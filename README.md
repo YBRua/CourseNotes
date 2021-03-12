@@ -1,2 +1,4 @@
-# CourseNotes
-Notes to courses taken in SJTU
+# My Notes Repo
+大概会用来放各种课程的电子笔记。
+
+随缘更新，希望不鸽。
