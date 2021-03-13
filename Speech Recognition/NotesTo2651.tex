@@ -1,0 +1,63 @@
+\documentclass[oneside]{book}
+\usepackage{xeCJK}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{listings} % lstlist插入代码
+\usepackage{booktabs}
+\usepackage{ulem}
+\usepackage{enumerate}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{setspace} % spacing环境设置行间距
+\usepackage[ruled, vlined]{algorithm2e} % 算法与伪代码 
+\usepackage{bm} % 数学公式中的加粗
+\usepackage{pifont} % 打圈的数字。172-211。\ding
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+%\usepackage{indentfirst}
+\usepackage{ulem} %\sout{}打删除线
+\normalem % 使用默认normalem
+\usepackage{lmodern}
+\usepackage{subcaption}
+\usepackage[colorlinks, linkcolor=blue]{hyperref}
+\usepackage{cleveref}
+\usepackage[a4paper]{geometry}
+\usepackage{titlesec}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{optTheorem}{Theorem}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{sketchproof}{Sketch of Proof}
+
+\newcommand\sgn{\mathrm{sgn}}
+
+% \titleformat{\part}{\centering\Huge}{第 \thepart 部分}{1em}{}
+% \titleformat{\chapter}{\centering\Huge}{第 \thechapter 章}{1em}{}
+
+\title{\textsc{AI2651\\Intelligent Speech \sout{Distinguish} Recognition}\\ T.H.E. Note}
+\author{\textsc{YBiuR}}
+\date{魔法少女ＨＭＭ}
+
+
+\begin{document}
+\begin{spacing}{1.5}
+% \setlength{\leftskip}{2em}
+\setlength{\parindent}{0em}
+
+\frontmatter
+\maketitle
+\chapter*{Preface}
+\paragraph{}Hey Siri.
+\mainmatter
+\include{SpeechSignalProcessing}
+\include{ShortTimeProcessing}
+\end{spacing}
+\end{document}

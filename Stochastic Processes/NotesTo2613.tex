@@ -1,0 +1,59 @@
+\documentclass[oneside]{book}
+\usepackage{xeCJK}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{listings} % lstlist插入代码
+\usepackage{booktabs}
+\usepackage{ulem}
+\usepackage{enumerate}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{setspace} % spacing环境设置行间距
+\usepackage[ruled, vlined]{algorithm2e} % 算法与伪代码 
+\usepackage{bm} % 数学公式中的加粗
+\usepackage{pifont} % 打圈的数字。172-211。\ding
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+%\usepackage{indentfirst}
+\usepackage{ulem} %\sout{}打删除线
+\normalem % 使用默认normalem
+\usepackage{lmodern}
+\usepackage{subcaption}
+\usepackage[colorlinks, linkcolor=blue]{hyperref}
+\usepackage{cleveref}
+\usepackage[a4paper]{geometry}
+\usepackage{titlesec}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{optTheorem}{Theorem}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{sketchproof}{Sketch of Proof}
+
+
+\title{Notes to AI2613 Stochastic Processes}
+\author{\textsc{YBiuR}}
+\date{A long long time ago in a far far away SJTU}
+
+
+\begin{document}
+\begin{spacing}{1.5}
+% \setlength{\leftskip}{2em}
+\setlength{\parindent}{0em}
+
+\frontmatter
+\maketitle
+\chapter*{Preface}
+\paragraph{}Learning Convex Optimization is non-convex.
+\paragraph{}Yet learning Stochastic Porcesses is indeed stochastic.
+\mainmatter
+\include{DiscreteMarkovChain}
+\end{spacing}
+\end{document}

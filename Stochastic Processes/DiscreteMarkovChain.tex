@@ -1,0 +1,325 @@
+\chapter{Discrete Markov Chains}
+\emph{“和女朋友在商场走散了，是在原地等碰到的概率大还是随机走碰到的概率大？急，在线等。”}
+\newpage
+
+%%%%%%%% Finite Space Markov Chain %%%%%%%%
+\section{Finite Space Markov Chain}
+
+%%%%%%%% 1.1
+\subsection{Basic Definitions}
+\begin{definition}[State Space]
+    A \textbf{state space} $\mathcal{S}$ is a finite or countable set of states, i.e. the values that random variables $X_i$ may take on.
+\end{definition}
+
+\begin{definition}[Initial Distribution]
+    The \textbf{initial distribution} $\pi_0$ is the probability distribution of the Markov Chain at time $0$. Denote $\mathbb{P}[X_0 = i]$ by $\pi_0(i)$.
+\end{definition}
+\begin{remark}
+    Formally, $\pi_0$ is a function from $\mathcal{S}$ to $[0,1]$ s.t.
+    \[ \pi_0(i) \ge 0 \text{ for all $i\in\mathcal{S}$} \]
+    \[ \sum_{i\in\mathcal{S}} \pi_0(i) = 1\]
+\end{remark}
+
+\begin{definition}[Probability Transition Matrix]
+    The \textbf{Transition Matrix} is a matrix $P = (p_{ij})$, where
+    \[ p_{ij} = \mathbb{P}[X_{n+1} = j | X_n = i] \]
+    i.e. the probability given that the chain is at state $i$ at $T=n$ that jumps to $j$ at $T=n+1$
+\end{definition}
+\begin{remark}
+    ~{}
+    \begin{itemize}
+        \item The \emph{rows} of $P$ sum up to $1$.
+        \item The entries in $P$ are all non-negative.
+    \end{itemize}
+\end{remark}
+
+%%%%%%%% 1.2
+\subsection{The Markov Property}
+\begin{definition}[Markov Property]
+    We say a stochastic process $X_1, X_2, \dots $ satisfies the \textbf{Markov property} if 
+    \[ \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n, \dots, X_0 = i_0] = \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n] \]
+\end{definition}
+That is, the \emph{next} state $X_{n+1}$ depends only on the \emph{current} state $X_n$.
+
+\begin{definition}[Time-homogeneous Markov Chain]
+    A Markov Chain is said to be \textbf{time homogeneous} if
+    \[ \forall t \quad \mathbb{P}[X_{t+1} = j | X_t = i] = P(i,j) \]
+\end{definition}
+For now, we only consider \emph{time homogeneous} Markov Chains.
+
+%%%%%%%% 1.3
+\subsection{Matrix Interpretation of Markov Chains}
+We now computes the probability distribution at $T=n+1$, denoted by $\pi_{n+1}$.
+\[ \pi_{n+1}(j) = \mathbb{P}[X_{n+1} = j] = \sum_{i=1}^N \mathbb{P}[X_n=i]\mathbb{P}[X_{n+1} = j | X_n = i] = \sum_{i=i}^N \pi_n(i)P(i,j)\]
+Therefore
+\[ \pi_{n+1}^T = \pi_n^T P \]
+\[ \pi_n^T = \pi_0^T P^n \]
+We use $P(i,j)$ to denote the element $(i,j)$ of $P$, we use $P^n$ to denote the $n$-th power of $P$, and we assume that $\pi_i$'s are column vectors.
+
+\begin{theorem}[Chapman-Kolmogorov Equality]
+    \[ P^{m+n}(i,j) = \sum_k P^m(i,k)P^n(k,j) \]
+\end{theorem}
+
+%%%%%%%% Stationary Distribution %%%%%%%%
+\section{Stationary Distribution}
+\begin{definition}[Stationary Distribution]
+    $\pi$ is called a \textbf{stationary distribution} of a Markov Chain if
+    \[ \pi^TP = \pi \]
+\end{definition}
+\begin{remark}
+    A Markov Chain may have 0, 1 or infinitely many stationary distribution.
+\end{remark}
+
+\emph{Here comes the question: When does a stationary distribution exist? If it exists, is it unique? If it is unique, does the chain converges to it?}
+
+%%%%%%%% Irreducibility, Aperiodicity and Recurrence %%%%%%%%
+\section{Irreducibility, Aperiodicity and Recurrence}
+For convenience, we will use $\mathbb{P}_i[A]$ to denote $\mathbb{P}[A | X_0 = i]$, and use $\mathbb{E}_i$ to denote expectation in an analogous way.
+
+%%%%%%%% Irreducibility
+\subsection{Irreducibility}
+\begin{definition}[Accessibility]
+    Let $i$, $j$ be two states, we say $j$ is \textbf{accessible from} $i$ if it is possible (with positive probability) for the chain to ever visit $j$ if the chain starts from $i$.
+    \[ \mathbb{P}_i[\bigcup_{n=0}^\infty\{X_n = j\}] > 0 \]
+    or equivalently
+    \[ \sum_{n=0}^\infty P^n(i,j) = \sum_{n=0}^\infty \mathbb{P}_i[X_n = j] > 0 \]
+\end{definition}
+
+\begin{definition}[Communication]
+    We say $i$ \textbf{communicates with} $j$ if $j$ is accessible from $i$ and $i$ is accessible from $j$.
+\end{definition}
+
+\begin{definition}[Irreducibility]
+    We say a Markov Chain is \textbf{irreducible} if all pairs of states communicate. And it is reducible otherwise.
+\end{definition}
+The relation \emph{communicate with} is an equivalent relation, and irreducible simply means the number of equivalent classes is 1.
+
+%%%%%%%% Aperiodicity
+\subsection{Aperiodicity}
+\begin{definition}[Period]
+    Given a Markov Chain, its \textbf{period} of state $i$ is defined to be the greatest common divisor $d_i$ of the lengths of loops starting from $i$.
+    \[ d_i = \gcd\{n|P^n(i,i) > 0\} \]
+\end{definition}
+
+\begin{theorem}
+    If states $i$ and $j$ communicate, then $d_i = d_j$
+\end{theorem}
+\begin{sketchproof}
+    ~{}
+    \begin{itemize}
+        \item $P^{n_1}(i,j) > 0$ and $P^{n_2}(j,i) > 0$.
+        \item $P^{n_1+n_2}(i,i)>0 \Rightarrow d_i | n_1 + n_2$.
+        \item Suppose $P^n{j,j} > 0$, then $P^{n+n_1+n_2}(i,i) > 0 \Rightarrow d_i | n + n_1 + n_2$.
+        \item $d_i | n \Rightarrow d_j \ge d_i$.
+        \item Similarly $d_i \ge d_j$. We are done.
+    \end{itemize}
+\end{sketchproof}
+\begin{remark}
+    Therefore all states in a communicating class have the same period, and all states in an irreducible Markov chain have the same period.
+\end{remark}
+
+\begin{definition}[Aperiodicity]
+    An irreducible Markov chain is said to be \textbf{aperiodic} if its period is 1, and periodic otherwise.
+\end{definition}
+
+\begin{lemma}
+    \normalfont
+    If P(i,i) > 0, then the Markov Chain is aperiodic.
+\end{lemma}
+\begin{remark}
+    This is a sufficient but not necessary condition.
+\end{remark}
+
+
+%%%%%%%% Recurrence
+\subsection{Recurrence}
+We define the \textbf{First Hitting Time} $T_i$ of the state $i$ by
+\[ T_i = \inf\{n>0 | X_n = i\} \]
+and we can define recurrence as follows
+\begin{definition}[Recurrence]
+    The state $i$ is \textbf{recurrent} if $\mathbb{P}_i[T_i<\infty] = 1$, and is transient if it is not recurrent.
+\end{definition}
+\begin{remark}
+    Recurrence means that starting from state $i$ at $T=0$, the chain \emph{is sure to} return to $i$ eventually.
+\end{remark}
+
+\begin{theorem}
+    \normalfont
+    Let $i$ be a recurrent state, and let $j$ be accessible from $i$, then all of the following hold:
+    \begin{enumerate}
+        \item $\mathbb{P}_i[T_j < \infty] = 1$.
+        \item $\mathbb{P}_j[T_i < \infty] = 1$.
+        \item The state $j$ is recurrent.
+    \end{enumerate}
+\end{theorem}
+\begin{sketchproof}
+    ~{}
+    \begin{itemize}
+        \item The paths starting from $i$ can be seen as infinitely many \emph{cycles}.
+        \item Whether the chain visits $p$ in the cycles can be seen as a Bernoulli distribution with probability $p>0$.
+        \item The probability of not visiting $j$ in the first $n$ cycles is $(i-p)^n$, which goes to $0$ as $n\to\infty$. So (1)hold.
+        \item (2) can be proved by contradiction. $\mathbb{P}_j[T_i < \infty] < 1$ will lead to contradiction against the fact that $i$ is recurrent.
+        \item (1)(2) implies (3).
+    \end{itemize}
+\end{sketchproof}
+
+\begin{theorem}[Equivalent Statement of Recurrence]
+    \normalfont
+    The state $i$ is recurrent if and only if $\mathbb{E}_i[N_i] = \infty$, where $N_i = \sum_{i=0}^\infty\mathbb{I}\{X_n = i\}$.
+\end{theorem}
+\begin{sketchproof}
+    ~{}
+    \begin{itemize}
+        \item Recurrence $\Rightarrow \mathbb{P}_i[N_i = \infty] = 1 \Rightarrow \mathbb{E}_i[N_i] = \infty$.
+        \item The converse is proved by contradiction.
+        \item If $i$ is transient, there is a chance of $p$ that the chain never return to $i$.
+        \item So $N_i$ is distributed geometrically, and $\mathbb{E}_i[N_i]$ will be finite. Contradiction.
+    \end{itemize}
+\end{sketchproof}
+\begin{remark}
+    By taking expectation on $N_i$, we have:
+    \[ \mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) \]
+\end{remark}
+
+\begin{corollary}\label{TransientStateGoesToZero}
+    If $j$ is transient, then $\lim_{n\to\infty}P^n(i,j) = 0$ for all states $i$.
+\end{corollary}
+\begin{sketchproof}
+    ~{}
+    \begin{itemize}
+        \item $\mathbb{E}_j[N_j] < \infty$.
+        \item $\mathbb{E}_i[N_j] = \mathbb{P}_i[T_j < \infty]\mathbb{E}_i[N_j | T_j < \infty]$.
+        \item $\mathbb{E}_i[N_j] \le \mathbb{E}_i[N_j | T_j] = \mathbb{E}_j[N_j] < \infty$ since the probability \emph{restarts} once the chain visits $j$ again.
+        \item $\mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) < \infty$ and this implies our conclusion.
+    \end{itemize}
+\end{sketchproof}
+
+\begin{proposition}
+    Suppose a Markov Chain has a stationary distribution $\pi$, if the state $j$ is transient, then $\pi(j) = 0$.
+\end{proposition}
+This follows from Corollary \ref{TransientStateGoesToZero}.
+
+\begin{corollary}
+    If an irreducible Markov Chain has a stationary distribution, then the chain is recurrent.
+\end{corollary}
+\begin{sketchproof}
+    The chain cannot be transient, or otherwise all $\pi(j)$ would be 0 and the sum of $\pi$ does not equal to 1.
+\end{sketchproof}
+\begin{remark}
+    The converse is not true!
+\end{remark}
+
+\begin{proposition}
+    A drunk man will find his way home, but a drunk bird may get lost forever.
+\end{proposition}
+This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent, while the walks on higher dimensions are transient.
+
+%%%%%%%% More on Recurrence
+\subsection{More on Recurrence}
+\begin{definition}[Null Recurrence]
+    The state $i$ is \textbf{null recurrent} if it is recurrent and $\mathbb{E}_i[T_i] = \infty$.
+\end{definition}
+\begin{definition}[Positive Recurrence]
+    The state $i$ is \textbf{positive reccurent} it is recurrent and $\mathbb{E}_i[T_i] < \infty$.
+\end{definition}
+
+\begin{proposition}
+    Given an irreducible Markov Chain, it is either transient, null recurrent or positive recurrent.
+\end{proposition}
+
+%%%%%%%% SLLN %%%%%%%%
+\section{Strong Law of Large Numbers of Markov Chains}
+\begin{theorem}[SLLN of Markov Chains]\label{SLLN}
+    Let $X_0, X_1, \dots$ be a Markov Chain starting in the state $X_0=i$. Suppose state $i$ communicates with state $j$. The limiting fraction of time that the chain spends in $j$ is $\frac{1}{\mathbb{E_j}[T_j]}$.
+    \[ \mathbb{P}_i[\lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^n\mathbb{I}\{X_t=j\} = \frac{1}{\mathbb{E_j}[T_j]}] = 1 \]
+\end{theorem}
+\begin{sketchproof}
+    Read the book. I'm not going to write this because I am lazy.
+\end{sketchproof}
+
+%%%%%%%% Basic Limit Theorem %%%%%%%%
+\section{Basic Limit Theorem}
+aka. Foundamental Theorem of Markov Chains
+
+%%%%%%%% Finite Case
+\subsection{Finite State Space}
+\begin{definition}[Spectral Radius]
+    Given a non-negative matrix $A$, the spectral radius $\rho(A)$ is the maximum norm of its eigenvalues
+    \[ \rho(A) = \max\{ \lambda(A) \} \]
+\end{definition}
+\begin{proposition}
+    Let $A$ be a non-negative matrix, then
+    \[ \min_{1\le i \le n} \sum_{j=1}^N a_{i,j} \le \rho(A) \le \max_{1\le i \le n} \sum_{j=1}^N a_{i,j} \]
+\end{proposition}
+
+\begin{lemma}[Perron-Frobenius Theorem]\label{PFT}
+    Let $A$ be a non-negative matrix with spectral radius $\rho(A) = \alpha$, then $\alpha$ is an eigenvalue of $A$, and has both left and right non-negative eigenvectors.
+\end{lemma}
+\begin{remark}
+    Lemma \ref{PFT} implies that for a finite probability transition matrix $P$, it always has at least one stationary distribution, because it always has eigenvalue $1$ ($P\mathbf{1} = \mathbf{1}$) and a corresponding eigenvector $\pi$ s.t. $\pi^TP = \pi$.
+\end{remark}
+
+\begin{lemma}
+    Suppose a $k \times k$ matrix $P$ is irreducible. Then there exists a unique solution to $\pi P = \pi$.
+\end{lemma}
+
+\begin{theorem}[Foundamental Theorem, Finite Case] If a finite Markov Chain is \emph{irreducible} and \emph{Aperiodic}, then it has a \emph{unique stationary distribution} $\pi$ any initial distribution \emph{converges} to it:
+    \[ \forall \pi_0,\quad \lim_{t\to\infty}\pi_0^T P^t = \pi^T \]
+\end{theorem}
+
+%%%%%%%% Countable Case
+\subsection{Countable Case}
+\begin{theorem}[Basic Limit Theorem]
+    Let $X_1, X_2, \dots$ be an \emph{irreducible aperiodic} Markov Chain that has a \emph{stationary distribution} $\pi$. Then
+    \[ \lim_{n\to\infty}\pi_n(i) = \pi(i) \]
+    for any state $i$ and for any initial distribution $\pi_0$.
+\end{theorem}
+
+\begin{lemma}[Bounded Convergence Theorem]\label{BCT}
+    If $X_n \to X$ with probability $1$ and there is a finite number $b$ such that $|X_n| < b$ for all $n$, then
+    \[ \mathbb{E}[X_n] \to \mathbb{E}[X] \]
+\end{lemma}
+
+Recall SLLN \ref{SLLN}, and the following is a corollary.
+\begin{corollary}\label{SLLNCoro}
+    For an \emph{irreducible} Markov Chain, we have
+    \[ \lim_{n\to\infty} \frac{1}{n}\sum_{t=1}^n P^t(i,j) = \frac{1}{\mathbb{E}_j[T_j]} \]
+\end{corollary}
+\begin{sketchproof}
+    Take expectations on both sides of Theorem \ref{SLLN} yields the conclusion.
+\end{sketchproof}
+
+\begin{proposition}[Cesaro Average]
+    If a sequence of numbers $a_n$ converges to a value $a$, then the \textbf{Cesaro Average} $(1/n)\sum_{t=1}^na_t$ also converges to it.
+\end{proposition}
+This corollary follows immediately from the proposition,
+\begin{corollary}\label{CesaroCoro}
+    For an \emph{irreducible aperiodic} Markov Chain with a \emph{stationary distribution},
+    \[ \lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^nP^t(i,j) \to \pi(j) \]
+\end{corollary}
+\begin{theorem}
+    An \emph{irreducible, aperiodic} Markov Chain with a \emph{stationary distribution} has a stationary distribution given by
+    \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
+\end{theorem}
+\begin{sketchproof}
+    The proof of the theorem is trivial, and is done by comparing Corollary \ref{SLLNCoro} and \ref{CesaroCoro}.
+\end{sketchproof}
+
+\begin{theorem}[Foundamental Theorem, Countable Case]
+    An \emph{irreducible} Markov Chain has a \emph{unique stationary distribution} given by
+    \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
+    if and only if it is \emph{positive recurrent}.
+\end{theorem}
+
+%%%%%%%% Other Conclusions
+\subsection{Other Conclusions}
+\emph{Since they are not covered in class, no proof will be provided. I'm lazy you know.}
+\begin{definition}[Doubly Stochastic Chains]
+    A transition matrix $P$ is said to be \textbf{doubly stochastic} if all of its columns sum up to 1.
+\end{definition}
+\begin{optTheorem}
+    For a doubly stochastic Markov Chain with $N$ states, the uniform distribution $\pi(i) = 1/N$ is a stationary distribution.
+\end{optTheorem}
+\begin{optTheorem}
+    For a Markov Chain with symmetric $P$ and $N$ states, the uniform distribution $\pi(i) = 1/N$ is a stationary distribution.
+\end{optTheorem}
