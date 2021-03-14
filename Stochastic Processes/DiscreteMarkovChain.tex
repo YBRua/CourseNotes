@@ -122,10 +122,10 @@ The relation \emph{communicate with} is an equivalent relation, and irreducible 
     An irreducible Markov chain is said to be \textbf{aperiodic} if its period is 1, and periodic otherwise.
 \end{definition}
 
-\begin{lemma}
+\begin{proposition}
     \normalfont
-    If P(i,i) > 0, then the Markov Chain is aperiodic.
-\end{lemma}
+    If $P(i,i) > 0$, then the Markov Chain is aperiodic.
+\end{proposition}
 \begin{remark}
     This is a sufficient but not necessary condition.
 \end{remark}
@@ -162,6 +162,9 @@ and we can define recurrence as follows
         \item (1)(2) implies (3).
     \end{itemize}
 \end{sketchproof}
+\begin{corollary}
+    If $\mathbb{P}_i[T_j < \infty] > 0$ but $\mathbb{P}_j[T_i < \infty] < 1$, then $i$ is transient.
+\end{corollary}
 
 \begin{theorem}[Equivalent Statement of Recurrence]
     \normalfont
@@ -193,11 +196,17 @@ and we can define recurrence as follows
         \item $\mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) < \infty$ and this implies our conclusion.
     \end{itemize}
 \end{sketchproof}
+\begin{corollary}
+    If $i$ is recurrent, then $\sum_{n=1}^{\infty}p^n(i,i) = \infty$;
+
+    If $i$ is transient, then $\sum_{n=1}^{\infty}p^n(i,i) < \infty$.
+\end{corollary}
+
 
 \begin{proposition}
     Suppose a Markov Chain has a stationary distribution $\pi$, if the state $j$ is transient, then $\pi(j) = 0$.
 \end{proposition}
-This follows from Corollary \ref{TransientStateGoesToZero}.
+The last proposition follows from Corollary \ref{TransientStateGoesToZero}.
 
 \begin{corollary}
     If an irreducible Markov Chain has a stationary distribution, then the chain is recurrent.
@@ -238,7 +247,7 @@ This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent,
 \end{sketchproof}
 
 %%%%%%%% Basic Limit Theorem %%%%%%%%
-\section{Basic Limit Theorem}
+\section{Basic Limit Theorem}\label{BasicLimitTheorem}
 aka. Foundamental Theorem of Markov Chains
 
 %%%%%%%% Finite Case
@@ -263,7 +272,7 @@ aka. Foundamental Theorem of Markov Chains
     Suppose a $k \times k$ matrix $P$ is irreducible. Then there exists a unique solution to $\pi P = \pi$.
 \end{lemma}
 
-\begin{theorem}[Foundamental Theorem, Finite Case] If a finite Markov Chain is \emph{irreducible} and \emph{Aperiodic}, then it has a \emph{unique stationary distribution} $\pi$ any initial distribution \emph{converges} to it:
+\begin{theorem}[Foundamental Theorem, Finite Case] If a finite Markov Chain is \emph{irreducible} and \emph{aperiodic}, then it has a \emph{unique stationary distribution} $\pi$ any initial distribution \emph{converges} to it:
     \[ \forall \pi_0,\quad \lim_{t\to\infty}\pi_0^T P^t = \pi^T \]
 \end{theorem}
 
@@ -292,7 +301,7 @@ Recall SLLN \ref{SLLN}, and the following is a corollary.
 \begin{proposition}[Cesaro Average]
     If a sequence of numbers $a_n$ converges to a value $a$, then the \textbf{Cesaro Average} $(1/n)\sum_{t=1}^na_t$ also converges to it.
 \end{proposition}
-This corollary follows immediately from the proposition,
+Corollary \ref{CesaroCoro} follows immediately from the proposition,
 \begin{corollary}\label{CesaroCoro}
     For an \emph{irreducible aperiodic} Markov Chain with a \emph{stationary distribution},
     \[ \lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^nP^t(i,j) \to \pi(j) \]
@@ -302,7 +311,7 @@ This corollary follows immediately from the proposition,
     \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
 \end{theorem}
 \begin{sketchproof}
-    The proof of the theorem is trivial, and is done by comparing Corollary \ref{SLLNCoro} and \ref{CesaroCoro}.
+    The proof of the theorem is trivial: compare Corollary \ref{SLLNCoro} and \ref{CesaroCoro}.
 \end{sketchproof}
 
 \begin{theorem}[Foundamental Theorem, Countable Case]
@@ -323,3 +332,14 @@ This corollary follows immediately from the proposition,
 \begin{optTheorem}
     For a Markov Chain with symmetric $P$ and $N$ states, the uniform distribution $\pi(i) = 1/N$ is a stationary distribution.
 \end{optTheorem}
+\begin{optTheorem}
+    Let $T_j^k = \min\{ n > T_y^{k-1} | X_n = y \}$ be the time of the $k$-th visit to $j$, then by the Markov property,
+    \[ \mathbb{T}_x[T_y^k < \infty] = \mathbb{P}_x[T_y < \infty]\cdot\mathbb{P}_y[T_y<\infty] \]
+    Notice that
+    \[ \mathbb{E}[X] = \sum_{k=0}^{\infty}\mathbb{P}[X \le k] \]
+    Using the two equations, we have
+    \[ \mathbb{E}_x[N_y] = \frac{\mathbb{P}_x[T_y < \infty]}{1-\mathbb{P}_y[T_y < \infty]} \]
+\end{optTheorem}
+\begin{remark}
+    This theorem gives us more insights into the results in Section \ref{BasicLimitTheorem}.
+\end{remark}
