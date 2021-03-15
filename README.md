@@ -5,5 +5,10 @@
 
 # Updates
 **Mar.12**
-- AI2613 Stochastic Processes
-- AI2651 Intelligent Speech Recognition.
+- Added new files
+  + AI2613 Stochastic Processes
+  + AI2651 Intelligent Speech Recognition.
+
+**Mar.15**
+- Updated AI2613.
+  + Added examples of Markov Chains.
