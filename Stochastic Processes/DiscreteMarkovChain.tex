@@ -2,15 +2,18 @@
 \emph{“和女朋友在商场走散了，是在原地等碰到的概率大还是随机走碰到的概率大？急，在线等。”}
 \newpage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% Finite Space Markov Chain %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Finite Space Markov Chain}
 
-%%%%%%%% 1.1
+%%%%%%%% Basic Definitions
 \subsection{Basic Definitions}
+% State Space
 \begin{definition}[State Space]
     A \textbf{state space} $\mathcal{S}$ is a finite or countable set of states, i.e. the values that random variables $X_i$ may take on.
 \end{definition}
-
+% Initial Distribution
 \begin{definition}[Initial Distribution]
     The \textbf{initial distribution} $\pi_0$ is the probability distribution of the Markov Chain at time $0$. Denote $\mathbb{P}[X_0 = i]$ by $\pi_0(i)$.
 \end{definition}
@@ -19,7 +22,7 @@
     \[ \pi_0(i) \ge 0 \text{ for all $i\in\mathcal{S}$} \]
     \[ \sum_{i\in\mathcal{S}} \pi_0(i) = 1\]
 \end{remark}
-
+% Probability Transition Matrix
 \begin{definition}[Probability Transition Matrix]
     The \textbf{Transition Matrix} is a matrix $P = (p_{ij})$, where
     \[ p_{ij} = \mathbb{P}[X_{n+1} = j | X_n = i] \]
@@ -33,21 +36,22 @@
     \end{itemize}
 \end{remark}
 
-%%%%%%%% 1.2
+%%%%%%%% Markov Property
 \subsection{The Markov Property}
+% Markov Property
 \begin{definition}[Markov Property]
     We say a stochastic process $X_1, X_2, \dots $ satisfies the \textbf{Markov property} if 
     \[ \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n, \dots, X_0 = i_0] = \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n] \]
 \end{definition}
 That is, the \emph{next} state $X_{n+1}$ depends only on the \emph{current} state $X_n$.
-
+% Time-homogeneity
 \begin{definition}[Time-homogeneous Markov Chain]
     A Markov Chain is said to be \textbf{time homogeneous} if
     \[ \forall t \quad \mathbb{P}[X_{t+1} = j | X_t = i] = P(i,j) \]
 \end{definition}
 For now, we only consider \emph{time homogeneous} Markov Chains.
 
-%%%%%%%% 1.3
+%%%%%%%% Multistep Transition by Matrix Algebra
 \subsection{Matrix Interpretation of Markov Chains}
 We now computes the probability distribution at $T=n+1$, denoted by $\pi_{n+1}$.
 \[ \pi_{n+1}(j) = \mathbb{P}[X_{n+1} = j] = \sum_{i=1}^N \mathbb{P}[X_n=i]\mathbb{P}[X_{n+1} = j | X_n = i] = \sum_{i=i}^N \pi_n(i)P(i,j)\]
@@ -55,13 +59,16 @@ Therefore
 \[ \pi_{n+1}^T = \pi_n^T P \]
 \[ \pi_n^T = \pi_0^T P^n \]
 We use $P(i,j)$ to denote the element $(i,j)$ of $P$, we use $P^n$ to denote the $n$-th power of $P$, and we assume that $\pi_i$'s are column vectors.
-
+% Chapman-Kolmogorov
 \begin{theorem}[Chapman-Kolmogorov Equality]
     \[ P^{m+n}(i,j) = \sum_k P^m(i,k)P^n(k,j) \]
 \end{theorem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% Stationary Distribution %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Stationary Distribution}
+% Stationary Distribution
 \begin{definition}[Stationary Distribution]
     $\pi$ is called a \textbf{stationary distribution} of a Markov Chain if
     \[ \pi^TP = \pi \]
@@ -72,23 +79,26 @@ We use $P(i,j)$ to denote the element $(i,j)$ of $P$, we use $P^n$ to denote the
 
 \emph{Here comes the question: When does a stationary distribution exist? If it exists, is it unique? If it is unique, does the chain converges to it?}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% Irreducibility, Aperiodicity and Recurrence %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Irreducibility, Aperiodicity and Recurrence}
 For convenience, we will use $\mathbb{P}_i[A]$ to denote $\mathbb{P}[A | X_0 = i]$, and use $\mathbb{E}_i$ to denote expectation in an analogous way.
 
 %%%%%%%% Irreducibility
 \subsection{Irreducibility}
+% Accessible
 \begin{definition}[Accessibility]
     Let $i$, $j$ be two states, we say $j$ is \textbf{accessible from} $i$ if it is possible (with positive probability) for the chain to ever visit $j$ if the chain starts from $i$.
     \[ \mathbb{P}_i[\bigcup_{n=0}^\infty\{X_n = j\}] > 0 \]
     or equivalently
     \[ \sum_{n=0}^\infty P^n(i,j) = \sum_{n=0}^\infty \mathbb{P}_i[X_n = j] > 0 \]
 \end{definition}
-
+% Communicate
 \begin{definition}[Communication]
     We say $i$ \textbf{communicates with} $j$ if $j$ is accessible from $i$ and $i$ is accessible from $j$.
 \end{definition}
-
+% Irreducible
 \begin{definition}[Irreducibility]
     We say a Markov Chain is \textbf{irreducible} if all pairs of states communicate. And it is reducible otherwise.
 \end{definition}
@@ -96,11 +106,12 @@ The relation \emph{communicate with} is an equivalent relation, and irreducible 
 
 %%%%%%%% Aperiodicity
 \subsection{Aperiodicity}
+% Period
 \begin{definition}[Period]
     Given a Markov Chain, its \textbf{period} of state $i$ is defined to be the greatest common divisor $d_i$ of the lengths of loops starting from $i$.
     \[ d_i = \gcd\{n|P^n(i,i) > 0\} \]
 \end{definition}
-
+% Period is a class property
 \begin{theorem}
     If states $i$ and $j$ communicate, then $d_i = d_j$
 \end{theorem}
@@ -117,11 +128,10 @@ The relation \emph{communicate with} is an equivalent relation, and irreducible 
 \begin{remark}
     Therefore all states in a communicating class have the same period, and all states in an irreducible Markov chain have the same period.
 \end{remark}
-
+% Aperiodic
 \begin{definition}[Aperiodicity]
     An irreducible Markov chain is said to be \textbf{aperiodic} if its period is 1, and periodic otherwise.
 \end{definition}
-
 \begin{proposition}
     \normalfont
     If $P(i,i) > 0$, then the Markov Chain is aperiodic.
@@ -130,19 +140,19 @@ The relation \emph{communicate with} is an equivalent relation, and irreducible 
     This is a sufficient but not necessary condition.
 \end{remark}
 
-
 %%%%%%%% Recurrence
 \subsection{Recurrence}
 We define the \textbf{First Hitting Time} $T_i$ of the state $i$ by
 \[ T_i = \inf\{n>0 | X_n = i\} \]
 and we can define recurrence as follows
+% Recurrent
 \begin{definition}[Recurrence]
     The state $i$ is \textbf{recurrent} if $\mathbb{P}_i[T_i<\infty] = 1$, and is transient if it is not recurrent.
 \end{definition}
 \begin{remark}
     Recurrence means that starting from state $i$ at $T=0$, the chain \emph{is sure to} return to $i$ eventually.
 \end{remark}
-
+% Recurrence is a class property
 \begin{theorem}
     \normalfont
     Let $i$ be a recurrent state, and let $j$ be accessible from $i$, then all of the following hold:
@@ -165,7 +175,7 @@ and we can define recurrence as follows
 \begin{corollary}
     If $\mathbb{P}_i[T_j < \infty] > 0$ but $\mathbb{P}_j[T_i < \infty] < 1$, then $i$ is transient.
 \end{corollary}
-
+% Equivalent Statement of Recurrence
 \begin{theorem}[Equivalent Statement of Recurrence]
     \normalfont
     The state $i$ is recurrent if and only if $\mathbb{E}_i[N_i] = \infty$, where $N_i = \sum_{i=0}^\infty\mathbb{I}\{X_n = i\}$.
@@ -196,12 +206,12 @@ and we can define recurrence as follows
         \item $\mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) < \infty$ and this implies our conclusion.
     \end{itemize}
 \end{sketchproof}
+
 \begin{corollary}
     If $i$ is recurrent, then $\sum_{n=1}^{\infty}p^n(i,i) = \infty$;
 
     If $i$ is transient, then $\sum_{n=1}^{\infty}p^n(i,i) < \infty$.
 \end{corollary}
-
 
 \begin{proposition}
     Suppose a Markov Chain has a stationary distribution $\pi$, if the state $j$ is transient, then $\pi(j) = 0$.
@@ -225,9 +235,11 @@ This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent,
 
 %%%%%%%% More on Recurrence
 \subsection{More on Recurrence}
+% Null Recurrence
 \begin{definition}[Null Recurrence]
     The state $i$ is \textbf{null recurrent} if it is recurrent and $\mathbb{E}_i[T_i] = \infty$.
 \end{definition}
+% Positive Recurrence
 \begin{definition}[Positive Recurrence]
     The state $i$ is \textbf{positive reccurent} it is recurrent and $\mathbb{E}_i[T_i] < \infty$.
 \end{definition}
@@ -236,8 +248,11 @@ This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent,
     Given an irreducible Markov Chain, it is either transient, null recurrent or positive recurrent.
 \end{proposition}
 
+%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% SLLN %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
 \section{Strong Law of Large Numbers of Markov Chains}
+% SLLN of Markov Chains
 \begin{theorem}[SLLN of Markov Chains]\label{SLLN}
     Let $X_0, X_1, \dots$ be a Markov Chain starting in the state $X_0=i$. Suppose state $i$ communicates with state $j$. The limiting fraction of time that the chain spends in $j$ is $\frac{1}{\mathbb{E_j}[T_j]}$.
     \[ \mathbb{P}_i[\lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^n\mathbb{I}\{X_t=j\} = \frac{1}{\mathbb{E_j}[T_j]}] = 1 \]
@@ -246,12 +261,15 @@ This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent,
     Read the book. I'm not going to write this because I am lazy.
 \end{sketchproof}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% Basic Limit Theorem %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Basic Limit Theorem}\label{BasicLimitTheorem}
 aka. Foundamental Theorem of Markov Chains
 
 %%%%%%%% Finite Case
 \subsection{Finite State Space}
+% Spectral Radius
 \begin{definition}[Spectral Radius]
     Given a non-negative matrix $A$, the spectral radius $\rho(A)$ is the maximum norm of its eigenvalues
     \[ \rho(A) = \max\{ \lambda(A) \} \]
@@ -260,7 +278,7 @@ aka. Foundamental Theorem of Markov Chains
     Let $A$ be a non-negative matrix, then
     \[ \min_{1\le i \le n} \sum_{j=1}^N a_{i,j} \le \rho(A) \le \max_{1\le i \le n} \sum_{j=1}^N a_{i,j} \]
 \end{proposition}
-
+% Perron-Frobenius Theorem
 \begin{lemma}[Perron-Frobenius Theorem]\label{PFT}
     Let $A$ be a non-negative matrix with spectral radius $\rho(A) = \alpha$, then $\alpha$ is an eigenvalue of $A$, and has both left and right non-negative eigenvectors.
 \end{lemma}
@@ -271,24 +289,25 @@ aka. Foundamental Theorem of Markov Chains
 \begin{lemma}
     Suppose a $k \times k$ matrix $P$ is irreducible. Then there exists a unique solution to $\pi P = \pi$.
 \end{lemma}
-
+% Foundamental Theorem, Finite Case
 \begin{theorem}[Foundamental Theorem, Finite Case] If a finite Markov Chain is \emph{irreducible} and \emph{aperiodic}, then it has a \emph{unique stationary distribution} $\pi$ any initial distribution \emph{converges} to it:
     \[ \forall \pi_0,\quad \lim_{t\to\infty}\pi_0^T P^t = \pi^T \]
 \end{theorem}
 
 %%%%%%%% Countable Case
 \subsection{Countable Case}
+% Basic Limit Theorem
 \begin{theorem}[Basic Limit Theorem]
     Let $X_1, X_2, \dots$ be an \emph{irreducible aperiodic} Markov Chain that has a \emph{stationary distribution} $\pi$. Then
     \[ \lim_{n\to\infty}\pi_n(i) = \pi(i) \]
     for any state $i$ and for any initial distribution $\pi_0$.
 \end{theorem}
-
+% Bounded Convergence Theorem
 \begin{lemma}[Bounded Convergence Theorem]\label{BCT}
     If $X_n \to X$ with probability $1$ and there is a finite number $b$ such that $|X_n| < b$ for all $n$, then
     \[ \mathbb{E}[X_n] \to \mathbb{E}[X] \]
 \end{lemma}
-
+% Corollary of SLLN
 Recall SLLN \ref{SLLN}, and the following is a corollary.
 \begin{corollary}\label{SLLNCoro}
     For an \emph{irreducible} Markov Chain, we have
@@ -297,7 +316,7 @@ Recall SLLN \ref{SLLN}, and the following is a corollary.
 \begin{sketchproof}
     Take expectations on both sides of Theorem \ref{SLLN} yields the conclusion.
 \end{sketchproof}
-
+% Cesaro Average
 \begin{proposition}[Cesaro Average]
     If a sequence of numbers $a_n$ converges to a value $a$, then the \textbf{Cesaro Average} $(1/n)\sum_{t=1}^na_t$ also converges to it.
 \end{proposition}
@@ -313,7 +332,7 @@ Corollary \ref{CesaroCoro} follows immediately from the proposition,
 \begin{sketchproof}
     The proof of the theorem is trivial: compare Corollary \ref{SLLNCoro} and \ref{CesaroCoro}.
 \end{sketchproof}
-
+% Foundamental Theorem, Countable Case
 \begin{theorem}[Foundamental Theorem, Countable Case]
     An \emph{irreducible} Markov Chain has a \emph{unique stationary distribution} given by
     \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
@@ -342,4 +361,220 @@ Corollary \ref{CesaroCoro} follows immediately from the proposition,
 \end{optTheorem}
 \begin{remark}
     This theorem gives us more insights into the results in Section \ref{BasicLimitTheorem}.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% Examples %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Examples}
+%%%%%%%% Galton-Watson Process
+\subsection{Galton-Watson Process}
+\emph{aka. Branching Process}
+\paragraph*{Problem.} What is the probability that a family name eventually extincts?
+\paragraph*{Notations.}
+\begin{itemize}
+    \item $G_t$ denotes the number of males in generation $t$.
+    \item $X_{tk}$ denotes the number of sons fathered by the $k$-th father in the $t$-th generation. Assume $X_i$'s are \emph{iid} with probability mass function $p(\cdot)$.
+    \item $\rho = \mathbb{P}[extinction] = \mathbb{P}[\cup_{k\ge 1}\{ G_k=0 \}]$ denotes the probabily that the family name eventually goes extinct.
+    \item $q_t = \mathbb{P}[G_t = 0]$ denotes the probability that the family name goes extinct at the $t$-th generation.
+\end{itemize}
+The problem is trivial when $p(0) = 0$ or $p(0) + p(1) = 1$. Either the family name never goes extinct or it goes extinct almost surely. We consider $p(0) > 0$ and $p(0) + p(1) < 1$.
+
+By conditioning on what happens at the first step, we can calculate $\rho$ by
+\[ G_{t+1} = \sum_{i=1}^{G_t} X_{ti} \]
+\begin{align}
+\rho &= \sum_{k=0}^{\infty}\mathbb{P}[extinction \wedge  G_1 = k] \notag \\
+&= \sum_{k=0}^{\infty}\mathbb{P}[extinction | G_1 = k]\cdot\mathbb{P}[G_1 = k | G_0 = 1] \quad \text{(by 全概率公式)} \notag \\
+&= \sum_{k=0}^{\infty}f(k)\rho^k \triangleq \psi(\rho) \notag
+\end{align}
+The last step used the fact that all males have sons independently. $\psi(\rho)$ is called the \textbf{Probability Generating Function} of $p(\cdot)$.
+
+The probability of eventual extinction satisfies $\psi(\rho) = \rho$.
+\[ \psi'(z) = \sum_{k=1}^{\infty}kp(k)z^{k-1} > 0\]
+\[ \psi''(z) = \sum_{k=2}^{\infty}k(k-1)p(k)z^{k-2} > 0 \]
+So $\psi(z)$ is a strictly increasing convex function with the following properties.
+\begin{itemize}
+    \item $\psi(1) = 1$. So $\rho = 1$ is always a solution.
+    \item $\psi'(1) = \sum_{k=1}^{\infty}kp(k) = \mathbb{E}[X] \triangleq \mu$
+\end{itemize}
+\begin{enumerate}[(i)]
+    \item If $\mu \le 1$, $\rho = 1$ is the only solution. Therefore the family name will go extinct.
+    \item If $\mu > 1$, there exists another solution $r<1$.
+    
+    Observe that $\{ G_t = 0 \} \subseteq \{ G_{t+1} = 0 \}$ and $q_t \le t_{t+1}$. Since $q_t$ has a upper bound $\rho$, it will always converge.
+    \[ q_t \uparrow \rho \]
+    So we only need to prove $q_t < r \quad \forall t$. By induction,
+    \begin{itemize}
+        \item[base.] $q_0 = 0 < r$.
+        \item[hypo.] $q_t < r$.
+        \item[step.] $q_{t+1} = \sum_{i=0}^{\infty}\mathbb{P}[G_1 = i]\mathbb{P}[G_{t+1} = 0| G_1 = i] = \sum_{i=0}^{\infty}p(i)(q_t)^i$. The last step used the iid assuption of $X$. 
+        Therefore $q_{t+1} = \psi(q_t) \le \psi(r) = r$. Done.
+    \end{itemize} 
+\end{enumerate}
+
+%%%%%%%% Gambler's Ruin
+\subsection{Gambler's Ruin}\label{GamblerRuin}
+\paragraph*{Problem.} Consider a gambler in a casino, who has probability $p$ to win \$$1$ and $1-p$ to lose \$$1$. The process stops when the gambler gets \$$N$ or goes to $0$. Assume the gambler starts the game with \$$i$.
+\paragraph*{Notations.}
+\begin{itemize}
+    \item $P_i$ denotes the probability of the gambler gets \$$N$ and wins, starting with \$$i$.
+    \item $Z_i \in \{1, -1\}$ denotes whether the gambler wins or loses in round $i$.
+    \[ X_t = X_0 + \sum_{i=0}^{t-1}Z_i \]
+\end{itemize}
+Obviously,
+\[ P_N = 1 \quad P_0 = 0 \]
+When $1 \le i \le N-1$, $P_i$ can be calculated by
+\begin{align*}
+    P_i &= \mathbb{P}[win | X_0 = i] \\
+    &= \mathbb{P}[win \wedge Z_0 = 1 | X_0 = i] + \mathbb{P}[win \wedge Z_0 = -1 | X_0 = i] \quad \text{(Again by 全概率公式 on $Z_i$)} \\
+    &= \mathbb{P}[win | X_0=i, Z_0 = 1]\cdot\mathbb{P}[Z_0=1|X_0=i] + \mathbb{P}[win|X_0=1, Z_0=-1]\cdot\mathbb{P}[Z_0=-1|X_0=i] \\
+    &= p\cdot P_{i+1} + (1-p)\cdot P_{i-1}
+\end{align*}
+Rearranging,
+\[ p(P_{i+1} - P_i) = (1-p)(P_i - P_{i-1}) \]
+\[ P_{i+1} -P_i = \frac{1-p}{p}(P_i - P_{i-1}) \]
+Let $\theta = \frac{1-p}{p}$, by high school mafs
+\[ P_{i+1} - P_i = \theta^i(P_1 - P_{0}) \]
+\begin{enumerate}[(i)]
+    \item Assume for now that $p \neq \frac{1}{2}$ so $\theta \neq 1$, then summing over $i$ yields
+    \[ P_N - P_0 = 1 = \frac{1-\theta^N}{1-\theta} P_1 \]
+    Therefore
+    \[ P_1 = \frac{1-\theta}{1-\theta^N} \]
+    Summing from $0$ to $i$ yields
+    \[ P_i = \frac{1-\theta^i}{1-\theta^N} \]
+    \item If $p=\frac{1}{2}$,
+    \[ P_{i+1} - P_i = P_i - P_{i-1} \]
+    This is a arithmetic progress, and again by high school mafs
+    \[ P_i = \frac{i}{N} \]
+\end{enumerate}
+To sum up
+\[ 
+    P_i = 
+    \begin{cases}
+        \frac{i}{N} &(i = \frac{1}{2})\\
+        \frac{1-\theta^i}{1-\theta^N} &(\text{o.w.})
+    \end{cases}    
+\]
+
+\subsection{Drug Test}\label{DrugTest}
+This example is based on results from the previous subsection \ref{GamblerRuin}.
+\paragraph*{Problem.} We want to test the cure rate $p_1$ of a drug \textrm{Drug}1. We already have a \textrm{Drug}2 with known cure rate $p_2$. We want to know whether $p_1 > p_2$ or not. To do this, we find $t$ pairs of patients $(X_i, Y_i)$ and conduct tests using the two drugs on $X$ and $Y$ respectively. Once the number of patients who are cured by \textrm{Drug}1 but not \textrm{Drug}2 exceeds a certain threshold $M$, we can claim that $p_1 \ge p_2$.
+\paragraph*{Notations.}
+\begin{itemize}
+    \item $X_i,Y_i \in \{0,1\}$ is a boolean denoting whether the first or the second drug cured patient $i$.
+    \item $Z_i = X_i - Y_i$.
+    \item $p_1, p_2$ denotes the probability that the two drugs cure a patient, respectively.
+\end{itemize}
+
+The value of $Z_i$ falls into 3 cases:
+\[ Z_i = 
+    \begin{cases}
+        1 &p_1(1-p_2)\\
+        -1 &p_2(1-p_1)\\
+        0 &(\text{o.w.})
+    \end{cases}
+\]
+If we ignore the cases where $Z_i = 0$, then we can model this problem as a gambler's ruin, with $p = \frac{p_1(1-p_2)}{p_1(1-p_2)+p_2(1-p_1)}$.
+
+And
+\[ \mathbb{P}[TestWrong] = 1 - \frac{1-\theta^M}{1-\theta^{2M}} = \frac{1}{\theta^{-M} + 1} \]
+The probability above drops exponentially with $M$, so the threshold does not need to be very large to achieve accurate results.
+
+%%%%%%%% Another random walk on N
+\subsection{Another Random Walk}\label{AnotherRandWalk}
+\paragraph*{Problem.} Consider a random walk on $\mathbb{N}$ where
+\[ P(0,1) = 1 \quad P(N,N-1) = 1 \]
+We want to compute how many steps we need to reach $N$ starting from $i$.
+\paragraph*{Notataions.}
+\begin{itemize}
+    \item $h_i$ denotes the number of steps to reach $N$ starting from $X_0=i$.
+    \item $Y_i$ denotes the number of steps from $i$ to $i+1$ for the first time.
+    \item $g_j \triangleq \mathbb{E}[Y_j]$.
+\end{itemize}
+Obviously
+\[ \mathbb{E}[h_0] = 1 + \mathbb{E}[h_1] \quad \mathbb{E}[h_N] = 0 \]
+Similar to subsection \ref{DrugTest},
+\[ h_i = 1+ (1-p)h_{i-1} + ph_{i+1} \]
+This can be calculated using \emph{the linearity of expectation}. 
+
+Notice that
+\[ h_i = \sum_{j=i}^{N-1}Y_j \]
+Taking expectations on both sides
+\[ \mathbb{E}[h_i] = \sum_{j=i}^{N-1}\mathbb{E}[Y_j] \]
+So we only need to caculate $\mathbb{E}[Y_j]$.
+\begin{itemize}
+    \item $g_0 = 1$.
+    \item $g_i = 1 + 0 \cdot p + (1-p)(g_{i-1}+g_i)$.
+\end{itemize}
+\begin{enumerate}
+    \item Again assume $p \neq \frac{1}{2}$. 
+    Rearranging yields
+    \[ g_i = \frac{1}{p} + \theta g_{i-1} \]
+    and after a few steps of arithmetics
+    \[ g_i = \sum_{i=0}^{t-1}\frac{1}{p}\theta^i + \theta^t \]
+    Summing over $g_i$ is a sum of geometric progress, easy.
+    \item If $p = \frac{1}{2}$, then
+    \[ g_{i} - g_{i-1} = \frac{1}{p} = 2 \]
+    so
+    \[ g_t = 2t + 1 \]
+    and
+    \[ \mathbb{E}[h_0] = \sum_{t=0}^{N-1}(2t+1) = N^2 \]
+\end{enumerate}
+\begin{remark}
+    As the converse of the conclusion, if we take $N$ steps, the farthest distance we can go is $\sqrt{N}$.
+\end{remark}
+
+%%%%%%%% 2-SAT
+\subsection{2-SAT}
+Recall the SAT problem in \textsc{AI2615 Design and Analysis of Algorithms}. A 2-SAT is a special case of SAT where each \verb|or| expression has at most 2 terms
+\[ \varphi = (x_1 \vee y_1) \wedge (x_2 \vee y_2) \cdots \]
+The problem is RP and can be solved using the following algorithm.
+
+\begin{algorithm}
+    \caption{2-SAT Solver}
+    \KwIn{CNF with $n$ terms}
+    Random intialize a solution $\sigma$.\\
+    \For{$i = 1:100n^2$}
+    {
+        \If{$\sigma$ satisfies CNF}
+        {
+            \KwRet{$\sigma$}
+        }
+        \Else
+        {
+            Randomly choose one term $(X_i \vee Y_i)$ that is false.\\
+            Randomly flip $X_i$ or $Y_i$.
+        }
+    }
+    \KwRet{Not satisfiable}
+\end{algorithm}
+
+To prove its correctness, we only need to consider the cases where the CNF is indeed satisfiable with solution $\sigma$. We denote the sequence of attempts produced by the algorithm by
+\[ \sigma_0 \to \sigma_1 \to \cdots \to \sigma_{100n^2} \]
+Let $X_i$ denotes the number of exactly the same terms between $\sigma$ and $\sigma_i$.
+
+$X_0, X_1, \dots$ is not a Markov Chain. \sout{So we get stuck}. However we can still informally show the correctness.
+
+We first introduce some basic concepts.
+\begin{definition}[Stochasitcal Dominance]
+    A random variable $X$ has first-order stochastic dominance over random variable $Y$ if
+    \[ \mathbb{P}[X \ge x] \ge \mathbb{P}[Y \ge x] \forall x \]
+    \[ \mathbb{P}[X > x] > \mathbb{P}[Y > x] \exists x \]
+\end{definition}
+\begin{theorem}[Markov's Inequality]\label{MarkovIneq}
+    Let $X$ be a nonnegative random varialbe and let $a > 0$, then
+    \[ \mathbb{P}[X \ge a] \le \frac{\mathbb{E}[X]}{a} \]
+\end{theorem}
+\begin{sketchproof}
+    Note that $X_{i+1}$ differs from $X_i$ in at most 1 operand, and that
+    \[ \mathbb{P}[X_{i+1} = X_i + 1] \ge \frac{1}{2} \]
+    \[ \mathbb{P}[X_{i+1} = X_i - 1] \le \frac{1}{2} \]
+    We can introduce a random walk described in subsection \ref{AnotherRandWalk} $Y_1, Y_2, \dots$ with $p = \frac{1}{2}$.
+
+    $X_i$ stochatically dominates $Y_i$. Since $Y_i$ has an expectation of $n^2$ to get to state $n$, it follows intuitively that $X_i$ has a smaller expectation of steps to get to $n$.
+
+    We have chosen the max iteration to be $100n^2$, by Markov's Inequality \ref{MarkovIneq}, the probability that we take $100n^2$ iterations without finding a feasible solution is at most $1/100$.
+\end{sketchproof}
+\begin{remark}
+    A formal proof of correctness will be given in the next lecture.
 \end{remark}
