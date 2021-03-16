@@ -1,0 +1,45 @@
+\chapter{Regression}
+Almost all of them have closed-form solutions.
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% Linear Regression %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Linear Regression}
+%%%%%%%% Notation
+\subsection{Notations}
+\begin{itemize}
+    \item $X$: $N \times d$ matrix of data.
+    \item $x^{(i)}$: $i$-th sample, $d$ dimensional feature vector, suppose $x_0 = 1$.
+    \item $y$: $N$ dimensional output.
+    \item  $w$: $d \times 1$ parameter.
+\end{itemize}
+%%%%%%%% Model
+\subsection{Model}
+\[ f(X;w) = w^T X \]
+\begin{remark}
+    If $X$ is invertible, then we are done.
+    \[ w = X^{-1}y \]
+    Unfortunately $X$ is usually not invertible, it is usually not even a square matrix. So we need optimizaiton-based approach to solve this.
+\end{remark}
+%%%%%%%% Loss Function
+\subsection{Loss Function}
+\[ J(w)  = \frac{1}{2}\| Xw - y \|_2^2 = \frac{1}{2}\sum_{i=1}^N(w^Tx^{(i)} - y^{(i)})^2 \]
+%%%%%%%% Gradient Descent Update Rule
+\subsection{Descent Direction}
+$J(w)$ is convex, and can be optimized by gradient descent.
+\[ \nabla J(w) = X^T(Xw-y) \]
+\[ w_{i+1} = w_i - \alpha \nabla J(w) \]
+where $\alpha$ is the step size.
+%%%%%%%% Closed Form Solution
+\subsection{Closed Form Solution}
+$J(w)$ is convex, and we can calculate the closed-form solution.
+
+Let $\nabla J(w) = 0$.
+\[ X^TXy = X^Ty \]
+\[ w = (X^TX)^{-1}X^Ty \]
+\begin{remark}
+    If $X^TX$ is not invertible, we can use its pseudo-inverse, which is defined as
+\end{remark}
+\begin{definition}[Pseudo-Inverse]
+    \verb|raise NotImplementedError('查完凸优化书再写')|
+\end{definition}

@@ -1,0 +1,96 @@
+\chapter{Introduction}
+\emph{“你们CS比CS的强吗？那你们的EE比EE的强吗？”}
+\newpage
+
+\section{Basics}
+The basic assumption of machine learning is that \textbf{data samples are i.i.d.}.
+
+The goal of training a model is to \textbf{minimize the generalization error of the model}. Since we only have limited amount of data, what we can actually do is to minimize the emprical error.
+
+\section{Overfitting and Underfitting}
+\paragraph{Overfitting.} High variance. The model performs well on training sets but performs poorly on new unseen samples. Using a high-order model to fit low-order distribution of data usually leads to overfitting.
+\paragraph{Underfitting.} High bias. The model has not fully captured the underlying structure of the data. Conduct more training or change a more complicated model.
+
+\section{Methods for Splitting data}
+To train a model, we first need to divide data into training set and test set. Training set and test set should be disjoint.
+
+\subsection{Hold-Out}
+Divide dataset $\mathcal{D}$ into traning set $\mathcal{S}$ and test set $\mathcal{T}$ s.t.
+\[ \mathcal{S} \cup \mathcal{T} = \mathcal{D} \quad \mathcal{S} \cap \mathcal{T} = \emptyset \]
+Typical proportion of $\mathcal{S}$ and $\mathcal{T}$ is 30\% and 70\%.
+
+\subsection{Cross-Validation}
+Divide $\mathcal{D}$ into $k$ disjoint sets of similar size.
+\[ \mathcal{D} = \mathcal{D}_1 \cup \mathcal{D}_2 \cup \dots \mathcal{D}_k \quad \text{s.t.} \quad \mathcal{D}_i \cap \mathcal{D}_j = \emptyset \]
+Each time use $k-1$ sets for training and the remaining set for testing. 
+A typical value of $k$ is $10$.
+
+\subsection{Leave-One-Out}
+A special case of cross-validation, wehre each set $\mathcal{D}_i$ contains only one sample.
+
+\subsection{Bootstrapping}
+Suppose $\mathcal{D}$ has $m$ samples. Randomly pick a sample from $\mathcal{D}$, copy it into some $\mathcal{D}'$ and put it back to $\mathcal{D}$. Repeat the process for $m$ times.
+\[ \lim_{m\to\infty}(1-\frac{1}{m})^m = \frac{1}{e} \approx 0.368 \]
+About $36.8\%$ samples in $\mathcal{D}$ will not be in $\mathcal{D}'$. So we can use $\mathcal{D}'$ for training and $\mathcal{D}\backslash\mathcal{D}'$ for testing.
+
+\section{Performance Evaluation}
+\subsection{Measure}
+\paragraph{Regression} Common performance measure for a regression model is \textbf{Mean Squared Error}.
+\[ E = \frac{1}{m}\sum_{i=1}^m(f(x^{(i)}) - y^{(i)})^2 \]
+\paragraph{Classification} Common measure for a classification model is \textbf{Error Rate}
+\[ E = \frac{1}{m}\sum_{i=1}^m\mathbb{I}[f(x^{(i)}) \neq y^{(i)}] \]
+
+\subsection{TPR and FPR}
+\begin{definition}[Sensitivity/TPR]
+    \[ TPR = \frac{TP}{TP + FN} \]
+\end{definition}
+\begin{definition}[FPR]
+    \[ FPR = \frac{FP}{TN + FP} \]
+\end{definition}
+
+\subsection{Receiver Operating Characteristic}
+Many classification models output a real value and compare it to a certain threshold.
+
+The \textbf{ROC Curve} uses $FPR$ as its $x$-axis, and $TPR$ as its $y$-axis. It can be plotted by setting different thresholds for dividing positive and negative samples.
+
+The \textbf{Area Under Curve, AUC} is used to evaluate different models. Usually models with a larger AUC is considered to have better performance.
+
+\subsection{Precision and Recall}
+\begin{definition}[Precision]
+    \[ P = \frac{TP}{TP + FP} \]
+\end{definition}
+\begin{definition}[Recall]
+    \[ R = \frac{TP}{TP + FN} \]
+\end{definition}
+Similar to the ROC Curve, we can also plot the \textbf{P-R Curve}. And the \textbf{Break-Even Point, BEP}, defined as the value when $P = R$, is used to evaluate different models.
+
+Another more common measure is the $F1$ rate
+\begin{definition}[$F1$ Rate]
+    \[ F1 = \frac{2 \times P \times R}{P + R} = \frac{2 \times TP}{\#Samples + TP - TN} \]
+\end{definition}
+\begin{remark}
+    The $F1$ rate is defined by the harmonic mean of Precision and Recall.
+\end{remark}
+
+\begin{definition}[$F_{\beta}$ Rate]
+    \[ F_{\beta} = \frac{(1+\beta^2)\times P \times R}{(\beta^2 \times P)+R} \]
+\end{definition}
+\begin{remark}
+    $F_{\beta}$ is the weighted harmonic mean. When $\beta > 1$, precision has a higher weight. When $0 < \beta < 1$, recall has a higher weight.
+\end{remark}
+
+\section{Error Analysis}
+\paragraph{Bias.} The \textbf{bias} is the difference between model prediction and ground truth.
+\paragraph{Variance.} The \textbf{variance} is the variance of outputs of the same model fitted different times.
+\paragraph{Noise.} Noise.
+
+High variance $\to$ Overfitting.
+
+High bias $\to$ Underfitting.
+
+\subsection{Bias-Variance Decomposition}
+Let
+\[ bias(x) = f(x) - y \]
+\[ var(x) = \mathbb{E}_{\mathcal{D}}[(f(x;\mathcal{D}-f(x)))^2] \]
+The generalization error of a model $f$ trained on $\mathcal{D}$ can be represented by
+\[ E(f;\mathcal{D}) = bias^2(x) + var(x) + \varepsilon^2 \]
