@@ -4,6 +4,11 @@
 随缘更新，希望不鸽。
 
 # Updates
+**Mar.18**
+- Used git lfs.
+- Added TH029.
+  + 毛概。
+
 **Mar.16**
 - Updated AI2613. Added AI2611.
   + Minor typo fixes in Stochastic Process notes.

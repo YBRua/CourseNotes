@@ -1,0 +1,73 @@
+\documentclass[oneside]{book}
+\usepackage{xeCJK}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{listings} % lstlist插入代码
+\usepackage{booktabs}
+\usepackage{ulem}
+\usepackage{enumerate}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{setspace} % spacing环境设置行间距
+\usepackage[ruled, vlined]{algorithm2e} % 算法与伪代码 
+\usepackage{bm} % 数学公式中的加粗
+\usepackage{pifont} % 打圈的数字。172-211。\ding
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{indentfirst}
+\usepackage{ulem} %\sout{}打删除线
+\normalem % 使用默认normalem
+\usepackage{lmodern}
+\usepackage{subcaption}
+\usepackage[colorlinks, linkcolor=blue]{hyperref}
+\usepackage{cleveref}
+\usepackage[a4paper]{geometry}
+\usepackage{titlesec}
+
+\usepackage{zhnumber}
+\renewcommand{\thesubsection}{\zhnum{subsection}}
+\renewcommand{\thesection}{\zhnum{section}}
+\renewcommand{\thechapter}{\zhnum{chapter}}
+\renewcommand{\thepart}{\zhnum{part}}
+
+\renewcommand{\contentsname}{目录}
+
+\titleformat{\part}{\centering\Huge\bfseries}{第\thepart 部分}{1em}{}
+\titleformat{\chapter}{\centering\Huge\bfseries}{第\thechapter 章}{1em}{}
+\titleformat{\section}{\LARGE\bfseries}{第\thesection 节}{1em}{}
+\titleformat{\subsection}{\Large\bfseries}{\thesubsection 、}{1em}{}
+
+\usepackage{fancyhdr}
+\pagestyle{plain}
+
+\title{\Huge\textbf{毛泽东思想和中国特色\\社会主义理论体系概论}}
+\author{背不完书的\textsc{YBiuR}}
+\date{2020-2021学年{} 春季学期}
+
+
+\begin{document}
+\begin{spacing}{1.5}
+% \setlength{\leftskip}{2em}
+\setlength{\parindent}{2em}
+
+\frontmatter
+\maketitle
+\chapter*{前言}
+\paragraph{}Notes to \textsc{TH029 Introduction to Mao Zedong's Thoughts and Theoretical System of Socialism with Chinese Characteristics}.
+\paragraph{}\verb|aReasonablyLongCourseName|.
+\paragraph{}排版中文 太难力。
+\paragraph{}See also: \url{https://github.com/cn-s3bit/TH902}. 902和029不是差不多嘛！
+\paragraph{}讲正事了。
+
+\textbf{马克思主义中国化}就是把马克思主义基本原理同中国具体实际和时代特征结合起来，运用马克思主义的立场、观点、方法研究和解决中国革命、建设、改革中的实际问题。
+
+\tableofcontents
+
+\mainmatter
+\part{毛泽东思想}
+\include{Ch1}
+\include{Ch2}
+
+\end{spacing}
+\end{document}
