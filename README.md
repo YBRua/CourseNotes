@@ -3,7 +3,15 @@
 
 随缘更新，希望不鸽。
 
+不嫌弃的话可以随意取用。
+
 # Updates
+**Mar.23**
+- Updated AI2611
+  + Added Ridge and LASSO
+- Minor fixes
+  + Fixed typos in TH029.
+
 **Mar.18**
 - Used git lfs.
 - Added TH029.

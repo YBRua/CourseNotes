@@ -1,10 +1,10 @@
 \chapter{Regression}
 Almost all of them have closed-form solutions.
 \newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%% Linear Regression %%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Linear Regression}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% Least Squares Regression %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Least Squares Regression}
 %%%%%%%% Notation
 \subsection{Notations}
 \begin{itemize}
@@ -22,10 +22,12 @@ Almost all of them have closed-form solutions.
     Unfortunately $X$ is usually not invertible, it is usually not even a square matrix. So we need optimizaiton-based approach to solve this.
 \end{remark}
 %%%%%%%% Loss Function
-\subsection{Loss Function}
+\subsection{Loss Function}\label{section:LeastSquareLossFunc}
 \[ J(w)  = \frac{1}{2}\| Xw - y \|_2^2 = \frac{1}{2}\sum_{i=1}^N(w^Tx^{(i)} - y^{(i)})^2 \]
+Our goal is to minimize the loss function
+\[ \min_w \quad J(w) \]
 %%%%%%%% Gradient Descent Update Rule
-\subsection{Descent Direction}
+\subsection{Descent Method}
 $J(w)$ is convex, and can be optimized by gradient descent.
 \[ \nabla J(w) = X^T(Xw-y) \]
 \[ w_{i+1} = w_i - \alpha \nabla J(w) \]
@@ -41,5 +43,120 @@ Let $\nabla J(w) = 0$.
     If $X^TX$ is not invertible, we can use its pseudo-inverse, which is defined as
 \end{remark}
 \begin{definition}[Pseudo-Inverse]
-    \verb|raise NotImplementedError('查完凸优化书再写')|
+    Let $A = U\Sigma V^T$ be the SVD of matrix $A \in \mathbb{R}^{m\times n}$, with $\mathbf{Rank}(A) = r$. The pseudo-inverse of $A$ is defined as
+    \[ A^{\dagger} = V\Sigma^{-1}U^T \in \mathbb{R}^{n\times m} \]
 \end{definition}
+\begin{remark}
+    Pseudo-Inverse does not necessarily give a good solution.
+\end{remark}
+%%%%%%%%
+\subsection{Comparision}
+\paragraph{Gradient Descent} is easy to implement and converges relatively fast.
+\paragraph{Closed-form solution} is straightforward but may be numerically unstable.
+%%%%%%%% Geometric Interpretation
+\subsection{Geometric Interpretation}
+\[ \hat{y} = Xw = X(X^TX)^{-1}X^Ty \]
+\begin{align*}
+    \hat{y} - y &= X(X^TX)^{-1}X^Ty - y \\
+    &= (X(X^TX)^{-1}X^T - I)y
+\end{align*}
+Multiplying $X^T$ on both sides yields
+\begin{align*}
+    X^T(\hat{y}-y) &= X^T(X(X^TX)^{-1}X^T - I)y \\
+    &= (X^TX(X^TX)^{-1}X^T - X^T)y \\
+    &= 0
+\end{align*}
+The error $\hat{y} - y$ is perpendicular to the space spanned by samples $x^{(i)}$.
+%%%%%%%% Probability Interpretation
+\subsection{Probability Interpretation}\label{section:LeastSquareProbability}
+We make the following assumptions
+\begin{itemize}
+    \item $y$ is linear with $x$ plus some random error $\varepsilon^{(i)}$.
+    \[ y^{(i)} = w^Tx^{(i)} + \varepsilon \]
+    \item $\varepsilon^{(i)}$ has a Gaussian distribution.
+    \[ \varepsilon^{(i)} \sim \mathcal{N}(0,1) \]
+\end{itemize}
+Substitute $\varepsilon$ with $w^Tx-y$, and the probaility density function is
+\[ p(y^{(i)}|x^{(i)};w) = \frac{1}{\sqrt{2\pi}}\exp\left(-\frac{(w^Tx^{(i)}-y^{(i)})^2}{2}\right) \]
+We maximize the (log) likelihood
+\[ L(w) = \prod_{i=1}^N \frac{1}{\sqrt{2\pi}}\exp\left(-\frac{\|w^Tx^{(i)}-y^{(i)}\|^2}{2}\right) \]
+\[ l(w) = \log L(w) = constant - \sum_{i=1}^N \frac{1}{2}\|w^Tx^{(i)}-y^{(i)}\|^2\]
+Maximizing the log likelihood is equivalent to minimizing the last term. So the problem becomes
+\[ \min_{w} \quad \frac{1}{2}\sum_{i=1}^N\|w^Tx^{(i)} - y^{(i)}\|^2 \]
+This is exactly the loss function in section \ref{section:LeastSquareLossFunc}.
+%%%%%%%% Regularization
+\subsection{Regularization}
+\[ \min_w \| Xw - y \|^2 + \epsilon\|w\|^2 \]
+where $\epsilon$ is a small positive value, and the closed form solution can be derived from
+\[ (X^TX + \epsilon I)w = X^Ty \]
+Adding $\epsilon$ sometimes makes the inverse of matrix more stable.
+\begin{remark}
+    Adds a contraint that the norm of $w$ cannot be too large. But regularization still does not guarantee a good solution when the matrix is not invertible.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% Ridge Regression %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ridge Regression}
+%%%%%%%% Model
+\subsection{Model}
+\begin{align*}
+    \min_w \quad &\| Xw - y \|_2^2 \\
+    \text{s.t.} \quad &\|w\|_2^2 \le t
+\end{align*}
+It can be rewritten in the form of Penalized Residual Sum of Squares, PRSS
+\[ \textrm{PRSS}(w) = \|Xw-y\|_2^2 + \lambda\|w\|_2^2 \]
+
+\subsection{Solving Ridge Regression}
+Ridge regression is also a convex optimization problem. It can be solved by using numerical methods or deriving closed form solutions.
+\[ \nabla\textrm{PRSS}(w) = -2X^T(y-Xw) + 2\lambda w \]
+So
+\[ w = (X^TX + \lambda I)^{-1}X^Ty \]
+\begin{remark}
+    Even if $X^TX$ is singular, by choosing a proper $\lambda$ we can make $(X^TX + \lambda I)$ nonsingular.
+\end{remark}
+%%%%%%%% Regularization Revisited
+\subsection{Regularization Revisited}
+$\lambda$ is a regularization hyperparameter.
+\begin{itemize}
+    \item When $\lambda = 0$, the penalty term has no effect and Ridge regression is equivalent to ordinary least squares.
+    \item When $\lambda \to \infty$, $w\to 0 $.
+    \item A proper $\lambda$ can be chosen via cross-validation.
+\end{itemize}
+%%%%%%%% Probability Interpretation
+\subsection{Probability Interpretation}
+In addtion to the assumptions made in Section \ref{section:LeastSquareProbability}, if we further assume
+\[ w \sim \mathcal{N}(0,\sqrt{\lambda}) \]
+Then by Bayes's Rule
+\[ p(w|y) = \frac{p(y|w)\cdot p(w)}{p(y)} \]
+By Maximum-A-Posteriori estimation
+\[ \hat{w} = \arg \max_w p(w|y) = \arg \max_w \log p(y|w)\cdot p(w) \]
+This yields the loss function of Ridge Regression.
+%%%%%%%% Geometric Interpretation
+\subsection{Geometric Interpretation}
+The feasible region of Ridge Regression is a $l_2$-norm ball (circle in 2D and sphere in 3D). We are looking for the smallest value of objective function in the norm ball.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% LASSO Regression %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{LASSO}
+\emph{Least Absolute Shrinkage and Selection Operator}.
+%%%%%%%% Model
+\subsection{Model}
+\begin{align*}
+    \min_w \quad &\| Xw - y \|_2^2 \\
+    \text{s.t.} \quad &\|w\|_1 \le t
+\end{align*}
+The optimization problem can be reformulated as
+\[ \min_w \quad \| Xw - y \|_2^2 + \lambda \|w\|_1 \]
+%%%%%%%% Solving LASSO
+\subsection{Solving LASSO}
+LASSO can be solved, but solving it is nontrivial. There are a number of algorithms to solve LASSO.
+%%%%%%%% Probabilistic Interpretation
+\subsection{Probabilistic Interpretation}
+In addition to the assumptions made in \ref{section:LeastSquareProbability}, we further assume that $w$ has a Gamma distribution.
+
+The minimizing $w$ is the MAP estimator.
+%%%%%%%% Geometric Interpretation
+\subsection{Geometric Interpretation}
+The feasible region of LASSO is a $l_1$-norm ball (diamond in 2D). We look for the smallest value in the diamond-shaped region.
