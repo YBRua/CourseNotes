@@ -1,0 +1,127 @@
+\chapter{Classification}
+\newpage
+
+
+\section{k Nearest Neighbours}
+    kNN is a classical non-parametrized lazy-learning algorithm.
+
+    \subsection{Distance}
+        A distance function $d(x,y)$ is a function that satisfies
+        \begin{itemize}
+            \item Positive Definite. $d(x,y)>0$ and $d(x,y)=0$ iff $x=y$.
+            \item Symmetric.
+            \item Triangle Inequality. $d(x,y) \le d(x,z) + d(z,y)$.
+        \end{itemize}
+        Common distance functions include
+        \begin{itemize}
+            \item $l_2$ distance (Euclidean). $\|x-y\|_2 = \sqrt{\sum(x_i - y_i)^2}$.
+            \item $l_1$ distance (Manhattan). $\|x-y\|_2 = \sum |x_i-y_i|$.
+            \item $l_{\infty}$ distance. $\|x-y\|_{\infty} = \max\{|x_i-y_i|\}$.
+        \end{itemize}
+
+    \subsection{A general form of Euclidean Distance}
+        Let $P$ be a projection matrix, we can generalize $l_2$ distance by
+        \[\|Px-Py\|_2^2 = (P(x-y))^T(P(x-y)) = (x-y)^TP^TP(x-y)\]
+        \[\Rightarrow Dist(x,y) = (x-y)^TA(x-y)\]
+        \begin{remark}
+            Actually $A$ can be learned.
+        \end{remark}
+
+    \subsection{kNN Algorithm}
+        Given a dataset $\mathcal{D}$ and an input $x$, the kNN algorithm
+        \begin{enumerate}
+            \item Computes some kind of distance between $x$ and each $y$ in $\mathcal{D}$.
+            \item Finds the nearest $k$ neighbours of $x$ in $\mathcal{D}$.
+            \item Determines the class of $x$ by the label of neighbours.
+        \end{enumerate}
+
+    \subsection{Choosing k}
+        \begin{itemize}
+            \item For a binary classification task, $k$ should be an odd number.
+            \item $k$ should not be too large or too small.
+            \item Choosing a proper $k$ is a matter of parameter tuning.
+        \end{itemize}
+
+    \subsection{More on kNN}
+        \paragraph{Complexity.}
+        kNN requires
+        \begin{itemize}
+            \item An $O(n)$ time to calculate distances.
+            \item An $O(n\log n)$ time to sort and find nearest neighbours.
+        \end{itemize}
+        \paragraph{Can it be faster?}
+        Yes if we use parallelism.
+
+
+\section{Naive Bayes Classifer}
+
+    \subsection{Posterior, Prior, Likelihood and Evidence}
+        Recall Bayes' Rule
+        \[ p(w_j|x) = \frac{p(x|w_j) \cdot p(w_j)}{p(x)} \]
+        \begin{itemize}
+            \item $p(w_j|x)$ is called the \textbf{posterior}.
+            \item $p(w_j)$ is called the \textbf{prior}.
+            \item $p(x|w_j)$ is called the \textbf{likelihood}.
+            \item $p(x)$ is called the \textbf{evidence}.
+        \end{itemize}
+        \[ Posterior = (Likelihood \cdot Prior) / Evidence \]
+        Since optimizing w.r.t. $w$ has nothing to do with $p(x)$,
+        \[ Posterior \sim (Likelihood \cdot Prior) \]
+        A \textbf{discriminative model} directly models likelihood $p(c|x)$, while a \textbf{generative model} models joint distribution $p(x,c)$ by modeling $p(c) \cdot p(x|c)$.
+
+    \subsection{Bayesian Decision Theory}
+        Suppose there are $N$ classes $c_1,c_2,\dots,c_N$. Let $\lambda_{ij}$ be the cost of (mistankenly) classifying a sample in $c_i$ into $c_j$.
+        \begin{remark}
+            In a more general sense, $c_1, c_2, \dots, c_N$ is more than just a set of classes. It can be seen as a set of ``actions''.
+        \end{remark}
+
+        \begin{definition}[Conditional Risk]
+            The \textbf{expected loss}, or the \textbf{conditional risk} is defined as
+            \[ R(c_i|x) = \sum_{j=1}^N \lambda_{ij}p(c_j|x) \]
+        \end{definition}
+        Our goal is to find a minimizer $h(x)$ of the general conditional risk $R(h) = \mathbb{E}[R(h(x)|x)]$.
+
+        For each $x$, if $h(x)$ minimizes $R(h(x)|x)$, then obviously $h(x)$ also minimizes $R(h)$. The minimizing $h^*(x)$ is called the \textbf{Bayes optimal classifier}, and $R(h^*)$ is called the \textbf{Bayes risk}.
+
+        If
+        \[
+        \lambda_{ij} = 
+        \begin{cases}
+            0 \quad & i = j\\
+            1 \quad & otherwise
+        \end{cases}    
+        \]
+        Then
+        \[ R(c|x) = 1 - p(c|x) \]
+        and
+        \[ h^*(x) = \arg \max_{c_i} p(c_i|x) \]
+        So we choose the $x$ that \emph{maximizes posterior}.
+
+    \subsection{Naive Bayes}
+        \paragraph{Notations.}
+            \begin{itemize}
+                \item $X$: $N \times d$ training set. 
+                \item $x$: a $d$-dim data sample.
+                \item $x^{(i)}$: the $i$-th sample in $X$.
+                \item $y^{(i)}$: the label of $x^{(i)}$.
+                \item $x_j$: the $j$-th feature in $x$.
+                \item $c_i$'s: classes.
+            \end{itemize}
+        The naives Bayes classifier makes the attribute conditinoal independence assumption, aka. the naive Bayes assumption: \emph{all features of x are independent}.
+        \[ p(x_1), x_2,\dots,x_d | y) = \prod_{i=1}^d p(x_i|y) \]
+        Then we can compute the optimal classifier by
+        \[ h_{nb}(x) = \arg\max_{c}p(c)\prod_{j=1}^d p(x_j|c) \]
+        Therefore a naive Bayes classifier estimates $p(c)$ and $p(x_j|c)$.
+
+        If we assume $p(x^{(i)}|c) \sim \mathcal{N}(\mu_{c,i}, \sigma^2_{c,i})$, then
+        \[ p(c) = \frac{\sum_{i=1}^N\mathbb{I}[y^{(i)}=c]}{N} \]
+        i.e. the frequency of $x$ with label $c$ in $X$.
+        \[ p(x_j|c) = \frac{\sum_{i=1}^N\mathbb{I}[x^{(i)}_j = 1, y^{(i)}=c]}{\sum_{i=1}^N\mathbb{I}[y^{(i)}=c]} \]
+        i.e. the frequency of those $x$ with feature $x_j$ in all $x$ with label $c$.
+
+    \subsection{Laplace Smoothing}
+        If an attribute value has never appeared in the training set, the output will either be $0$ or $\frac{0}{0}$.
+
+        To fix this, we introduce \textbf{Laplace smoothing}.
+        \[ p(y=i) = \frac{\sum_{j=1}^N\mathbb{I}[y^{(j)=i}] + 1}{N + k} \]
+        where $k$ is the number of classes.

@@ -152,6 +152,28 @@ The optimization problem can be reformulated as
 %%%%%%%% Solving LASSO
 \subsection{Solving LASSO}
 LASSO can be solved, but solving it is nontrivial. There are a number of algorithms to solve LASSO.
+\paragraph{Quasi-Gradient Method.}
+Let
+\[
+\nabla |w|_1 =
+\begin{cases}
+1 \quad &w > 0\\
+-1 \quad &w < 0\\
+0 \quad &w = 0
+\end{cases}
+\]
+\paragraph{A Simple Method.}
+Define error $r$ by
+$$ r = y - Xw = y - \sum_{i=1}^D x_iw_i $$
+\begin{enumerate}
+    \item Initialize $r = y$; $w_1 = w_2 = \dots = w_d = 0$.
+    \item Find an $x_j$ that correlates with $r$.
+    \item Update $w_j = w_j +\delta_j$, where $\delta_j = \varepsilon\cdot\mathrm{sgn}\langle r, X_j \rangle$.
+    \item Update $r = r-\delta\cdot x_j$.
+    \item Repeat step 2-4 until convergence
+\end{enumerate}
+\paragraph{Soft Threshold Method.}
+Use Taylor expansion.
 %%%%%%%% Probabilistic Interpretation
 \subsection{Probabilistic Interpretation}
 In addition to the assumptions made in \ref{section:LeastSquareProbability}, we further assume that $w$ has a Gamma distribution.
