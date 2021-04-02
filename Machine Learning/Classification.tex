@@ -67,7 +67,6 @@
         \[ Posterior = (Likelihood \cdot Prior) / Evidence \]
         Since optimizing w.r.t. $w$ has nothing to do with $p(x)$,
         \[ Posterior \sim (Likelihood \cdot Prior) \]
-        A \textbf{discriminative model} directly models likelihood $p(c|x)$, while a \textbf{generative model} models joint distribution $p(x,c)$ by modeling $p(c) \cdot p(x|c)$.
 
     \subsection{Bayesian Decision Theory}
         Suppose there are $N$ classes $c_1,c_2,\dots,c_N$. Let $\lambda_{ij}$ be the cost of (mistankenly) classifying a sample in $c_i$ into $c_j$.
@@ -94,8 +93,54 @@
         Then
         \[ R(c|x) = 1 - p(c|x) \]
         and
-        \[ h^*(x) = \arg \max_{c_i} p(c_i|x) \]
+        \[ h^*(x) = \arg \max_{c_i} p(c_i|x) = \arg \max_{c_i} \frac{p(x|c_i)p(c_i)}{p(x)} = \arg\max_{c_i} p(x|c_i)p(c_i)\]
         So we choose the $x$ that \emph{maximizes posterior}.
+
+        \begin{remark}
+            A \textbf{discriminative model} directly models likelihood $p(c|x)$, while a \textbf{generative model} models joint distribution $p(x,c)$ by modeling $p(c) \cdot p(x|c)$.
+        \end{remark}
+
+        \subsubsection{Example.}
+        For a binary classification (decision-making), if
+        \[ R(c_1|x) < R(c_2|x) \]
+        then we take $c_1$.
+
+        This is equivalent to taking $c_1$ if
+        \[ (\lambda_{21}-\lambda_{11})p(x|c_1)p(c_1) > (\lambda_{12}-\lambda_{22})p(x|c_2)p(c_2) \]
+        or
+        \[ \frac{p(x|c_1)}{p(x|c_2)} > \frac{\lambda_{12} - \lambda_{22}}{\lambda_{21} - \lambda_{11}} \cdot \frac{p(c_2)}{p(c_1)} \]
+
+        If we further assume that $p(x|C_1)$ and $p(x|c_2)$ have Gaussian distributions with the same variance, then we test whether
+        \[ \exp\left\{ -\frac{1}{2}(x-\mu_1)^2/\sigma^2 + \frac{1}{2}(x-\mu_2)^2/\sigma^2 \right\} \ge \lambda \]
+        where $\lambda$ is a threshold.
+        Taking logarithm and simplifying
+        \[ (\mu_1/\sigma^2 - \mu_2/\sigma^2)x + constant \ge \log\lambda \]
+        i.e.
+        \[ ax+b > c \]
+        or in higher dimensions
+        \[ w^Tx > b \]
+        It is a linear classifier.
+
+    \subsection{Parameter Estimation}
+    \subsubsection{Maximum Likelihood Estimation}
+    Let $D$ be a dataset with $n$ i.i.d. samples $x_i$, MLE maximizes
+    \[ p(D|\theta) = \prod_{i=1}^n p(x_i|\theta) \]
+    to avoid underflow of floating point operations, we take the log likelihood
+    \[ l(\theta) = \log(p(D|\theta)) = \sum_{i=1}^n \log(p(x_i|\theta)) \]
+    
+    \subsubsection{Example of MLE}
+    Consider the multivariate Gaussian distribution with dimension $p$
+    \[ f(x) = \frac{1}{(2\pi)^{p/2}|\Sigma|^{1/2}}\cdot \exp \left\{ -\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) \right\} \]
+    The log likelihood is
+    \[ \log\left( p(x_i|\theta) = -\frac{1}{2}\log\left[(2\pi)^p|\Sigma|\right] - \frac{1}{2}(x_i - \mu)^T\Sigma^{-1}(x_i - \mu)  \right) \]
+    Taking gradient w.r.t. $\mu$
+    \[ \nabla_{\mu} = \Sigma^{-1}(x_i-\mu) \]
+    And the MLE estimator is
+    \[ \hat{\mu} = \frac{1}{n}\sum_{i=1}^n x_i \]
+    The covariance matrix can be estimated similarly.
+
+    \subsubsection{Maximum-A-Posterior}
+    Beyond the scope.
 
     \subsection{Naive Bayes}
         \paragraph{Notations.}
@@ -125,3 +170,31 @@
         To fix this, we introduce \textbf{Laplace smoothing}.
         \[ p(y=i) = \frac{\sum_{j=1}^N\mathbb{I}[y^{(j)=i}] + 1}{N + k} \]
         where $k$ is the number of classes.
+
+
+\section{Decision Trees}
+    A decision tree is a tree-based classifier. It has a root, several leaf nodes and several internal nodes. Each leaf is a decision and in each internal node we perform a test on one or more attributes of input.
+
+    \subsection{Entropy}
+    \begin{definition}[Entropy]
+        Given a dataset $D$ with $k$ classes, suppose the proportion of the $k$-th class in $D$ is $p_k$. The entropy is defined by
+        \[ H(D) = -\sum_{i=1}^k p_k \log_2 p_k \]
+    \end{definition}
+    \begin{remark}~{}
+            The smaller $H(D)$ is, the higher ``purity'' $D$ has.
+    \end{remark}
+
+    \begin{definition}[Conditional Entropy]
+        Suppose an attribute $a$ has $V$ possible values. If we split $D$ based on the value of $a$, we will have $V$ branches.
+        \[ H(Y|X) = \sum_{v=1}^V \mathbb{P}[X=x_v]\sum_{i=1}^k\mathbb{P}[Y=y_i|X=x_v]\log_2\mathbb{P}[Y=y_i|X=x_v] \]
+        or
+        \[ H(Y|X) = \sum_{v=1}^V\frac{|D_v|}{|D|}H(D_v) \]
+    \end{definition}
+    \begin{remark}
+        Conditional Entropy is a weighted sum.
+    \end{remark}
+
+    \begin{definition}[Information Gain]
+        Given a dataset $D$ and an attribute $a$, the information gain is defined by
+        \[ IG(D,a) = H(D) - \sum_{v=1}^V\frac{|D_v|}{|D|}H(D_v) \]
+    \end{definition}

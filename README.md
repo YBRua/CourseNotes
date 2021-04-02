@@ -15,6 +15,11 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**Apr.02, 2021**
+- Updated AI2611
+  - Updated Naive Bayes
+  - Added decision tree (temporary version, to be revised)
+
 **Apr.01, 2021**
 - Updated TH029
   - Finished Part.1 毛泽东思想
