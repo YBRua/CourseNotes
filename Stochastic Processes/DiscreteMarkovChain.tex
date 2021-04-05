@@ -2,255 +2,248 @@
 \emph{“和女朋友在商场走散了，是在原地等碰到的概率大还是随机走碰到的概率大？急，在线等。”}
 \newpage
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%% Finite Space Markov Chain %%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Finite Space Markov Chain}
 
-%%%%%%%% Basic Definitions
-\subsection{Basic Definitions}
-% State Space
-\begin{definition}[State Space]
-    A \textbf{state space} $\mathcal{S}$ is a finite or countable set of states, i.e. the values that random variables $X_i$ may take on.
-\end{definition}
-% Initial Distribution
-\begin{definition}[Initial Distribution]
-    The \textbf{initial distribution} $\pi_0$ is the probability distribution of the Markov Chain at time $0$. Denote $\mathbb{P}[X_0 = i]$ by $\pi_0(i)$.
-\end{definition}
-\begin{remark}
-    Formally, $\pi_0$ is a function from $\mathcal{S}$ to $[0,1]$ s.t.
-    \[ \pi_0(i) \ge 0 \text{ for all $i\in\mathcal{S}$} \]
-    \[ \sum_{i\in\mathcal{S}} \pi_0(i) = 1\]
-\end{remark}
-% Probability Transition Matrix
-\begin{definition}[Probability Transition Matrix]
-    The \textbf{Transition Matrix} is a matrix $P = (p_{ij})$, where
-    \[ p_{ij} = \mathbb{P}[X_{n+1} = j | X_n = i] \]
-    i.e. the probability given that the chain is at state $i$ at $T=n$ that jumps to $j$ at $T=n+1$
-\end{definition}
-\begin{remark}
-    ~{}
-    \begin{itemize}
-        \item The \emph{rows} of $P$ sum up to $1$.
-        \item The entries in $P$ are all non-negative.
-    \end{itemize}
-\end{remark}
+    \subsection{Basic Definitions}
+    % State Space
+    \begin{definition}[State Space]
+        A \textbf{state space} $\mathcal{S}$ is a finite or countable set of states, i.e. the values that random variables $X_i$ may take on.
+    \end{definition}
+    % Initial Distribution
+    \begin{definition}[Initial Distribution]
+        The \textbf{initial distribution} $\pi_0$ is the probability distribution of the Markov Chain at time $0$. Denote $\mathbb{P}[X_0 = i]$ by $\pi_0(i)$.
+    \end{definition}
+    \begin{remark}
+        Formally, $\pi_0$ is a function from $\mathcal{S}$ to $[0,1]$ s.t.
+        \[ \pi_0(i) \ge 0 \text{ for all $i\in\mathcal{S}$} \]
+        \[ \sum_{i\in\mathcal{S}} \pi_0(i) = 1\]
+    \end{remark}
+    % Probability Transition Matrix
+    \begin{definition}[Probability Transition Matrix]
+        The \textbf{Transition Matrix} is a matrix $P = (p_{ij})$, where
+        \[ p_{ij} = \mathbb{P}[X_{n+1} = j | X_n = i] \]
+        i.e. the probability given that the chain is at state $i$ at $T=n$ that jumps to $j$ at $T=n+1$
+    \end{definition}
+    \begin{remark}
+        ~{}
+        \begin{itemize}
+            \item The \emph{rows} of $P$ sum up to $1$.
+            \item The entries in $P$ are all non-negative.
+        \end{itemize}
+    \end{remark}
 
-%%%%%%%% Markov Property
-\subsection{The Markov Property}
-% Markov Property
-\begin{definition}[Markov Property]
-    We say a stochastic process $X_1, X_2, \dots $ satisfies the \textbf{Markov property} if 
-    \[ \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n, \dots, X_0 = i_0] = \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n] \]
-\end{definition}
-That is, the \emph{next} state $X_{n+1}$ depends only on the \emph{current} state $X_n$.
-% Time-homogeneity
-\begin{definition}[Time-homogeneous Markov Chain]
-    A Markov Chain is said to be \textbf{time homogeneous} if
-    \[ \forall t \quad \mathbb{P}[X_{t+1} = j | X_t = i] = P(i,j) \]
-\end{definition}
-For now, we only consider \emph{time homogeneous} Markov Chains.
+    %%%%%%%% Markov Property
+    \subsection{The Markov Property}
+    % Markov Property
+    \begin{definition}[Markov Property]
+        We say a stochastic process $X_1, X_2, \dots $ satisfies the \textbf{Markov property} if 
+        \[ \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n, \dots, X_0 = i_0] = \mathbb{P}[X_{n+1} = i_{n+1} | X_n = i_n] \]
+    \end{definition}
+    That is, the \emph{next} state $X_{n+1}$ depends only on the \emph{current} state $X_n$.
+    % Time-homogeneity
+    \begin{definition}[Time-homogeneous Markov Chain]
+        A Markov Chain is said to be \textbf{time homogeneous} if
+        \[ \forall t \quad \mathbb{P}[X_{t+1} = j | X_t = i] = P(i,j) \]
+    \end{definition}
+    For now, we only consider \emph{time homogeneous} Markov Chains.
 
-%%%%%%%% Multistep Transition by Matrix Algebra
-\subsection{Matrix Interpretation of Markov Chains}
-We now computes the probability distribution at $T=n+1$, denoted by $\pi_{n+1}$.
-\[ \pi_{n+1}(j) = \mathbb{P}[X_{n+1} = j] = \sum_{i=1}^N \mathbb{P}[X_n=i]\mathbb{P}[X_{n+1} = j | X_n = i] = \sum_{i=i}^N \pi_n(i)P(i,j)\]
-Therefore
-\[ \pi_{n+1}^T = \pi_n^T P \]
-\[ \pi_n^T = \pi_0^T P^n \]
-We use $P(i,j)$ to denote the element $(i,j)$ of $P$, we use $P^n$ to denote the $n$-th power of $P$, and we assume that $\pi_i$'s are column vectors.
-% Chapman-Kolmogorov
-\begin{theorem}[Chapman-Kolmogorov Equality]
-    \[ P^{m+n}(i,j) = \sum_k P^m(i,k)P^n(k,j) \]
-\end{theorem}
+    %%%%%%%% Multistep Transition by Matrix Algebra
+    \subsection{Matrix Interpretation of Markov Chains}
+    We now computes the probability distribution at $T=n+1$, denoted by $\pi_{n+1}$.
+    \[ \pi_{n+1}(j) = \mathbb{P}[X_{n+1} = j] = \sum_{i=1}^N \mathbb{P}[X_n=i]\mathbb{P}[X_{n+1} = j | X_n = i] = \sum_{i=i}^N \pi_n(i)P(i,j)\]
+    Therefore
+    \[ \pi_{n+1}^T = \pi_n^T P \]
+    \[ \pi_n^T = \pi_0^T P^n \]
+    We use $P(i,j)$ to denote the element $(i,j)$ of $P$, we use $P^n$ to denote the $n$-th power of $P$, and we assume that $\pi_i$'s are column vectors.
+    % Chapman-Kolmogorov
+    \begin{theorem}[Chapman-Kolmogorov Equality]
+        \[ P^{m+n}(i,j) = \sum_k P^m(i,k)P^n(k,j) \]
+    \end{theorem}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%% Stationary Distribution %%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Stationary Distribution}
-% Stationary Distribution
-\begin{definition}[Stationary Distribution]
-    $\pi$ is called a \textbf{stationary distribution} of a Markov Chain if
-    \[ \pi^TP = \pi \]
-\end{definition}
-\begin{remark}
-    A Markov Chain may have 0, 1 or infinitely many stationary distribution.
-\end{remark}
 
-\emph{Here comes the question: When does a stationary distribution exist? If it exists, is it unique? If it is unique, does the chain converges to it?}
+    % Stationary Distribution
+    \begin{definition}[Stationary Distribution]
+        $\pi$ is called a \textbf{stationary distribution} of a Markov Chain if
+        \[ \pi^TP = \pi \]
+    \end{definition}
+    \begin{remark}
+        A Markov Chain may have 0, 1 or infinitely many stationary distribution.
+    \end{remark}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%% Irreducibility, Aperiodicity and Recurrence %%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \emph{Here comes the question: When does a stationary distribution exist? If it exists, is it unique? If it is unique, does the chain converges to it?}
+
+
 \section{Irreducibility, Aperiodicity and Recurrence}
 For convenience, we will use $\mathbb{P}_i[A]$ to denote $\mathbb{P}[A | X_0 = i]$, and use $\mathbb{E}_i$ to denote expectation in an analogous way.
 
-%%%%%%%% Irreducibility
-\subsection{Irreducibility}
-% Accessible
-\begin{definition}[Accessibility]
-    Let $i$, $j$ be two states, we say $j$ is \textbf{accessible from} $i$ if it is possible (with positive probability) for the chain to ever visit $j$ if the chain starts from $i$.
-    \[ \mathbb{P}_i[\bigcup_{n=0}^\infty\{X_n = j\}] > 0 \]
-    or equivalently
-    \[ \sum_{n=0}^\infty P^n(i,j) = \sum_{n=0}^\infty \mathbb{P}_i[X_n = j] > 0 \]
-\end{definition}
-% Communicate
-\begin{definition}[Communication]
-    We say $i$ \textbf{communicates with} $j$ if $j$ is accessible from $i$ and $i$ is accessible from $j$.
-\end{definition}
-% Irreducible
-\begin{definition}[Irreducibility]
-    We say a Markov Chain is \textbf{irreducible} if all pairs of states communicate. And it is reducible otherwise.
-\end{definition}
-The relation \emph{communicate with} is an equivalent relation, and irreducible simply means the number of equivalent classes is 1.
+    %%%%%%%% Irreducibility
+    \subsection{Irreducibility}
+    % Accessible
+    \begin{definition}[Accessibility]
+        Let $i$, $j$ be two states, we say $j$ is \textbf{accessible from} $i$ if it is possible (with positive probability) for the chain to ever visit $j$ if the chain starts from $i$.
+        \[ \mathbb{P}_i[\bigcup_{n=0}^\infty\{X_n = j\}] > 0 \]
+        or equivalently
+        \[ \sum_{n=0}^\infty P^n(i,j) = \sum_{n=0}^\infty \mathbb{P}_i[X_n = j] > 0 \]
+    \end{definition}
+    % Communicate
+    \begin{definition}[Communication]
+        We say $i$ \textbf{communicates with} $j$ if $j$ is accessible from $i$ and $i$ is accessible from $j$.
+    \end{definition}
+    % Irreducible
+    \begin{definition}[Irreducibility]
+        We say a Markov Chain is \textbf{irreducible} if all pairs of states communicate. And it is reducible otherwise.
+    \end{definition}
+    The relation \emph{communicate with} is an equivalent relation, and irreducible simply means the number of equivalent classes is 1.
 
-%%%%%%%% Aperiodicity
-\subsection{Aperiodicity}
-% Period
-\begin{definition}[Period]
-    Given a Markov Chain, its \textbf{period} of state $i$ is defined to be the greatest common divisor $d_i$ of the lengths of loops starting from $i$.
-    \[ d_i = \gcd\{n|P^n(i,i) > 0\} \]
-\end{definition}
-% Period is a class property
-\begin{theorem}
-    If states $i$ and $j$ communicate, then $d_i = d_j$
-\end{theorem}
-\begin{sketchproof}
-    ~{}
-    \begin{itemize}
-        \item $P^{n_1}(i,j) > 0$ and $P^{n_2}(j,i) > 0$.
-        \item $P^{n_1+n_2}(i,i)>0 \Rightarrow d_i | n_1 + n_2$.
-        \item Suppose $P^n{j,j} > 0$, then $P^{n+n_1+n_2}(i,i) > 0 \Rightarrow d_i | n + n_1 + n_2$.
-        \item $d_i | n \Rightarrow d_j \ge d_i$.
-        \item Similarly $d_i \ge d_j$. We are done.
-    \end{itemize}
-\end{sketchproof}
-\begin{remark}
-    Therefore all states in a communicating class have the same period, and all states in an irreducible Markov chain have the same period.
-\end{remark}
-% Aperiodic
-\begin{definition}[Aperiodicity]
-    An irreducible Markov chain is said to be \textbf{aperiodic} if its period is 1, and periodic otherwise.
-\end{definition}
-\begin{proposition}
-    \normalfont
-    If $P(i,i) > 0$, then the Markov Chain is aperiodic.
-\end{proposition}
-\begin{remark}
-    This is a sufficient but not necessary condition.
-\end{remark}
+    %%%%%%%% Aperiodicity
+    \subsection{Aperiodicity}
+    % Period
+    \begin{definition}[Period]
+        Given a Markov Chain, its \textbf{period} of state $i$ is defined to be the greatest common divisor $d_i$ of the lengths of loops starting from $i$.
+        \[ d_i = \gcd\{n|P^n(i,i) > 0\} \]
+    \end{definition}
+    % Period is a class property
+    \begin{theorem}
+        If states $i$ and $j$ communicate, then $d_i = d_j$
+    \end{theorem}
+    \begin{sketchproof}
+        ~{}
+        \begin{itemize}
+            \item $P^{n_1}(i,j) > 0$ and $P^{n_2}(j,i) > 0$.
+            \item $P^{n_1+n_2}(i,i)>0 \Rightarrow d_i | n_1 + n_2$.
+            \item Suppose $P^n{j,j} > 0$, then $P^{n+n_1+n_2}(i,i) > 0 \Rightarrow d_i | n + n_1 + n_2$.
+            \item $d_i | n \Rightarrow d_j \ge d_i$.
+            \item Similarly $d_i \ge d_j$. We are done.
+        \end{itemize}
+    \end{sketchproof}
+    \begin{remark}
+        Therefore all states in a communicating class have the same period, and all states in an irreducible Markov chain have the same period.
+    \end{remark}
+    % Aperiodic
+    \begin{definition}[Aperiodicity]
+        An irreducible Markov chain is said to be \textbf{aperiodic} if its period is 1, and periodic otherwise.
+    \end{definition}
+    \begin{proposition}
+        \normalfont
+        If $P(i,i) > 0$, then the Markov Chain is aperiodic.
+    \end{proposition}
+    \begin{remark}
+        This is a sufficient but not necessary condition.
+    \end{remark}
 
-%%%%%%%% Recurrence
-\subsection{Recurrence}
-We define the \textbf{First Hitting Time} $T_i$ of the state $i$ by
-\[ T_i = \inf\{n>0 | X_n = i\} \]
-and we can define recurrence as follows
-% Recurrent
-\begin{definition}[Recurrence]
-    The state $i$ is \textbf{recurrent} if $\mathbb{P}_i[T_i<\infty] = 1$, and is transient if it is not recurrent.
-\end{definition}
-\begin{remark}
-    Recurrence means that starting from state $i$ at $T=0$, the chain \emph{is sure to} return to $i$ eventually.
-\end{remark}
-% Recurrence is a class property
-\begin{theorem}
-    \normalfont
-    Let $i$ be a recurrent state, and let $j$ be accessible from $i$, then all of the following hold:
-    \begin{enumerate}
-        \item $\mathbb{P}_i[T_j < \infty] = 1$.
-        \item $\mathbb{P}_j[T_i < \infty] = 1$.
-        \item The state $j$ is recurrent.
-    \end{enumerate}
-\end{theorem}
-\begin{sketchproof}
-    ~{}
-    \begin{itemize}
-        \item The paths starting from $i$ can be seen as infinitely many \emph{cycles}.
-        \item Whether the chain visits $p$ in the cycles can be seen as a Bernoulli distribution with probability $p>0$.
-        \item The probability of not visiting $j$ in the first $n$ cycles is $(i-p)^n$, which goes to $0$ as $n\to\infty$. So (1)hold.
-        \item (2) can be proved by contradiction. $\mathbb{P}_j[T_i < \infty] < 1$ will lead to contradiction against the fact that $i$ is recurrent.
-        \item (1)(2) implies (3).
-    \end{itemize}
-\end{sketchproof}
-\begin{corollary}
-    If $\mathbb{P}_i[T_j < \infty] > 0$ but $\mathbb{P}_j[T_i < \infty] < 1$, then $i$ is transient.
-\end{corollary}
-% Equivalent Statement of Recurrence
-\begin{theorem}[Equivalent Statement of Recurrence]
-    \normalfont
-    The state $i$ is recurrent if and only if $\mathbb{E}_i[N_i] = \infty$, where $N_i = \sum_{i=0}^\infty\mathbb{I}\{X_n = i\}$.
-\end{theorem}
-\begin{sketchproof}
-    ~{}
-    \begin{itemize}
-        \item Recurrence $\Rightarrow \mathbb{P}_i[N_i = \infty] = 1 \Rightarrow \mathbb{E}_i[N_i] = \infty$.
-        \item The converse is proved by contradiction.
-        \item If $i$ is transient, there is a chance of $p$ that the chain never return to $i$.
-        \item So $N_i$ is distributed geometrically, and $\mathbb{E}_i[N_i]$ will be finite. Contradiction.
-    \end{itemize}
-\end{sketchproof}
-\begin{remark}
-    By taking expectation on $N_i$, we have:
-    \[ \mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) \]
-\end{remark}
+    %%%%%%%% Recurrence
+    \subsection{Recurrence}
+    We define the \textbf{First Hitting Time} $T_i$ of the state $i$ by
+    \[ T_i = \inf\{n>0 | X_n = i\} \]
+    and we can define recurrence as follows
+    % Recurrent
+    \begin{definition}[Recurrence]
+        The state $i$ is \textbf{recurrent} if $\mathbb{P}_i[T_i<\infty] = 1$, and is transient if it is not recurrent.
+    \end{definition}
+    \begin{remark}
+        Recurrence means that starting from state $i$ at $T=0$, the chain \emph{is sure to} return to $i$ eventually.
+    \end{remark}
+    % Recurrence is a class property
+    \begin{theorem}
+        \normalfont
+        Let $i$ be a recurrent state, and let $j$ be accessible from $i$, then all of the following hold:
+        \begin{enumerate}
+            \item $\mathbb{P}_i[T_j < \infty] = 1$.
+            \item $\mathbb{P}_j[T_i < \infty] = 1$.
+            \item The state $j$ is recurrent.
+        \end{enumerate}
+    \end{theorem}
+    \begin{sketchproof}
+        ~{}
+        \begin{itemize}
+            \item The paths starting from $i$ can be seen as infinitely many \emph{cycles}.
+            \item Whether the chain visits $p$ in the cycles can be seen as a Bernoulli distribution with probability $p>0$.
+            \item The probability of not visiting $j$ in the first $n$ cycles is $(i-p)^n$, which goes to $0$ as $n\to\infty$. So (1)hold.
+            \item (2) can be proved by contradiction. $\mathbb{P}_j[T_i < \infty] < 1$ will lead to contradiction against the fact that $i$ is recurrent.
+            \item (1)(2) implies (3).
+        \end{itemize}
+    \end{sketchproof}
+    \begin{corollary}
+        If $\mathbb{P}_i[T_j < \infty] > 0$ but $\mathbb{P}_j[T_i < \infty] < 1$, then $i$ is transient.
+    \end{corollary}
+    % Equivalent Statement of Recurrence
+    \begin{theorem}[Equivalent Statement of Recurrence]
+        \normalfont
+        The state $i$ is recurrent if and only if $\mathbb{E}_i[N_i] = \infty$, where $N_i = \sum_{i=0}^\infty\mathbb{I}\{X_n = i\}$.
+    \end{theorem}
+    \begin{sketchproof}
+        ~{}
+        \begin{itemize}
+            \item Recurrence $\Rightarrow \mathbb{P}_i[N_i = \infty] = 1 \Rightarrow \mathbb{E}_i[N_i] = \infty$.
+            \item The converse is proved by contradiction.
+            \item If $i$ is transient, there is a chance of $p$ that the chain never return to $i$.
+            \item So $N_i$ is distributed geometrically, and $\mathbb{E}_i[N_i]$ will be finite. Contradiction.
+        \end{itemize}
+    \end{sketchproof}
+    \begin{remark}
+        By taking expectation on $N_i$, we have:
+        \[ \mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) \]
+    \end{remark}
 
-\begin{corollary}\label{TransientStateGoesToZero}
-    If $j$ is transient, then $\lim_{n\to\infty}P^n(i,j) = 0$ for all states $i$.
-\end{corollary}
-\begin{sketchproof}
-    ~{}
-    \begin{itemize}
-        \item $\mathbb{E}_j[N_j] < \infty$.
-        \item $\mathbb{E}_i[N_j] = \mathbb{P}_i[T_j < \infty]\mathbb{E}_i[N_j | T_j < \infty]$.
-        \item $\mathbb{E}_i[N_j] \le \mathbb{E}_i[N_j | T_j] = \mathbb{E}_j[N_j] < \infty$ since the probability \emph{restarts} once the chain visits $j$ again.
-        \item $\mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) < \infty$ and this implies our conclusion.
-    \end{itemize}
-\end{sketchproof}
+    \begin{corollary}\label{TransientStateGoesToZero}
+        If $j$ is transient, then $\lim_{n\to\infty}P^n(i,j) = 0$ for all states $i$.
+    \end{corollary}
+    \begin{sketchproof}
+        ~{}
+        \begin{itemize}
+            \item $\mathbb{E}_j[N_j] < \infty$.
+            \item $\mathbb{E}_i[N_j] = \mathbb{P}_i[T_j < \infty]\mathbb{E}_i[N_j | T_j < \infty]$.
+            \item $\mathbb{E}_i[N_j] \le \mathbb{E}_i[N_j | T_j] = \mathbb{E}_j[N_j] < \infty$ since the probability \emph{restarts} once the chain visits $j$ again.
+            \item $\mathbb{E}_i[N_j] = \sum_{i=0}^\infty P^n(i,j) < \infty$ and this implies our conclusion.
+        \end{itemize}
+    \end{sketchproof}
 
-\begin{corollary}
-    If $i$ is recurrent, then $\sum_{n=1}^{\infty}p^n(i,i) = \infty$;
+    \begin{corollary}
+        If $i$ is recurrent, then $\sum_{n=1}^{\infty}p^n(i,i) = \infty$;
 
-    If $i$ is transient, then $\sum_{n=1}^{\infty}p^n(i,i) < \infty$.
-\end{corollary}
+        If $i$ is transient, then $\sum_{n=1}^{\infty}p^n(i,i) < \infty$.
+    \end{corollary}
 
-\begin{proposition}
-    Suppose a Markov Chain has a stationary distribution $\pi$, if the state $j$ is transient, then $\pi(j) = 0$.
-\end{proposition}
-The last proposition follows from Corollary \ref{TransientStateGoesToZero}.
+    \begin{proposition}
+        Suppose a Markov Chain has a stationary distribution $\pi$, if the state $j$ is transient, then $\pi(j) = 0$.
+    \end{proposition}
+    The last proposition follows from Corollary \ref{TransientStateGoesToZero}.
 
-\begin{corollary}
-    If an irreducible Markov Chain has a stationary distribution, then the chain is recurrent.
-\end{corollary}
-\begin{sketchproof}
-    The chain cannot be transient, or otherwise all $\pi(j)$ would be 0 and the sum of $\pi$ does not equal to 1.
-\end{sketchproof}
-\begin{remark}
-    The converse is not true!
-\end{remark}
+    \begin{corollary}
+        If an irreducible Markov Chain has a stationary distribution, then the chain is recurrent.
+    \end{corollary}
+    \begin{sketchproof}
+        The chain cannot be transient, or otherwise all $\pi(j)$ would be 0 and the sum of $\pi$ does not equal to 1.
+    \end{sketchproof}
+    \begin{remark}
+        The converse is not true!
+    \end{remark}
 
-\begin{proposition}
-    A drunk man will find his way home, but a drunk bird may get lost forever.
-\end{proposition}
-This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent, while the walks on higher dimensions are transient.
+    \begin{proposition}
+        A drunk man will find his way home, but a drunk bird may get lost forever.
+    \end{proposition}
+    This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent, while the walks on higher dimensions are transient.
 
-%%%%%%%% More on Recurrence
-\subsection{More on Recurrence}
-% Null Recurrence
-\begin{definition}[Null Recurrence]
-    The state $i$ is \textbf{null recurrent} if it is recurrent and $\mathbb{E}_i[T_i] = \infty$.
-\end{definition}
-% Positive Recurrence
-\begin{definition}[Positive Recurrence]
-    The state $i$ is \textbf{positive reccurent} it is recurrent and $\mathbb{E}_i[T_i] < \infty$.
-\end{definition}
+    %%%%%%%% More on Recurrence
+    \subsection{More on Recurrence}
+    % Null Recurrence
+    \begin{definition}[Null Recurrence]
+        The state $i$ is \textbf{null recurrent} if it is recurrent and $\mathbb{E}_i[T_i] = \infty$.
+    \end{definition}
+    % Positive Recurrence
+    \begin{definition}[Positive Recurrence]
+        The state $i$ is \textbf{positive reccurent} it is recurrent and $\mathbb{E}_i[T_i] < \infty$.
+    \end{definition}
 
-\begin{proposition}
-    Given an irreducible Markov Chain, it is either transient, null recurrent or positive recurrent.
-\end{proposition}
+    \begin{proposition}
+        Given an irreducible Markov Chain, it is either transient, null recurrent or positive recurrent.
+    \end{proposition}
 
-%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%% SLLN %%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%
+
+
 \section{Strong Law of Large Numbers of Markov Chains}
 % SLLN of Markov Chains
 \begin{theorem}[SLLN of Markov Chains]\label{SLLN}
@@ -261,320 +254,618 @@ This is because the random walk on $\mathbb{Z}$ and $\mathbb{Z}^2$ is recurrent,
     Read the book. I'm not going to write this because I am lazy.
 \end{sketchproof}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%% Basic Limit Theorem %%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Basic Limit Theorem}\label{BasicLimitTheorem}
 aka. Foundamental Theorem of Markov Chains
 
-%%%%%%%% Finite Case
-\subsection{Finite State Space}
-% Spectral Radius
-\begin{definition}[Spectral Radius]
-    Given a non-negative matrix $A$, the spectral radius $\rho(A)$ is the maximum norm of its eigenvalues
-    \[ \rho(A) = \max\{ \lambda(A) \} \]
-\end{definition}
-\begin{proposition}
-    Let $A$ be a non-negative matrix, then
-    \[ \min_{1\le i \le n} \sum_{j=1}^N a_{i,j} \le \rho(A) \le \max_{1\le i \le n} \sum_{j=1}^N a_{i,j} \]
-\end{proposition}
-% Perron-Frobenius Theorem
-\begin{lemma}[Perron-Frobenius Theorem]\label{PFT}
-    Let $A$ be a non-negative matrix with spectral radius $\rho(A) = \alpha$, then $\alpha$ is an eigenvalue of $A$, and has both left and right non-negative eigenvectors.
-\end{lemma}
-\begin{remark}
-    Lemma \ref{PFT} implies that for a finite probability transition matrix $P$, it always has at least one stationary distribution, because it always has eigenvalue $1$ ($P\mathbf{1} = \mathbf{1}$) and a corresponding eigenvector $\pi$ s.t. $\pi^TP = \pi$.
-\end{remark}
+    %%%%%%%% Finite Case
+    \subsection{Finite State Space}
+    % Spectral Radius
+    \begin{definition}[Spectral Radius]
+        Given a non-negative matrix $A$, the spectral radius $\rho(A)$ is the maximum norm of its eigenvalues
+        \[ \rho(A) = \max\{ \lambda(A) \} \]
+    \end{definition}
+    \begin{proposition}
+        Let $A$ be a non-negative matrix, then
+        \[ \min_{1\le i \le n} \sum_{j=1}^N a_{i,j} \le \rho(A) \le \max_{1\le i \le n} \sum_{j=1}^N a_{i,j} \]
+    \end{proposition}
+    % Perron-Frobenius Theorem
+    \begin{lemma}[Perron-Frobenius Theorem]\label{PFT}
+        Let $A$ be a non-negative matrix with spectral radius $\rho(A) = \alpha$, then $\alpha$ is an eigenvalue of $A$, and has both left and right non-negative eigenvectors.
+    \end{lemma}
+    \begin{remark}
+        Lemma \ref{PFT} implies that for a finite probability transition matrix $P$, it always has at least one stationary distribution, because it always has eigenvalue $1$ ($P\mathbf{1} = \mathbf{1}$) and a corresponding eigenvector $\pi$ s.t. $\pi^TP = \pi$.
+    \end{remark}
 
-\begin{lemma}
-    Suppose a $k \times k$ matrix $P$ is irreducible. Then there exists a unique solution to $\pi P = \pi$.
-\end{lemma}
-% Foundamental Theorem, Finite Case
-\begin{theorem}[Foundamental Theorem, Finite Case] If a finite Markov Chain is \emph{irreducible} and \emph{aperiodic}, then it has a \emph{unique stationary distribution} $\pi$ any initial distribution \emph{converges} to it:
-    \[ \forall \pi_0,\quad \lim_{t\to\infty}\pi_0^T P^t = \pi^T \]
-\end{theorem}
+    \begin{lemma}
+        Suppose a $k \times k$ matrix $P$ is irreducible. Then there exists a unique solution to $\pi P = \pi$.
+    \end{lemma}
+    % Foundamental Theorem, Finite Case
+    \begin{theorem}[Foundamental Theorem, Finite Case] If a finite Markov Chain is \emph{irreducible} and \emph{aperiodic}, then it has a \emph{unique stationary distribution} $\pi$ any initial distribution \emph{converges} to it:
+        \[ \forall \pi_0,\quad \lim_{t\to\infty}\pi_0^T P^t = \pi^T \]
+    \end{theorem}
 
-%%%%%%%% Countable Case
-\subsection{Countable Case}
-% Basic Limit Theorem
-\begin{theorem}[Basic Limit Theorem]
-    Let $X_1, X_2, \dots$ be an \emph{irreducible aperiodic} Markov Chain that has a \emph{stationary distribution} $\pi$. Then
-    \[ \lim_{n\to\infty}\pi_n(i) = \pi(i) \]
-    for any state $i$ and for any initial distribution $\pi_0$.
-\end{theorem}
-% Bounded Convergence Theorem
-\begin{lemma}[Bounded Convergence Theorem]\label{BCT}
-    If $X_n \to X$ with probability $1$ and there is a finite number $b$ such that $|X_n| < b$ for all $n$, then
-    \[ \mathbb{E}[X_n] \to \mathbb{E}[X] \]
-\end{lemma}
-% Corollary of SLLN
-Recall SLLN \ref{SLLN}, and the following is a corollary.
-\begin{corollary}\label{SLLNCoro}
-    For an \emph{irreducible} Markov Chain, we have
-    \[ \lim_{n\to\infty} \frac{1}{n}\sum_{t=1}^n P^t(i,j) = \frac{1}{\mathbb{E}_j[T_j]} \]
-\end{corollary}
-\begin{sketchproof}
-    Take expectations on both sides of Theorem \ref{SLLN} yields the conclusion.
-\end{sketchproof}
-% Cesaro Average
-\begin{proposition}[Cesaro Average]
-    If a sequence of numbers $a_n$ converges to a value $a$, then the \textbf{Cesaro Average} $(1/n)\sum_{t=1}^na_t$ also converges to it.
-\end{proposition}
-Corollary \ref{CesaroCoro} follows immediately from the proposition,
-\begin{corollary}\label{CesaroCoro}
-    For an \emph{irreducible aperiodic} Markov Chain with a \emph{stationary distribution},
-    \[ \lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^nP^t(i,j) \to \pi(j) \]
-\end{corollary}
-\begin{theorem}
-    An \emph{irreducible, aperiodic} Markov Chain with a \emph{stationary distribution} has a stationary distribution given by
-    \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
-\end{theorem}
-\begin{sketchproof}
-    The proof of the theorem is trivial: compare Corollary \ref{SLLNCoro} and \ref{CesaroCoro}.
-\end{sketchproof}
-% Foundamental Theorem, Countable Case
-\begin{theorem}[Foundamental Theorem, Countable Case]
-    An \emph{irreducible} Markov Chain has a \emph{unique stationary distribution} given by
-    \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
-    if and only if it is \emph{positive recurrent}.
-\end{theorem}
+    %%%%%%%% Countable Case
+    \subsection{Countable Case}
+    % Basic Limit Theorem
+    \begin{theorem}[Basic Limit Theorem]
+        Let $X_1, X_2, \dots$ be an \emph{irreducible aperiodic} Markov Chain that has a \emph{stationary distribution} $\pi$. Then
+        \[ \lim_{n\to\infty}\pi_n(i) = \pi(i) \]
+        for any state $i$ and for any initial distribution $\pi_0$.
+    \end{theorem}
+    % Bounded Convergence Theorem
+    \begin{lemma}[Bounded Convergence Theorem]\label{BCT}
+        If $X_n \to X$ with probability $1$ and there is a finite number $b$ such that $|X_n| < b$ for all $n$, then
+        \[ \mathbb{E}[X_n] \to \mathbb{E}[X] \]
+    \end{lemma}
+    % Corollary of SLLN
+    Recall SLLN \ref{SLLN}, and the following is a corollary.
+    \begin{corollary}\label{SLLNCoro}
+        For an \emph{irreducible} Markov Chain, we have
+        \[ \lim_{n\to\infty} \frac{1}{n}\sum_{t=1}^n P^t(i,j) = \frac{1}{\mathbb{E}_j[T_j]} \]
+    \end{corollary}
+    \begin{sketchproof}
+        Take expectations on both sides of Theorem \ref{SLLN} yields the conclusion.
+    \end{sketchproof}
+    % Cesaro Average
+    \begin{proposition}[Cesaro Average]
+        If a sequence of numbers $a_n$ converges to a value $a$, then the \textbf{Cesaro Average} $(1/n)\sum_{t=1}^na_t$ also converges to it.
+    \end{proposition}
+    Corollary \ref{CesaroCoro} follows immediately from the proposition,
+    \begin{corollary}\label{CesaroCoro}
+        For an \emph{irreducible aperiodic} Markov Chain with a \emph{stationary distribution},
+        \[ \lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^nP^t(i,j) \to \pi(j) \]
+    \end{corollary}
+    \begin{theorem}
+        An \emph{irreducible, aperiodic} Markov Chain with a \emph{stationary distribution} has a stationary distribution given by
+        \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
+    \end{theorem}
+    \begin{sketchproof}
+        The proof of the theorem is trivial: compare Corollary \ref{SLLNCoro} and \ref{CesaroCoro}.
+    \end{sketchproof}
+    % Foundamental Theorem, Countable Case
+    \begin{theorem}[Foundamental Theorem, Countable Case]\label{theorem:FTMC-Countable}
+        An \emph{irreducible} Markov Chain has a \emph{unique stationary distribution} given by
+        \[ \pi(j) = \frac{1}{\mathbb{E}_j[T_j]} \]
+        if and only if it is \emph{positive recurrent}.
+    \end{theorem}
 
-%%%%%%%% Other Conclusions
-\subsection{Other Conclusions}
-\emph{Since they are not covered in class, no proof will be provided. I'm lazy you know.}
-\begin{definition}[Doubly Stochastic Chains]
-    A transition matrix $P$ is said to be \textbf{doubly stochastic} if all of its columns sum up to 1.
-\end{definition}
-\begin{optTheorem}
-    For a doubly stochastic Markov Chain with $N$ states, the uniform distribution $\pi(i) = 1/N$ is a stationary distribution.
-\end{optTheorem}
-\begin{optTheorem}
-    For a Markov Chain with symmetric $P$ and $N$ states, the uniform distribution $\pi(i) = 1/N$ is a stationary distribution.
-\end{optTheorem}
-\begin{optTheorem}
-    Let $T_j^k = \min\{ n > T_y^{k-1} | X_n = y \}$ be the time of the $k$-th visit to $j$, then by the Markov property,
-    \[ \mathbb{T}_x[T_y^k < \infty] = \mathbb{P}_x[T_y < \infty]\cdot\mathbb{P}_y[T_y<\infty] \]
-    Notice that
-    \[ \mathbb{E}[X] = \sum_{k=0}^{\infty}\mathbb{P}[X \le k] \]
-    Using the two equations, we have
-    \[ \mathbb{E}_x[N_y] = \frac{\mathbb{P}_x[T_y < \infty]}{1-\mathbb{P}_y[T_y < \infty]} \]
-\end{optTheorem}
-\begin{remark}
-    This theorem gives us more insights into the results in Section \ref{BasicLimitTheorem}.
-\end{remark}
+    %%%%%%%% Other Conclusions
+    \subsection{Other Conclusions}
+    \emph{Since they are not covered in class, no proof will be provided. I'm lazy you know.}
+    \begin{definition}[Doubly Stochastic Chains]
+        A transition matrix $P$ is said to be \textbf{doubly stochastic} if all of its columns sum up to 1.
+    \end{definition}
+    \begin{optTheorem}
+        For a doubly stochastic Markov Chain with $N$ states, the uniform distribution $\pi(i) = 1/N$ is a stationary distribution.
+    \end{optTheorem}
+    \begin{optTheorem}
+        For a Markov Chain with symmetric $P$ and $N$ states, the uniform distribution $\pi(i) = 1/N$ is a stationary distribution.
+    \end{optTheorem}
+    \begin{optTheorem}
+        Let $T_j^k = \min\{ n > T_y^{k-1} | X_n = y \}$ be the time of the $k$-th visit to $j$, then by the Markov property,
+        \[ \mathbb{T}_x[T_y^k < \infty] = \mathbb{P}_x[T_y < \infty]\cdot\mathbb{P}_y[T_y<\infty] \]
+        Notice that
+        \[ \mathbb{E}[X] = \sum_{k=0}^{\infty}\mathbb{P}[X \le k] \]
+        Using the two equations, we have
+        \[ \mathbb{E}_x[N_y] = \frac{\mathbb{P}_x[T_y < \infty]}{1-\mathbb{P}_y[T_y < \infty]} \]
+    \end{optTheorem}
+    \begin{remark}
+        This theorem gives us more insights into the results in Section \ref{BasicLimitTheorem}.
+    \end{remark}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%% Examples %%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \section{Examples}
-%%%%%%%% Galton-Watson Process
-\subsection{Galton-Watson Process}
-\emph{aka. Branching Process}
-\paragraph*{Problem.} What is the probability that a family name eventually extincts?
-\paragraph*{Notations.}
-\begin{itemize}
-    \item $G_t$ denotes the number of males in generation $t$.
-    \item $X_{tk}$ denotes the number of sons fathered by the $k$-th father in the $t$-th generation. Assume $X_i$'s are \emph{iid} with probability mass function $p(\cdot)$.
-    \item $\rho = \mathbb{P}[extinction] = \mathbb{P}[\cup_{k\ge 1}\{ G_k=0 \}]$ denotes the probability that the family name eventually goes extinct.
-    \item $q_t = \mathbb{P}[G_t = 0]$ denotes the probability that the family name goes extinct at the $t$-th generation.
-\end{itemize}
-The problem is trivial when $p(0) = 0$ or $p(0) + p(1) = 1$. Either the family name never goes extinct or it goes extinct almost surely. We consider $p(0) > 0$ and $p(0) + p(1) < 1$.
 
-By conditioning on what happens at the first step, we can calculate $\rho$ by
-\[ G_{t+1} = \sum_{i=1}^{G_t} X_{ti} \]
-\begin{align}
-\rho &= \sum_{k=0}^{\infty}\mathbb{P}[extinction \wedge  G_1 = k] \notag \\
-&= \sum_{k=0}^{\infty}\mathbb{P}[extinction | G_1 = k]\cdot\mathbb{P}[G_1 = k | G_0 = 1] \quad \text{(by 全概率公式)} \notag \\
-&= \sum_{k=0}^{\infty}f(k)\rho^k \triangleq \psi(\rho) \notag
-\end{align}
-The last step used the fact that all males have sons independently. $\psi(\rho)$ is called the \textbf{Probability Generating Function} of $p(\cdot)$.
-
-The probability of eventual extinction satisfies $\psi(\rho) = \rho$.
-\[ \psi'(z) = \sum_{k=1}^{\infty}kp(k)z^{k-1} > 0\]
-\[ \psi''(z) = \sum_{k=2}^{\infty}k(k-1)p(k)z^{k-2} > 0 \]
-So $\psi(z)$ is a strictly increasing convex function with the following properties.
-\begin{itemize}
-    \item $\psi(1) = 1$. So $\rho = 1$ is always a solution.
-    \item $\psi'(1) = \sum_{k=1}^{\infty}kp(k) = \mathbb{E}[X] \triangleq \mu$
-\end{itemize}
-\begin{enumerate}[(i)]
-    \item If $\mu \le 1$, $\rho = 1$ is the only solution. Therefore the family name will go extinct.
-    \item If $\mu > 1$, there exists another solution $r<1$.
-    
-    Observe that $\{ G_t = 0 \} \subseteq \{ G_{t+1} = 0 \}$ and $q_t \le t_{t+1}$. Since $q_t$ has a upper bound $\rho$, it will always converge.
-    \[ q_t \uparrow \rho \]
-    So we only need to prove $q_t < r \quad \forall t$. By induction,
+    %%%%%%%% Galton-Watson Process
+    \subsection{Galton-Watson Process}
+    \emph{aka. Branching Process}
+    \paragraph*{Problem.} What is the probability that a family name eventually extincts?
+    \paragraph*{Notations.}
     \begin{itemize}
-        \item[base.] $q_0 = 0 < r$.
-        \item[hypo.] $q_t < r$.
-        \item[step.] $q_{t+1} = \sum_{i=0}^{\infty}\mathbb{P}[G_1 = i]\mathbb{P}[G_{t+1} = 0| G_1 = i] = \sum_{i=0}^{\infty}p(i)(q_t)^i$. The last step used the iid assuption of $X$. 
-        Therefore $q_{t+1} = \psi(q_t) \le \psi(r) = r$. Done.
-    \end{itemize} 
-\end{enumerate}
+        \item $G_t$ denotes the number of males in generation $t$.
+        \item $X_{tk}$ denotes the number of sons fathered by the $k$-th father in the $t$-th generation. Assume $X_i$'s are \emph{iid} with probability mass function $p(\cdot)$.
+        \item $\rho = \mathbb{P}[extinction] = \mathbb{P}[\cup_{k\ge 1}\{ G_k=0 \}]$ denotes the probability that the family name eventually goes extinct.
+        \item $q_t = \mathbb{P}[G_t = 0]$ denotes the probability that the family name goes extinct at the $t$-th generation.
+    \end{itemize}
+    The problem is trivial when $p(0) = 0$ or $p(0) + p(1) = 1$. Either the family name never goes extinct or it goes extinct almost surely. We consider $p(0) > 0$ and $p(0) + p(1) < 1$.
 
-%%%%%%%% Gambler's Ruin
-\subsection{Gambler's Ruin}\label{GamblerRuin}
-\paragraph*{Problem.} Consider a gambler in a casino, who has probability $p$ to win \$$1$ and $1-p$ to lose \$$1$. The process stops when the gambler gets \$$N$ or goes to $0$. Assume the gambler starts the game with \$$i$.
-\paragraph*{Notations.}
-\begin{itemize}
-    \item $P_i$ denotes the probability of the gambler gets \$$N$ and wins, starting with \$$i$.
-    \item $Z_i \in \{1, -1\}$ denotes whether the gambler wins or loses in round $i$.
-    \[ X_t = X_0 + \sum_{i=0}^{t-1}Z_i \]
-\end{itemize}
-Obviously,
-\[ P_N = 1 \quad P_0 = 0 \]
-When $1 \le i \le N-1$, $P_i$ can be calculated by
-\begin{align*}
-    P_i &= \mathbb{P}[win | X_0 = i] \\
-    &= \mathbb{P}[win \wedge Z_0 = 1 | X_0 = i] + \mathbb{P}[win \wedge Z_0 = -1 | X_0 = i] \quad \text{(Again by 全概率公式 on $Z_i$)} \\
-    &= \mathbb{P}[win | X_0=i, Z_0 = 1]\cdot\mathbb{P}[Z_0=1|X_0=i] + \mathbb{P}[win|X_0=1, Z_0=-1]\cdot\mathbb{P}[Z_0=-1|X_0=i] \\
-    &= p\cdot P_{i+1} + (1-p)\cdot P_{i-1}
-\end{align*}
-Rearranging,
-\[ p(P_{i+1} - P_i) = (1-p)(P_i - P_{i-1}) \]
-\[ P_{i+1} -P_i = \frac{1-p}{p}(P_i - P_{i-1}) \]
-Let $\theta = \frac{1-p}{p}$, by high school mafs
-\[ P_{i+1} - P_i = \theta^i(P_1 - P_{0}) \]
-\begin{enumerate}[(i)]
-    \item Assume for now that $p \neq \frac{1}{2}$ so $\theta \neq 1$, then summing over $i$ yields
-    \[ P_N - P_0 = 1 = \frac{1-\theta^N}{1-\theta} P_1 \]
-    Therefore
-    \[ P_1 = \frac{1-\theta}{1-\theta^N} \]
-    Summing from $0$ to $i$ yields
-    \[ P_i = \frac{1-\theta^i}{1-\theta^N} \]
-    \item If $p=\frac{1}{2}$,
-    \[ P_{i+1} - P_i = P_i - P_{i-1} \]
-    This is a arithmetic progress, and again by high school mafs
-    \[ P_i = \frac{i}{N} \]
-\end{enumerate}
-To sum up
-\[ 
-    P_i = 
-    \begin{cases}
-        \frac{i}{N} &(i = \frac{1}{2})\\
-        \frac{1-\theta^i}{1-\theta^N} &(\text{o.w.})
-    \end{cases}    
-\]
+    By conditioning on what happens at the first step, we can calculate $\rho$ by
+    \[ G_{t+1} = \sum_{i=1}^{G_t} X_{ti} \]
+    \begin{align}
+    \rho &= \sum_{k=0}^{\infty}\mathbb{P}[extinction \wedge  G_1 = k] \notag \\
+    &= \sum_{k=0}^{\infty}\mathbb{P}[extinction | G_1 = k]\cdot\mathbb{P}[G_1 = k | G_0 = 1] \quad \text{(by 全概率公式)} \notag \\
+    &= \sum_{k=0}^{\infty}f(k)\rho^k \triangleq \psi(\rho) \notag
+    \end{align}
+    The last step used the fact that all males have sons independently. $\psi(\rho)$ is called the \textbf{Probability Generating Function} of $p(\cdot)$.
 
-\subsection{Drug Test}\label{DrugTest}
-This example is based on results from the previous subsection \ref{GamblerRuin}.
-\paragraph*{Problem.} We want to test the cure rate $p_1$ of a drug \textrm{Drug}1. We already have a \textrm{Drug}2 with known cure rate $p_2$. We want to know whether $p_1 > p_2$ or not. To do this, we find $t$ pairs of patients $(X_i, Y_i)$ and conduct tests using the two drugs on $X$ and $Y$ respectively. Once the number of patients who are cured by \textrm{Drug}1 but not \textrm{Drug}2 exceeds a certain threshold $M$, we can claim that $p_1 \ge p_2$.
-\paragraph*{Notations.}
-\begin{itemize}
-    \item $X_i,Y_i \in \{0,1\}$ is a boolean denoting whether the first or the second drug cured patient $i$.
-    \item $Z_i = X_i - Y_i$.
-    \item $p_1, p_2$ denotes the probability that the two drugs cure a patient, respectively.
-\end{itemize}
+    The probability of eventual extinction satisfies $\psi(\rho) = \rho$.
+    \[ \psi'(z) = \sum_{k=1}^{\infty}kp(k)z^{k-1} > 0\]
+    \[ \psi''(z) = \sum_{k=2}^{\infty}k(k-1)p(k)z^{k-2} > 0 \]
+    So $\psi(z)$ is a strictly increasing convex function with the following properties.
+    \begin{itemize}
+        \item $\psi(1) = 1$. So $\rho = 1$ is always a solution.
+        \item $\psi'(1) = \sum_{k=1}^{\infty}kp(k) = \mathbb{E}[X] \triangleq \mu$
+    \end{itemize}
+    \begin{enumerate}[(i)]
+        \item If $\mu \le 1$, $\rho = 1$ is the only solution. Therefore the family name will go extinct.
+        \item If $\mu > 1$, there exists another solution $r<1$.
+        
+        Observe that $\{ G_t = 0 \} \subseteq \{ G_{t+1} = 0 \}$ and $q_t \le t_{t+1}$. Since $q_t$ has a upper bound $\rho$, it will always converge.
+        \[ q_t \uparrow \rho \]
+        So we only need to prove $q_t < r \quad \forall t$. By induction,
+        \begin{itemize}
+            \item[base.] $q_0 = 0 < r$.
+            \item[hypo.] $q_t < r$.
+            \item[step.] $q_{t+1} = \sum_{i=0}^{\infty}\mathbb{P}[G_1 = i]\mathbb{P}[G_{t+1} = 0| G_1 = i] = \sum_{i=0}^{\infty}p(i)(q_t)^i$. The last step used the iid assuption of $X$. 
+            Therefore $q_{t+1} = \psi(q_t) \le \psi(r) = r$. Done.
+        \end{itemize} 
+    \end{enumerate}
 
-The value of $Z_i$ falls into 3 cases:
-\[ Z_i = 
-    \begin{cases}
-        1 &p_1(1-p_2)\\
-        -1 &p_2(1-p_1)\\
-        0 &(\text{o.w.})
-    \end{cases}
-\]
-If we ignore the cases where $Z_i = 0$, then we can model this problem as a gambler's ruin, with $p = \frac{p_1(1-p_2)}{p_1(1-p_2)+p_2(1-p_1)}$.
+    %%%%%%%% Gambler's Ruin
+    \subsection{Gambler's Ruin}\label{GamblerRuin}
+    \paragraph*{Problem.} Consider a gambler in a casino, who has probability $p$ to win \$$1$ and $1-p$ to lose \$$1$. The process stops when the gambler gets \$$N$ or goes to $0$. Assume the gambler starts the game with \$$i$.
+    \paragraph*{Notations.}
+    \begin{itemize}
+        \item $P_i$ denotes the probability of the gambler gets \$$N$ and wins, starting with \$$i$.
+        \item $Z_i \in \{1, -1\}$ denotes whether the gambler wins or loses in round $i$.
+        \[ X_t = X_0 + \sum_{i=0}^{t-1}Z_i \]
+    \end{itemize}
+    Obviously,
+    \[ P_N = 1 \quad P_0 = 0 \]
+    When $1 \le i \le N-1$, $P_i$ can be calculated by
+    \begin{align*}
+        P_i &= \mathbb{P}[win | X_0 = i] \\
+        &= \mathbb{P}[win \wedge Z_0 = 1 | X_0 = i] + \mathbb{P}[win \wedge Z_0 = -1 | X_0 = i] \quad \text{(Again by 全概率公式 on $Z_i$)} \\
+        &= \mathbb{P}[win | X_0=i, Z_0 = 1]\cdot\mathbb{P}[Z_0=1|X_0=i] + \mathbb{P}[win|X_0=1, Z_0=-1]\cdot\mathbb{P}[Z_0=-1|X_0=i] \\
+        &= p\cdot P_{i+1} + (1-p)\cdot P_{i-1}
+    \end{align*}
+    Rearranging,
+    \[ p(P_{i+1} - P_i) = (1-p)(P_i - P_{i-1}) \]
+    \[ P_{i+1} -P_i = \frac{1-p}{p}(P_i - P_{i-1}) \]
+    Let $\theta = \frac{1-p}{p}$, by high school mafs
+    \[ P_{i+1} - P_i = \theta^i(P_1 - P_{0}) \]
+    \begin{enumerate}[(i)]
+        \item Assume for now that $p \neq \frac{1}{2}$ so $\theta \neq 1$, then summing over $i$ yields
+        \[ P_N - P_0 = 1 = \frac{1-\theta^N}{1-\theta} P_1 \]
+        Therefore
+        \[ P_1 = \frac{1-\theta}{1-\theta^N} \]
+        Summing from $0$ to $i$ yields
+        \[ P_i = \frac{1-\theta^i}{1-\theta^N} \]
+        \item If $p=\frac{1}{2}$,
+        \[ P_{i+1} - P_i = P_i - P_{i-1} \]
+        This is a arithmetic progress, and again by high school mafs
+        \[ P_i = \frac{i}{N} \]
+    \end{enumerate}
+    To sum up
+    \[ 
+        P_i = 
+        \begin{cases}
+            \frac{i}{N} &(i = \frac{1}{2})\\
+            \frac{1-\theta^i}{1-\theta^N} &(\text{o.w.})
+        \end{cases}    
+    \]
 
-And
-\[ \mathbb{P}[TestWrong] = 1 - \frac{1-\theta^M}{1-\theta^{2M}} = \frac{1}{\theta^{-M} + 1} \]
-The probability above drops exponentially with $M$, so the threshold does not need to be very large to achieve accurate results.
+    \subsection{Drug Test}\label{DrugTest}
+    This example is based on results from the previous subsection \ref{GamblerRuin}.
+    \paragraph*{Problem.} We want to test the cure rate $p_1$ of a drug \textrm{Drug}1. We already have a \textrm{Drug}2 with known cure rate $p_2$. We want to know whether $p_1 > p_2$ or not. To do this, we find $t$ pairs of patients $(X_i, Y_i)$ and conduct tests using the two drugs on $X$ and $Y$ respectively. Once the number of patients who are cured by \textrm{Drug}1 but not \textrm{Drug}2 exceeds a certain threshold $M$, we can claim that $p_1 \ge p_2$.
+    \paragraph*{Notations.}
+    \begin{itemize}
+        \item $X_i,Y_i \in \{0,1\}$ is a boolean denoting whether the first or the second drug cured patient $i$.
+        \item $Z_i = X_i - Y_i$.
+        \item $p_1, p_2$ denotes the probability that the two drugs cure a patient, respectively.
+    \end{itemize}
 
-%%%%%%%% Another random walk on N
-\subsection{Another Random Walk}\label{AnotherRandWalk}
-\paragraph*{Problem.} Consider a random walk on $\mathbb{N}$ where
-\[ P(0,1) = 1 \quad P(N,N-1) = 1 \]
-We want to compute how many steps we need to reach $N$ starting from $i$.
-\paragraph*{Notations.}
-\begin{itemize}
-    \item $h_i$ denotes the number of steps to reach $N$ starting from $X_0=i$.
-    \item $Y_i$ denotes the number of steps from $i$ to $i+1$ for the first time.
-    \item $g_j \triangleq \mathbb{E}[Y_j]$.
-\end{itemize}
-Obviously
-\[ \mathbb{E}[h_0] = 1 + \mathbb{E}[h_1] \quad \mathbb{E}[h_N] = 0 \]
-Similar to subsection \ref{DrugTest},
-\[ h_i = 1+ (1-p)h_{i-1} + ph_{i+1} \]
-This can be calculated using \emph{the linearity of expectation}. 
+    The value of $Z_i$ falls into 3 cases:
+    \[ Z_i = 
+        \begin{cases}
+            1 &p_1(1-p_2)\\
+            -1 &p_2(1-p_1)\\
+            0 &(\text{o.w.})
+        \end{cases}
+    \]
+    If we ignore the cases where $Z_i = 0$, then we can model this problem as a gambler's ruin, with $p = \frac{p_1(1-p_2)}{p_1(1-p_2)+p_2(1-p_1)}$.
 
-Notice that
-\[ h_i = \sum_{j=i}^{N-1}Y_j \]
-Taking expectations on both sides
-\[ \mathbb{E}[h_i] = \sum_{j=i}^{N-1}\mathbb{E}[Y_j] \]
-So we only need to caculate $\mathbb{E}[Y_j]$.
-\begin{itemize}
-    \item $g_0 = 1$.
-    \item $g_i = 1 + 0 \cdot p + (1-p)(g_{i-1}+g_i)$.
-\end{itemize}
-\begin{enumerate}
-    \item Again assume $p \neq \frac{1}{2}$. 
-    Rearranging yields
-    \[ g_i = \frac{1}{p} + \theta g_{i-1} \]
-    and after a few steps of arithmetics
-    \[ g_i = \sum_{i=0}^{t-1}\frac{1}{p}\theta^i + \theta^t \]
-    Summing over $g_i$ is a sum of geometric progress, easy.
-    \item If $p = \frac{1}{2}$, then
-    \[ g_{i} - g_{i-1} = \frac{1}{p} = 2 \]
-    so
-    \[ g_t = 2t + 1 \]
-    and
-    \[ \mathbb{E}[h_0] = \sum_{t=0}^{N-1}(2t+1) = N^2 \]
-\end{enumerate}
-\begin{remark}
-    As the converse of the conclusion, if we take $N$ steps, the farthest distance we can go is $\sqrt{N}$.
-\end{remark}
+    And
+    \[ \mathbb{P}[TestWrong] = 1 - \frac{1-\theta^M}{1-\theta^{2M}} = \frac{1}{\theta^{-M} + 1} \]
+    The probability above drops exponentially with $M$, so the threshold does not need to be very large to achieve accurate results.
 
-%%%%%%%% 2-SAT
-\subsection{2-SAT}
-Recall the SAT problem in \textsc{AI2615 Design and Analysis of Algorithms}. A 2-SAT is a special case of SAT where each \verb|or| expression has at most 2 terms
-\[ \varphi = (x_1 \vee y_1) \wedge (x_2 \vee y_2) \cdots \]
-The problem is RP and can be solved using the following algorithm.
+    %%%%%%%% Another random walk on N
+    \subsection{Another Random Walk}\label{AnotherRandWalk}
+    \paragraph*{Problem.} Consider a random walk on $\mathbb{N}$ where
+    \[ P(0,1) = 1 \quad P(N,N-1) = 1 \]
+    We want to compute how many steps we need to reach $N$ starting from $i$.
+    \paragraph*{Notations.}
+    \begin{itemize}
+        \item $h_i$ denotes the number of steps to reach $N$ starting from $X_0=i$.
+        \item $Y_i$ denotes the number of steps from $i$ to $i+1$ for the first time.
+        \item $g_j \triangleq \mathbb{E}[Y_j]$.
+    \end{itemize}
+    Obviously
+    \[ \mathbb{E}[h_0] = 1 + \mathbb{E}[h_1] \quad \mathbb{E}[h_N] = 0 \]
+    Similar to subsection \ref{DrugTest},
+    \[ h_i = 1+ (1-p)h_{i-1} + ph_{i+1} \]
+    This can be calculated using \emph{the linearity of expectation}. 
 
-\begin{algorithm}
-    \caption{2-SAT Solver}
-    \KwIn{CNF with $n$ terms}
-    Random intialize a solution $\sigma$.\\
-    \For{$i = 1:100n^2$}
-    {
-        \If{$\sigma$ satisfies CNF}
-        {
-            \KwRet{$\sigma$}
-        }
-        \Else
-        {
-            Randomly choose one term $(X_i \vee Y_i)$ that is false.\\
-            Randomly flip $X_i$ or $Y_i$.
-        }
-    }
-    \KwRet{Not satisfiable}
-\end{algorithm}
+    Notice that
+    \[ h_i = \sum_{j=i}^{N-1}Y_j \]
+    Taking expectations on both sides
+    \[ \mathbb{E}[h_i] = \sum_{j=i}^{N-1}\mathbb{E}[Y_j] \]
+    So we only need to caculate $\mathbb{E}[Y_j]$.
+    \begin{itemize}
+        \item $g_0 = 1$.
+        \item $g_i = 1 + 0 \cdot p + (1-p)(g_{i-1}+g_i)$.
+    \end{itemize}
+    \begin{enumerate}
+        \item Again assume $p \neq \frac{1}{2}$. 
+        Rearranging yields
+        \[ g_i = \frac{1}{p} + \theta g_{i-1} \]
+        and after a few steps of arithmetics
+        \[ g_i = \sum_{i=0}^{t-1}\frac{1}{p}\theta^i + \theta^t \]
+        Summing over $g_i$ is a sum of geometric progress, easy.
+        \item If $p = \frac{1}{2}$, then
+        \[ g_{i} - g_{i-1} = \frac{1}{p} = 2 \]
+        so
+        \[ g_t = 2t + 1 \]
+        and
+        \[ \mathbb{E}[h_0] = \sum_{t=0}^{N-1}(2t+1) = N^2 \]
+    \end{enumerate}
+    \begin{remark}
+        As the converse of the conclusion, if we take $N$ steps, the farthest distance we can go is $\sqrt{N}$.
+    \end{remark}
 
-To prove its correctness, we only need to consider the cases where the CNF is indeed satisfiable with solution $\sigma$. We denote the sequence of attempts produced by the algorithm by
-\[ \sigma_0 \to \sigma_1 \to \cdots \to \sigma_{100n^2} \]
-Let $X_i$ denotes the number of exactly the same terms between $\sigma$ and $\sigma_i$.
 
-$X_0, X_1, \dots$ is not a Markov Chain. \sout{So we get stuck}. However we can still informally show the correctness.
 
-We first introduce some basic concepts.
-\begin{definition}[Stochasitcal Dominance]
-    A random variable $X$ has first-order stochastic dominance over random variable $Y$ if
-    \[ \mathbb{P}[X \ge x] \ge \mathbb{P}[Y \ge x] \quad \forall x \]
-    \[ \mathbb{P}[X > x] > \mathbb{P}[Y > x] \quad \exists x \]
-\end{definition}
-\begin{theorem}[Markov's Inequality]\label{MarkovIneq}
-    Let $X$ be a nonnegative random varialbe and let $a > 0$, then
-    \[ \mathbb{P}[X \ge a] \le \frac{\mathbb{E}[X]}{a} \]
-\end{theorem}
-\begin{sketchproof}
-    Note that $X_{i+1}$ differs from $X_i$ in at most 1 operand, and that
-    \[ \mathbb{P}[X_{i+1} = X_i + 1] \ge \frac{1}{2} \]
-    \[ \mathbb{P}[X_{i+1} = X_i - 1] \le \frac{1}{2} \]
-    We can introduce a random walk described in subsection \ref{AnotherRandWalk} $Y_1, Y_2, \dots$ with $p = \frac{1}{2}$.
+\section{Coupling and Stochastical Dominance}
+In this section we assume the sample space $\Omega$ is at most countable, but the results in this section can be generalized to continuous case.
 
-    $X_i$ stochatically dominates $Y_i$. Since $Y_i$ has an expectation of $n^2$ to get to state $n$, it follows intuitively that $X_i$ has a smaller expectation of steps to get to $n$.
+    %%%%%%%% Motivating Example: 2-SAT
+    \subsection{Motivating Example: 2-SAT}
+        Recall the SAT problem in \textsc{AI2615 Design and Analysis of Algorithms}. A 2-SAT is a special case of SAT where each \verb|or| expression has at most 2 terms
+        \[ \varphi = (x_1 \vee y_1) \wedge (x_2 \vee y_2) \cdots \]
+        The problem is RP and can be solved using the following algorithm.
 
-    We have chosen the max iteration to be $100n^2$, by Markov's Inequality \ref{MarkovIneq}, the probability that we take $100n^2$ iterations without finding a feasible solution is at most $1/100$.
-\end{sketchproof}
-\begin{remark}
-    A formal proof of correctness will be given in the next lecture.
-\end{remark}
+        \begin{algorithm}
+            \caption{2-SAT Solver}
+            \KwIn{CNF with $n$ terms}
+            Random intialize a solution $\sigma$.\\
+            \For{$i = 1:100n^2$}
+            {
+                \If{$\sigma$ satisfies CNF}
+                {
+                    \KwRet{$\sigma$}
+                }
+                \Else
+                {
+                    Randomly choose one term $(X_i \vee Y_i)$ that is false.\\
+                    Randomly flip $X_i$ or $Y_i$.
+                }
+            }
+            \KwRet{Not satisfiable}
+            \label{2SATAlgo}
+        \end{algorithm}
+
+        To prove its correctness, we only need to consider the cases where the CNF is indeed satisfiable with solution $\sigma$. We denote the sequence of attempts produced by the algorithm by
+        \[ \sigma_0 \to \sigma_1 \to \cdots \to \sigma_{100n^2} \]
+        Let $X_i$ denotes the number of terms in $\sigma$ and $\sigma_i$ that are exactly the same.
+
+        You should convince yourself that $X_0, X_1, \dots$ is not a Markov Chain. \sout{So we get stuck}. However we can still informally show the correctness.
+
+        We first introduce some basic concepts.
+
+    %%%%%%%% Stochastical Dominance
+    \subsection{Stochastical Dominance}
+        \begin{definition}[Stochasitcal Dominance]
+            A distribution $\mu$ is said to \textbf{stochasitcally dominate} $\nu$ if
+            \[ \forall x\quad \mathbb{P}_{X\sim\mu}[X \ge x] \ge \mathbb{P}_{Y\sim\nu}[Y \ge x] \]
+        \end{definition}
+        \paragraph{Some Examples.}
+        \begin{itemize}
+            \item 2-SAT.
+            \item Binomial distribution. $B(n,p)$ and $B(n,q)$.
+            \item Erd$\mathrm{\ddot{o}}$s-R$\mathrm{\acute{e}}$nyi Random Graph $\mathcal{G}(n,p)$ is a graph with $n$ nodes and the edges have a probability of $p$ to exist. We sample $G$ randomly from $\mathcal{G}$ and test if $G$ is connected. If $p>q$ then $G_p$ stocahstically dominates $G_q$.
+        \end{itemize}
+
+    %%%%%%%% Coupling
+    \subsection{Coupling}
+        \begin{definition}[Coupling]
+            $(X',Y')$ is the coupling of random variables $(X,Y)$ if $X'$ has the same distribution of $X$ and $Y'$ has the same of $Y$. i.e. A coupling $C$ of $X$ and $Y$ is a joint distribution of $X$ and $Y$.
+        \end{definition}
+        \begin{remark}~{}
+            \begin{itemize}
+                \item The coupling of $X$ and $Y$ is not unique.
+                \item If $X$ has distribution $\mu$ and $Y$ has distribution $\nu$, then any joint distribution $(X,Y)$ having marginal distribution $X\sim\mu$ and $Y\sim\nu$ is a coupling of $X$ and $Y$.
+                \[ \forall x, \quad \mathbb{P}_{(X,Y) \sim C}[X=x] = \mu(x) \]
+                \[ \forall y, \quad \mathbb{P}_{(X,Y) \sim C}[Y=y] = \nu(y) \]
+                \item Constructing a coupling can be intuitively seen as a process of filling a table of the joint distribution of $X$ and $Y$.
+            \end{itemize}
+        \end{remark}
+        \begin{definition}[Monotone Coupling]
+            Let $C$ be a coupling of $X$ and $Y$. $C$ is a \textbf{monotone coupling} if
+            \[ \mathbb{P}_{(X,Y)\sim C}[X\ge Y] = 1\footnote{“它总是大”——Prof.Zhang} \]
+        \end{definition}
+        \begin{theorem}\label{MonoCouplingAndDominance}
+            There is a monotone coupling of $X$ and $Y$ \emph{if and only if} $X$ stochastically doniminates $Y$.
+        \end{theorem}
+        \begin{sketchproof}
+            ~{}\\
+            $\Rightarrow$.
+            By definition of coupling
+            \[ \mathbb{P}_{Y\sim\nu}[Y \ge a] = \mathbb{P}_{(X,Y)\sim C}[Y\ge a] \]
+            By the Law of Total Probability
+            \[ \mathbb{P}_{Y\sim\nu}[Y \ge a] = \mathbb{P}_{(X,Y)\sim C}[Y \ge a \wedge X \ge Y]\mathbb{P}[X \ge Y] + \mathbb{P}_{(X,Y)\sim C}[Y \ge a \wedge X < Y]\mathbb{P}[X < Y] \]
+            The latter term is $0$ by definition of monotone coupling, so
+            \[ \mathbb{P}_{Y\sim\nu}[Y \ge a] = \mathbb{P}_{(X,Y)\sim C}[X \ge Y \ge a] \le \mathbb{P}_{(X,Y)\sim C}[X \ge a] = \mathbb{P}_{X\sim\mu}[X \ge a] \]
+
+            $\Leftarrow$ is left as homework (that's bad).
+        \end{sketchproof}
+
+    %%%%%%%% 2-SAT Revisited
+    \subsection{2-SAT: Proof of Correctness}
+        \begin{theorem}[Markov's Inequality]\label{MarkovIneq}
+            Let $X$ be a nonnegative random varialbe and let $a > 0$, then
+            \[ \mathbb{P}[X \ge a] \le \frac{\mathbb{E}[X]}{a} \]
+        \end{theorem}
+        We can now prove the correctness of Algorithm \ref{2SATAlgo}.
+        \begin{sketchproof}
+            Note that $X_{i+1}$ differs from $X_i$ in at most 1 operand, and that
+            \[ \mathbb{P}[X_{i+1} = X_i + 1] \ge \frac{1}{2} \]
+            \[ \mathbb{P}[X_{i+1} = X_i - 1] \le \frac{1}{2} \]
+            We can introduce a random walk described in subsection \ref{AnotherRandWalk} $Y_1, Y_2, \dots$ with $p = \frac{1}{2}$.
+
+            $X_i$ stochatically dominates $Y_i$. This is intuitive, and can be proved using Theorem \ref{MonoCouplingAndDominance} and constructing a monotone coupling:
+
+            We introduce a random variable $U$ that has a uniform distribution $U \sim U(0,1)$. Let $q$ be the probability of $X_{i+1} = X_i + 1$, from the arguments above we already have $p < q$. Then we construct a coupling of $X$ and $Y$ by
+            \[ X_i = \mathbb{I}[U_i < q] \quad Y_i = \mathbb{I}[U_i < p] \]
+            Since $p < q$, clearly $Y_i \le X_i$, and thus
+            \[ X_0 + X_1 + \dots + X_i \ge Y_0 + Y_1 + \dots + Y_i \]
+            So we have constructed a monotone coupling, and it follows that $X$ stocahstically dominates $Y$.
+            
+            Since $Y_i$ has an expectation of $n^2$ to get to state $n$, it follows intuitively that $X_i$ has a smaller expectation of steps to get to $n$.
+
+            We have chosen the max iteration to be $100n^2$, by Markov's Inequality \ref{MarkovIneq}, the probability that we take $100n^2$ iterations without finding a feasible solution is at most $1/100$.
+        \end{sketchproof}
+        \begin{remark}~{}
+            \begin{itemize}
+                \item \sout{A formal proof of correctness will be given in the next lecture.}
+                \item The rigorous proof has been updated.
+                \item The idea of coupling can be used to prove other examples of stochastic dominance.
+            \end{itemize}
+        \end{remark}
+
+    %%%%%%%% Maximum Couplings
+    \subsection{Maximum Couplings}
+        \begin{definition}[Maximum Coupling]
+            Suppose $X$ has distribution function $\mu$, $Y$ has distribution function $\nu$. Let $C$ denote the set of all couplings of $(X,Y)$. $(\hat{X},\hat{Y})$ is a \textbf{maximum $\mu$,$\nu$ couple} if
+            \[ \mathbb{P}[\hat{X}=\hat{Y}] = \max_{(X,Y)\in C}\mathbb{P}[X=Y] \]
+            i.e. among all such couples its components are most likely to be equal.
+        \end{definition}
+        \begin{proposition}
+            A maximum coupling always exists.
+            \[ \mathbb{P}[\hat{X} = \hat{Y}] = \sum_{z\in\Omega}m(z) \]
+            where $m(z) = \min\{ \mu(z), \nu(z) \}$.
+        \end{proposition}
+        \begin{remark}
+            For continuous cases, the sum becomes integral.
+        \end{remark}
+
+    %%%%%%%% Total Variance Distance
+    \subsection{Total Variance Distance}
+        \begin{definition}[Total Variation Distance]
+            Given two distributions $\mu$ and $\nu$ defined on a sample space $\Omega$, the \textbf{total variance distance} of $\mu$ and $\nu$ is defined as
+            \[ \|\mu - \nu \|_{TV} \triangleq \frac{1}{2}\sum_{x\in\Omega}|\mu(x)-\nu(x)| = \max_{A\subseteq\Omega} \mu(A)-\nu(A) = 1-\min_{z\in\Omega}\{ \mu(z), \nu(z) \} \]
+            Geometrically, this is the half of size of the area between the pdf of $\mu$ and $\nu$.
+        \end{definition}
+        \begin{lemma}[The Coupling Lemmma]\label{CouplingLemma}
+            For any coupling $C$ of $\mu$ and $\nu$,
+            \[ \mathbb{P}_{(X,Y)\sim C}[X \neq Y] \ge \|\mu - \nu \|_{TV} \]
+            and there exists a coupling $C^{*}$ that achieves the equality.
+        \end{lemma}
+        \begin{sketchproof}
+            If we view the coupling as a way to fill the table, then $\mathbb{P}_{(X,Y) \sim C}[X=Y]$ is the sum of all values on the diagonal of the table. Intuitively, the value on $i$-th row and $j$-th column is upper bounded by $\mu(i)$ and $\nu(j)$, so the sum is upper bounded by $\sum_{z\in\Omega}\min\{\mu(z), \nu(z)\}$.
+            \begin{align*}
+                \mathbb{P}[X \neq Y] &= 1 - \mathbb{P}_{(X,Y) \sim C}[X = Y] \\
+                &= 1 - \sum_{z \in \Omega}\mathbb{P}[X=Y=z] \\
+                &\ge 1 - \sum_{z \in \Omega}\min \{\mu(z), \nu(z)\}\\
+                &= \sum_{z \in \Omega}\left( \mu(z) - \min\{\mu(z),\nu(z)\} \right)\\
+                &= \| \mu - \nu \|_{TV}
+            \end{align*}
+        \end{sketchproof}
+        \begin{remark}
+            The $C^*$ here is the maximal coupling.
+        \end{remark}
+
+
+
+\section{Proof of the Foundamental Theorem}
+    We are going to prove that:
+    \paragraph{}
+        \emph{An irreducible, aperiodic, positive recurrent Markov Chain has a unique stationary distribution, and it converges to the distribution.}
+
+    \begin{proof}
+        We only consider the finite case. The proof of Theorem \ref{theorem:FTMC-Countable} has already shown that an Irreducible Positive Recurrent Markov chain has a Unique Stationary Distribution, so we only prove the convergence part here. Suppose there are two Markov Chains $X$ and $Y$
+        \[ X_0 \to X_1 \to \dots \to X_t \to \dots \]
+        \[ Y_0 \to Y_1 \to \dots \to Y_t \to \dots \]
+        Let the initial distribution of $Y$ be the stationary distribution $\pi$, so each $Y_i$ has distribution $\pi$. Let the initial distribution of $X$ be $\mu_0$, and $X_i$ has the distribution given by $\mu_{i} = P^T\mu_{i-1}$.
+
+        We define \textbf{convergence} by $\lim_{i\to\infty}\|\mu_{i} - \pi\|_{TV} = 0$.
+
+        For each $(X_t, Y_t)$, we construct a coupling $C_t$ such that each chain is runned independently, and once $X_t = Y_t$ for some $t$, then $X_{t'} = Y_{t'}$ for all $t' \ge t$.
+
+        Irreducibility guarantees that 
+        \[ \forall i,j \quad \exists n \quad P^n(i,j) > 0 \]
+        And Aperiodicity further guarantees that
+        \begin{equation}\label{FTMCEq1}
+            \exists n \quad \forall i,j \quad P^n(i,j) > 0
+        \end{equation}
+        To prove (\ref{FTMCEq1}), we are going to show that
+        \begin{equation}\label{FTMCEq2}
+            \forall i,j \quad \exists t_{ij} \quad \forall t>t_{i,j} \quad P^t(i,j) > 0
+        \end{equation}
+        Then (\ref{FTMCEq1}) can be proved by setting $n = \max_{i,j}\{t_{ij}\}$. Note that this result only holds in finite case.
+
+        We visualize the Markov Chain from $i$ to $j$ as many cycles starting from and ending at $i$, of length $c_1,c_2,\dots$. Since the chain is Aperiodic,
+        \[ \gcd(c_1, c_2,\dots,c_s) = 1 \]
+        And by Lemma \ref{theorem:Bezout}, there exist integers $x_1,x_2,\dots,x_s$ such that
+        \[ c_1x_1 + c_2x_2 + \dots + c_sx_s = 1 \]
+        And it follows immediately that there exist $y_1,y_2,\dots,y_s$ such that
+        \[ c_1y_1 + c_2y_2 + \dots + c_sy_x = b \]
+        for all sufficiently large $b$.
+
+        \begin{lemma}[B$\mathrm{\acute{e}}$zout's Theorem]\label{theorem:Bezout}
+            Let $a,b$ be two integers, then there exist integer $\mu, \nu$ such that
+            \[ a\mu + b\nu = \gcd(a,b) \]
+        \end{lemma}
+
+        Now consider the coupling.
+        \[ \mathbb{P}[X_n = Y_n] \ge \mathbb{P}[X_n=Y_n=x] \ge SomeConstant~{} \alpha > 0 \]
+        This is guaranteed by the irreducibility of the chain.
+        So
+        \[ \mathbb{P}[X_n \neq Y_n] \le 1 - \alpha \]
+        Now condider the $2n$-th step, by the Law of Total Probability,
+        \[ \mathbb{P}[X_{2n} \neq Y_{2n}] = \mathbb{P}[X_{2n} \neq Y_{2n} \wedge X_n \neq Y_n] + \mathbb{P}[X_{2n} \neq Y_{2n} \wedge X_n = Y_n] \]
+        The latter is $0$ because it is impossible by our construction of coupling.
+        
+        By conditional probability
+        \[ \mathbb{P}[X_{2n} \neq Y_{2n} \wedge X_n \neq Y_n] \le \mathbb{P}[X_{2n} \neq Y_{2n} | X_n \neq Y_n](1-\alpha) \le (1-\alpha)^2 \]
+
+        It follows immediately that $\mathbb{P}[X_t \neq Y_t] \to 0$ as $t \to \infty$. So $\lim_{t\to\infty}\|\mu_t - \pi\|_{TV} = 0$, and we are done.
+    \end{proof}
+
+
+\section{Applications of Markov Chain}
+We assume the state space $\mathcal{S}$ is finite, but in most cases the applications can be generalized to countably infinite cases. And we assume that the Markov chains are Aperiodic and Irreducible.
+
+    \subsection{Time Reversibility}
+        \begin{definition}[Time Reversibility]
+            A Markov chain is said to be time reversible if there exists a distribution $\pi$ such that
+            \begin{equation}\label{Def:DetailedBalanceCondition}
+                \forall x,y \in \mathcal{S} \quad \pi(x)P(x,y) = \pi(y)P(y,x)
+            \end{equation}
+        \end{definition}
+        \begin{remark} ~{}
+            \begin{itemize}
+                \item The $\pi$ here is actually the stationay distribution. because
+                \[ (\pi^TP)(y) = \sum_{x\in\mathcal{S}}\pi(x)P(x,y) = \sum_{x\in\mathcal{S}}\pi(y)P(y,x) = \pi(y)\sum_{x\in\mathcal{S}}P(y,x) = \pi(y) \]
+                \item (\ref{Def:DetailedBalanceCondition}) is also called the \textbf{detailed balance condition}.
+                \item The detailed balance condition implies that $(X_0,X_1,\dots,X_n)$ and $X_n,X_{n-1},\dots,X_0$ have \emph{the same distribution}, and this is the reason why such chains are called time-reversible.
+            \end{itemize}
+        \end{remark}
+
+    \subsection{Metropolis Algorithm}
+        If we want to sample from some distribution $\mu$, one way of doing this is to design a random walk (Markov Chain) with stationary distribution $\mu$ and run the random walk for a sufficiently long period of time. We now discuss how to design such random walks. Recall the following proposition:
+        \begin{proposition}
+            A random walk on graph $\mathcal{G}$ with probability transition matrix
+            \[P(i,j) = 
+            \begin{cases}
+                \frac{1}{d_i} \quad &j \in \mathcal{N}(i)\\
+                0 \quad &j otherwise
+            \end{cases}
+            \]
+            has stationary distribution
+            \[ \pi(i) = \frac{d_i}{\sum_{j\in\mathcal{S}}d_j} \]
+        \end{proposition}
+        Consider a random walk on graph $\mathcal{G} = (V, E)$. Given a distribution $\mu$, we want to design a random walk such that the stationay distribution is $\mu$. Let $d_i$ denote the degree of the $i$-th node in $\mathcal{G}$.\\
+        Let
+        \[ \Delta = \max_{i \in V} d_i \]
+        For any node $i$, for all $j \in \mathcal{N}(i)$, we ``propose'' to move to $j$ with probability $1/\Delta$. And $j$ ``accepts'' $i$ with probability $\min \{\frac{\mu(j)}{\mu(i)}, 1\}$. If the move is rejected, we stay in $i$. We define the probability transition matrix as follows
+        \begin{equation}\notag
+            P(i, j) = 
+            \begin{cases}
+                0 \quad & j \notin \mathcal{N}(i)\\
+                \frac{1}{\Delta}\min\{1, \frac{\mu(j)}{\mu(i)}\} \quad &j \in \mathcal{N}(i)\\
+                1 - \sum_{k\in\mathcal{N}(i)} P(i,k) \quad & i = j
+            \end{cases}
+        \end{equation}
+        \begin{proposition}
+            The $P$ defined above satisfies
+            \[ \mu P = \mu \]
+            i.e. it is a Markov chain with stationay distribution $\pi$.
+        \end{proposition}
+        \begin{sketchproof}~{}
+            \begin{itemize}
+                \item Trivial if $j \notin \mathcal{N}(i)$.
+                \item If $j \in \mathcal{N}(i)$. WLOG assume $\mu(j) \ge \mu(i)$.
+                \[ \mu(i)P(i,j) = \mu(i)\frac{1}{\Delta}\min\{1,\frac{\mu(j)}{\mu(i)}\} = \frac{\mu(i)}{\Delta} \]
+                and
+                \[ \mu(j)P(j,i) = \mu(j)\frac{1}{\Delta}\min\{1,\frac{\mu(i)}{\mu(j)}\} = \frac{\mu(i)}{\Delta} \]
+                So we are done.
+            \end{itemize}
+        \end{sketchproof}
+        \begin{remark}
+            If we run the algorithm sufficiently long, the sequence we get will have a distribution that is approximately the same as $\mu$. What's more, in this algorithm, we only need to know $\frac{\mu(j)}{\mu(i)}$, instead of knowing $\mu$. And this is useful in practice.
+        \end{remark}
+
+    \subsection{Simulated Annealing}
+        \par Simulated Annealing is a stochastic optimization algorithm. Given a set $\mathcal{S}$, and a function $w(x)$. We want to minimize (or maximize) $w(x)$.
+        \paragraph{Notations.}
+        \begin{itemize}
+            \item $\mathcal{S}^* = \{x\in\mathcal{S}|w(x) = \min_{y\in\mathcal{S}} w(y)\}$: the set of global minimizers of $w(x)$.
+            \item $\mu^*$: a uniform distribution on $\mathcal{S}^*$.
+            \item $T$: The ``Temperature'' parameter.
+        \end{itemize}
+        \par We define a distribution on $\mathcal{S}$, and we want to make the probability concentrate on $x$ where $w(x)$ is small. However sampling from $\mathcal{S}$ is usually infeasible because $\mathcal{S}$ is too large.
+        \par Instead, we introduce a parameter $T$, and let
+        \[ \mu_T(x) \sim e^{-\frac{w(x)}{T}} \]
+        \begin{proposition}
+            As $T \to 0$, $\mu_T(x) \to \mu^*(x)$.
+        \end{proposition}
+        \par However, if we start with a very small $T$, we may get stuck in a local extremum. So we start with a large $T_1$ and gradually decrease $T$.
+        \begin{theorem}
+            If $T_1,T_2,\dots$ satisify
+            \begin{enumerate}
+                \item $\{T_i\} \to 0$.
+                \item $T_i$ decreases slow enough. (``Slow'' means that the sum of a certain series defined by $\mathcal{S}$ diverges, but it is so complicated that it is beyond the scope.)
+            \end{enumerate}
+            Then let $P^{(n)} \triangleq \prod_{k=1}^n P_{T_k}$.
+            \[ \forall \mu \quad \mu^TP^{(n)} \to \mu^* \]
+        \end{theorem}
+        That is, as long as $T$ decreases slowly enough, we only need to run each temperature $T_i$ \emph{for one step with the Metropolis algorithm}.
+
+    \subsection{Convergence Analysis of Markov Chains}
+        By designing a proper coupling $C$, we can upper bound the convergence speed of a Markov Chain.
+        \begin{definition}[Mixing Time]\label{def:MixingTime}
+            The \textbf{mixing time} $\tau_{mix}(\varepsilon)$ is defined as
+            \[ \tau_{mix}(\varepsilon) = \max_{a} \min_{t} \| \mu_t^a - \pi \|_{TV} \le \varepsilon \]
+            It represents the minimal time for $\mu$ to converge to $\pi$ starting from the worst initial distribution $\mu^a$.
+        \end{definition}
+
+        \subsubsection{Random Walk on Hypercube.}
+            A \textbf{hypercube} is a $\{0,1\}$ string $\{0,1\}^n$, and there exists an edge between $x$ and $y$ if and only if $\sum_{i=1}^n|x(i)-y(i)| = 1$, i.e. $x$ and $y$ differs in only one bit.
+            Let
+            \[
+                X_{t+1} = 
+                \begin{cases}
+                    X_t \quad & w.p.\frac{1}{2}\\
+                    \textit{Move into one of the neighbours} & w.p.\frac{1}{2}
+                \end{cases}
+            \]
+            i.e. we have probability $1/2$ to stay still and probability $1/2$ to move into a neighbour.
+
+            If we start from the worst case, then $\mathbb{P}[X_t \neq Y_t]$ can give an upper bound of $\tau_{mix}$.
+
+            We construct the coupling as follows. Suppose we are at $X_t$,
+            \begin{enumerate}
+                \item Uniformly pick $i \in n$.
+                \item Uniformly pick $c \in \{0, 1\}$.
+                \item Set the $i$-th bit of $X_t$ to $c$ and yield $X_{t+1}$.
+            \end{enumerate}
+            We choose \emph{the same} $i$ and $c$ for both $X_t$ and $Y_t$.
+
+            It can be proved that if we run $n\log n + cn$ iterations, the probability that $X_t \neq Y_t$ is at most $e^{-c}$. i.e.
+            If
+            \[ t \ge n\log n + cn \]
+            Then
+            \[ \mathbb{P}[X_t \ne Y_t] \le e^{-c} = \varepsilon \]
+            Therefore 
+            \[ \tau_{mix} \le n\log n + n\log \frac{1}{\varepsilon} \le \varepsilon\]
+            So we need approximately at most $n\log n$ steps.
+
+        \subsubsection{Coupon Collection}
+            Given a set of $n$ coupons, we pick $X$ times. And we want to know the total time we need to collect all $n$ coupons.
+
+            Let $X_i$ denotes the number of gatchas needed to get the $i$-th coupon.
+            \[ \mathbb{E}[X] = \mathbb{E}[\sum_{i=1}^n X_i] = \sum_{i=i}^n \mathbb{E}[X_i] \]
+            Notice that $X_i$ has a geometric distribution with parameter $\frac{n-i+1}{n}$. Therefore
+            \[ \mathbb{E}[X] = \sum_{i=1}^n \frac{n}{n-i+1} = n\sum_{i=1}^n \frac{1}{i} \approx n(\log n + \gamma) \]

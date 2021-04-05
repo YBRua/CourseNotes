@@ -15,6 +15,10 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**Apr.05, 2021**
+- Updated AI2613
+  - Metropolis, Simulated Annealing and Mixing time.
+
 **Apr.02, 2021**
 - Updated AI2611
   - Updated Naive Bayes
