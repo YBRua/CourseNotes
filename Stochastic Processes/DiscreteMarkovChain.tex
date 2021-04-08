@@ -554,12 +554,15 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
 
         We first introduce some basic concepts.
 
-    %%%%%%%% Stochastical Dominance
-    \subsection{Stochastical Dominance}
-        \begin{definition}[Stochasitcal Dominance]
+    %%%%%%%% Stochastic Dominance
+    \subsection{Stochastic Dominance}
+        \begin{definition}[Stochastic Dominance]
             A distribution $\mu$ is said to \textbf{stochasitcally dominate} $\nu$ if
             \[ \forall x\quad \mathbb{P}_{X\sim\mu}[X \ge x] \ge \mathbb{P}_{Y\sim\nu}[Y \ge x] \]
         \end{definition}
+        \begin{remark}
+            Let $F$ and $G$ be the cumulative distribution function of $X$ and $Y$, we have $F(x) \le G(x)$, i.e. the probability of $X$ concentrates on larger values.
+        \end{remark}
         \paragraph{Some Examples.}
         \begin{itemize}
             \item 2-SAT.
@@ -588,7 +591,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         \begin{theorem}\label{MonoCouplingAndDominance}
             There is a monotone coupling of $X$ and $Y$ \emph{if and only if} $X$ stochastically doniminates $Y$.
         \end{theorem}
-        \begin{sketchproof}
+        \begin{proof}
             ~{}\\
             $\Rightarrow$.
             By definition of coupling
@@ -598,8 +601,14 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             The latter term is $0$ by definition of monotone coupling, so
             \[ \mathbb{P}_{Y\sim\nu}[Y \ge a] = \mathbb{P}_{(X,Y)\sim C}[X \ge Y \ge a] \le \mathbb{P}_{(X,Y)\sim C}[X \ge a] = \mathbb{P}_{X\sim\mu}[X \ge a] \]
 
-            $\Leftarrow$ is left as homework (that's bad).
-        \end{sketchproof}
+            $\Leftarrow$. Suppose $X$, $Y$ are two random variables having  distribution $F(x)$ and $G(x)$ respectively. By stochastic dominance we have $F(x) \le G(x)$ for any $x$. Let $U$ be a random variable having a uniform distribution over $(0,1)$, since $F(x)$ is increasing
+            \[ F^{-1}(U) \le x \Leftrightarrow F(F^{-1}(U)) \le F(x) \]
+            Therefore
+            \[ \mathbb{P}[F^{-1}(U) \le x] = \mathbb{P}[F(F^{-1}(U)) \le F(x)] = \mathbb{P}[U \le F(x)] = F(x) \]
+            Similarly
+            \[ \mathbb{P}[G^{-1}(U) \le x] = G(x) \]
+            Since $F(x) \le G(x)$, we have $F^{-1}(x) \ge G^{-1}(x)$ and therefore we obtained a coupling $C = (X' = F^{-1}(U), Y' = G^{-1}(U))$ for which $X' \ge Y'$.
+        \end{proof}
 
     %%%%%%%% 2-SAT Revisited
     \subsection{2-SAT: Proof of Correctness}
@@ -646,6 +655,25 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             \[ \mathbb{P}[\hat{X} = \hat{Y}] = \sum_{z\in\Omega}m(z) \]
             where $m(z) = \min\{ \mu(z), \nu(z) \}$.
         \end{proposition}
+        \begin{proof}
+            Let $p = \sum_{z\in\Omega m(z)}$. Let $A = \{x| \mu(x) > \nu(x)\}$.
+            
+            Notice that
+            \[ m(x) = 
+                \begin{cases}
+                    \mu(x) \quad &(x \in A)\\
+                    \nu(x) \quad &(x \notin A)
+                \end{cases}
+            \]
+            
+            \begin{align*}
+                \mathbb{P}[X=Y] &= \mathbb{P}[X=Y\in A] + \mathbb{P}[X = Y \notin A]\\
+                &\le \mathbb{P}[Y \in A] + \mathbb{P}[X \notin A]\\
+                &= \sum_{z\in A}\nu(z) + \sum_{z\notin A}\mu(z)\\
+                &= \sum_{z\in A}m(z) + \sum_{z \notin A}m(z)\\
+                &= p
+            \end{align*}
+        \end{proof}
         \begin{remark}
             For continuous cases, the sum becomes integral.
         \end{remark}
@@ -657,12 +685,12 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             \[ \|\mu - \nu \|_{TV} \triangleq \frac{1}{2}\sum_{x\in\Omega}|\mu(x)-\nu(x)| = \max_{A\subseteq\Omega} \mu(A)-\nu(A) = 1-\min_{z\in\Omega}\{ \mu(z), \nu(z) \} \]
             Geometrically, this is the half of size of the area between the pdf of $\mu$ and $\nu$.
         \end{definition}
-        \begin{lemma}[The Coupling Lemmma]\label{CouplingLemma}
+        \begin{lemma}[The Coupling Lemma]\label{CouplingLemma}
             For any coupling $C$ of $\mu$ and $\nu$,
             \[ \mathbb{P}_{(X,Y)\sim C}[X \neq Y] \ge \|\mu - \nu \|_{TV} \]
             and there exists a coupling $C^{*}$ that achieves the equality.
         \end{lemma}
-        \begin{sketchproof}
+        \begin{proof}
             If we view the coupling as a way to fill the table, then $\mathbb{P}_{(X,Y) \sim C}[X=Y]$ is the sum of all values on the diagonal of the table. Intuitively, the value on $i$-th row and $j$-th column is upper bounded by $\mu(i)$ and $\nu(j)$, so the sum is upper bounded by $\sum_{z\in\Omega}\min\{\mu(z), \nu(z)\}$.
             \begin{align*}
                 \mathbb{P}[X \neq Y] &= 1 - \mathbb{P}_{(X,Y) \sim C}[X = Y] \\
@@ -671,7 +699,15 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
                 &= \sum_{z \in \Omega}\left( \mu(z) - \min\{\mu(z),\nu(z)\} \right)\\
                 &= \| \mu - \nu \|_{TV}
             \end{align*}
-        \end{sketchproof}
+            The previous part showed that $\mathbb{P}_{(X,Y)\sim C}[X \neq Y]$ is always lower bounded by $\|\mu - \nu\|_{TV}$, we further show that the equality is achieved by the maximum coupling. Let $A = \{x| \mu(x) > \nu(x)\}$
+            \begin{align*}
+                \|\mu - \nu\|_{TV} &= \mu(A) - \nu(A) = 1 - \mu(A^{c}) - \nu(A)\\
+                &= 1 - \sum_{z \notin A}\mu(z) - \sum_{z \in A}\nu(z)\\
+                &= 1 - \sum_{z \notin A}m(z) - \sum_{z \in A}m(z)\\
+                &= 1 - \mathbb{P}[X=Y]\\
+                &= \mathbb{P}[X \neq Y]
+            \end{align*}
+        \end{proof}
         \begin{remark}
             The $C^*$ here is the maximal coupling.
         \end{remark}
@@ -735,7 +771,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
 
 
 \section{Applications of Markov Chain}
-We assume the state space $\mathcal{S}$ is finite, but in most cases the applications can be generalized to countably infinite cases. And we assume that the Markov chains are Aperiodic and Irreducible.
+    We assume the state space $\mathcal{S}$ is finite, but in most cases the applications can be generalized to countably infinite cases. And we assume that the Markov chains are Aperiodic and Irreducible.
 
     \subsection{Time Reversibility}
         \begin{definition}[Time Reversibility]
@@ -823,13 +859,18 @@ We assume the state space $\mathcal{S}$ is finite, but in most cases the applica
         \end{theorem}
         That is, as long as $T$ decreases slowly enough, we only need to run each temperature $T_i$ \emph{for one step with the Metropolis algorithm}.
 
-    \subsection{Convergence Analysis of Markov Chains}
-        By designing a proper coupling $C$, we can upper bound the convergence speed of a Markov Chain.
+
+\section{Convergence Analysis of Markov Chains}
+    By designing a proper coupling $C$, we can upper bound the convergence speed of a Markov Chain.
+
+    \subsection{Mixing Time}
         \begin{definition}[Mixing Time]\label{def:MixingTime}
             The \textbf{mixing time} $\tau_{mix}(\varepsilon)$ is defined as
             \[ \tau_{mix}(\varepsilon) = \max_{a} \min_{t} \| \mu_t^a - \pi \|_{TV} \le \varepsilon \]
             It represents the minimal time for $\mu$ to converge to $\pi$ starting from the worst initial distribution $\mu^a$.
         \end{definition}
+
+    \subsection{Some Examples}
 
         \subsubsection{Random Walk on Hypercube.}
             A \textbf{hypercube} is a $\{0,1\}$ string $\{0,1\}^n$, and there exists an edge between $x$ and $y$ if and only if $\sum_{i=1}^n|x(i)-y(i)| = 1$, i.e. $x$ and $y$ differs in only one bit.
@@ -869,3 +910,70 @@ We assume the state space $\mathcal{S}$ is finite, but in most cases the applica
             \[ \mathbb{E}[X] = \mathbb{E}[\sum_{i=1}^n X_i] = \sum_{i=i}^n \mathbb{E}[X_i] \]
             Notice that $X_i$ has a geometric distribution with parameter $\frac{n-i+1}{n}$. Therefore
             \[ \mathbb{E}[X] = \sum_{i=1}^n \frac{n}{n-i+1} = n\sum_{i=1}^n \frac{1}{i} \approx n(\log n + \gamma) \]
+
+        \subsubsection{Card Shuffling}
+            Suppose we shuffle a deck of 52 cards using a ``top-in-at-random'' method: we pick the card on the top and insert it into one of 52 positions (including the top) at random. This Markov chain has the stationary distribution $\pi = Uniform(\mathcal{S}_{52})$. By FTMC, $\|\pi_n - pi\|_{TV} \to 0$ as $n \to \infty$.
+
+            It is possible to find a random variable $T$ which denotes the time at which the deck becomes exactly uniformly distributed. We first introduce some notations.
+
+            \begin{itemize}
+                \item $U_i$ is uniformly distributed on $1,2,\dots,52$ representing that the $i$-th shuffle moves the card on the top to position $U_i$.
+                \item $T_1 = \inf\{ n: U_n = 52 \}$ denotes the first time a card is moved below card 52.
+                \item $T_2 = \inf\{ n>T_1: U_n \ge 51 \}$ denotes the second time a card is moved below card 52.
+                \item $T_{51} = \inf\{ n>T_50: U_n \ge 2 \}$ denotes the 51st time a card is moved below card 52.
+            \end{itemize}
+
+            Then $T = T_{52} = T_{51} + 1$.
+
+            Clearly we have
+            \begin{itemize}
+                \item $T_1 \sim Geometry(1/51)$
+                \item $T_2 - T_1 \sim Geometry(2/52)$
+                \item \dots
+                \item $T_{52} - T_{51} \sim Geometry(52/52) = 1$
+            \end{itemize}
+
+            We can calculate $\mathbb{E}[T]$. By linearity of Expectation,
+            \[ \mathbb{E}[T] = \mathbb{E}[T_1] + \mathbb{E}[T_2-T_1] + \dots + \mathbb{E}[T_52 - T_51] \approx 52\log 52 \]
+            Similarly, if we are shuffling $d$ cards, we have
+            \[ \mathbb{E}[T] = d\log{d} \]
+
+    \subsection{Strong Stationary Times}
+        \begin{definition}[Stopping Time]
+            The time $T$ is called the \textbf{stopping time} if for each $n$, one can tell whether $T=n$ by just looking at $X_0, X_1, \dots, X_n$, i.e. it is not necessary to know any other future values of $X_{n+1}, X_{n+2}, \dots$.
+        \end{definition}
+        \begin{remark}
+            In the card-shuffling example, $T$ is a stopping time.
+        \end{remark}
+        \begin{definition}[Strong Stationary Time]
+            A random variable $T$ is called a \textbf{strong stationary time} if it satisfies
+            \begin{enumerate}
+                \item $T$ is a stopping time
+                \item $X_T$ is distributed as $\pi$
+                \item $X_T$ is independent of $T$
+            \end{enumerate}
+        \end{definition}
+        \begin{lemma}\label{Lemma:StrongStationaryTime}
+            If $T$ is a strong stationary time for the Markov Chain $\{X_n\}$, then $\|\pi_n - \pi\| \le \mathbb{P}[T > n]$ for all $n$.
+        \end{lemma}
+
+    \subsection{Threshold Pheonomenon}
+        In card shuffling and many other Markov Chains, $\|\pi_n - \pi\|$ stays close to $1$ for a while, and suddenly drop to nearly $0$ at approximately $n = d\log{d}$
+
+        \begin{theorem}
+            For $T$ defined in the card shuffling, let $\Delta(n) = \|\pi_n - \pi\|$, we have
+            \[ \Delta(d\log{d} + cd) \le \mathbb{P}[T > d\log{d} + cd] \le e^{-c} \]
+            for all $c \ge 0$
+        \end{theorem}
+        \begin{sketchproof} ~{}
+            \begin{enumerate}
+                \item The first inequality follows from Lemma \ref{Lemma:StrongStationaryTime}.
+                \item To prove the second inequality, we introduce the coupon collector's problem.
+                \item Suppose we want to collect $d$ uniforly distributed coupons, the \sout{gatchas} boxes we need to open to collect all $d$ coupons have the distribution
+                \[ 1 + Geometry((d-1)/d) + \dots + Geometry(1/d) \]
+                \item Let $B_i = \{ \text{coupon $i$ does not appear in the first $n$ cereal boxes} \}$
+                \item Then $T_i > n$ is the union $\bigcup_{i=1}^dB_i$
+                \item $\mathbb{P}[T>n] \le \sum_{i=1}^d\mathbb{P}[B_i] = d\left(1 - \frac{1}{d}\right)^n \le de^{-n/d}$
+                \item Take $n = d\log{d} + cd$ yield the result
+            \end{enumerate}
+        \end{sketchproof}
