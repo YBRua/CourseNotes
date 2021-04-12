@@ -15,6 +15,12 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**Apr.12, 2021**
+- Updated AI2613
+  - Added Poisson Process.
+  - Exponential and Poisson distirbution
+  - Two definitions of Poisson Processes and their equivalence.
+
 **Apr.09, 2021**
 - Updated AI2651
   - 参照课件更新了笔记

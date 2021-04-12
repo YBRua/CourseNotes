@@ -906,7 +906,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         \subsubsection{Coupon Collection}
             Given a set of $n$ coupons, we pick $X$ times. And we want to know the total time we need to collect all $n$ coupons.
 
-            Let $X_i$ denotes the number of gatchas needed to get the $i$-th coupon.
+            Let $X_i$ denotes the number of gachas needed to get the $i$-th coupon.
             \[ \mathbb{E}[X] = \mathbb{E}[\sum_{i=1}^n X_i] = \sum_{i=i}^n \mathbb{E}[X_i] \]
             Notice that $X_i$ has a geometric distribution with parameter $\frac{n-i+1}{n}$. Therefore
             \[ \mathbb{E}[X] = \sum_{i=1}^n \frac{n}{n-i+1} = n\sum_{i=1}^n \frac{1}{i} \approx n(\log n + \gamma) \]
@@ -969,7 +969,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             \begin{enumerate}
                 \item The first inequality follows from Lemma \ref{Lemma:StrongStationaryTime}.
                 \item To prove the second inequality, we introduce the coupon collector's problem.
-                \item Suppose we want to collect $d$ uniforly distributed coupons, the \sout{gatchas} boxes we need to open to collect all $d$ coupons have the distribution
+                \item Suppose we want to collect $d$ uniforly distributed coupons, the \sout{gachas} boxes we need to open to collect all $d$ coupons have the distribution
                 \[ 1 + Geometry((d-1)/d) + \dots + Geometry(1/d) \]
                 \item Let $B_i = \{ \text{coupon $i$ does not appear in the first $n$ cereal boxes} \}$
                 \item Then $T_i > n$ is the union $\bigcup_{i=1}^dB_i$

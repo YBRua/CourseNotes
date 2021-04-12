@@ -1,0 +1,152 @@
+\chapter{Poison Processes}
+“好想退休哦”
+\newpage
+
+\section{Poisson Distribution}
+    \subsection{Poisson Distibution}
+    \begin{definition}[Poisson Distribution]
+        $X$ has a \textbf{Poisson distribution} with rate $\lambda$, denoted by $Poisson(\lambda)$, if
+        \[ \mathbb{P}[X=k] = \frac{\lambda^k}{k!}e^{-\lambda} \]
+    \end{definition}
+    \begin{remark}
+        If we view $k$ as a constant w.r.t. $n$, then the Poisson distribution can be seen as the limitation of a Bernoulli distribution $Bermoulli(n, p)$ with $p = \frac{\lambda}{n}$, as $n\to\infty$.
+    \end{remark}
+    \begin{theorem}
+        If $n$ is large, then $Bernoulli(n, \lambda/n)$ is approximately $Poisson(\lambda)$.
+    \end{theorem}
+
+    \subsection{Expectation and Variance of Poisson Distribution}
+    Let $X$ be a random variable with a Poisson distribution, then
+    \[ \mathbb{E}[X] = \lambda \]
+    \[ Var[X] = \lambda \]
+
+    \subsection{Additivity of Poisson Distributions}
+    \begin{theorem}[Additivity of Poisson Distributions]
+        Let $X_1$, $X_2$ be two independent random variables, $X_1\sim Poisson(\lambda_1)$, $X_2\sim Poisson(\lambda_2)$, then
+        \[ X_1 + X_2 \sim Poisson(\lambda_1 + \lambda_2) \]
+    \end{theorem}
+    \begin{proof}
+        \begin{align*}
+            \mathbb{P}[X_1=X_2=n] &=\sum_{m=0}^n \mathbb{P}[X_1=m, X_2=n-m]\\
+            &= \sum_{m=0}^n\mathbb{P}[X_1=m]\cdot\mathbb{P}[X_2=n-m]\\
+            &= \sum_{m=0}^n\frac{\lambda_1^m}{m!}e^{-\lambda_1}\cdot\frac{\lambda_2^{n-m}}{(n-m)!}e^{-\lambda_2}\\
+            &= \frac{e^{-(\lambda_1+\lambda_2)}}{n!}\sum_{m=0}^n\frac{n!}{n!(n-m)!}\lambda_1^m\lambda_2^{n-m}\\
+            &= \frac{e^{-(\lambda_1+\lambda_2)}}{n!}\sum_{m=0}^n\mathrm{C}_m^n \lambda_1^m \lambda_2^{n-m}\\
+            &= \frac{(\lambda_1+\lambda_2)^n}{n!}e^{-(\lambda_1+\lambda_2)}
+        \end{align*}
+    \end{proof}
+
+
+\section{Exponential Distributions}
+
+    \subsection{Definition of Exponential Distributions}
+    \begin{definition}[Exponential Distribution]
+        A random variable $X$ is said to have an \textbf{exponential distribution} with rate $\lambda$, $X \sim Exp(\lambda)$ if
+        \[ \forall t \ge 0 \quad \mathbb{P}[X \le t] = 1 - e^{-\lambda t} \]
+    \end{definition}
+
+    \subsection{Properties of Exponential Distribution}
+
+        \subsubsection{Probability Density Function}
+        The exponential distribution $Exp(\lambda)$ has probability density function
+        \[ p(x) = \lambda e^{-\lambda x} \]
+
+        \subsubsection{Expectation}
+        \[ \mathbb{E}[X] = \int_0^{+\infty} t\lambda e^{-\lambda t}\mathrm{d}t = \frac{1}{\lambda} \]
+
+        \subsubsection{Variance}
+        \[ Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X] = \frac{1}{\lambda^2} \]
+
+        \subsubsection{Lack of Memory}
+        \[ \mathbb{P}[X>t+s|X>s] = \mathbb{P}[X \ge t] \]
+        \begin{remark}
+            If we have waited for $s$ units of time, then the probability that we have to wait for $t$ more units is the same as that of we have not waited at all.\footnote{白~{}等~{}了}
+        \end{remark}
+
+        \subsubsection{Exponential Races}
+        Let $X_1 \sim Exp(\lambda_1)$, $X_2 \sim Exp(\lambda_2)$ be two independent random variables. Let $Y = \min(X_1, X_2)$, then
+        \[ Y \sim Exp(\lambda_1 + \lambda_2) \]
+        \begin{proof}
+            \begin{align*}
+                \mathbb{P}[Y \ge k] &= \mathbb{P}[\min\{X_1,X_2\} \ge k]\\
+                &= \mathbb{P}[X_1 \ge k, X_2 \ge k]\\
+                &= \mathbb{P}[X_1 \ge k]\cdot \mathbb{P}[X_2 \ge k]\\
+                &= e^{-(\lambda_1 + \lambda_2)k}
+            \end{align*}
+        \end{proof}
+
+        If we consider the problem of ``Who finishes first between $X_1$ and $X_2$'', then
+        \[ \mathbb{P}[Y=X_1]=\sum_{s=0}^\infty \mathbb{P}[X_1=s,X_2>s] = \int_0^{+\infty}p_1(s)\mathbb{P}[X_2>s]\mathrm{d}s = \frac{\lambda_1}{\lambda_1 + \lambda_2} \]
+
+
+\section{Poisson Processes}
+
+    \subsection{Definition of Poisson Processes}
+    \begin{definition}[Poisson Process]\label{Def:PoissonProcess}
+        $\{N(s)|s \ge 0\}$ is a \textbf{Poisson Process}, if
+        \begin{enumerate}
+            \item $N(0)=0$
+            \item $\forall t, s \ge 0 \quad N(t+s) - N(s) \sim Poisson(\lambda t)$
+            \item $n$ has \textbf{independent increments}: $\forall t_0 \le t_1 \le \dots \le t_n$,
+            \[ N(t_1)-N(t_0), N(t_2)-N(t_1), \dots, N(t_n)-N(t_{n-1}) \]
+            are \textbf{mutually independent}.
+        \end{enumerate}
+    \end{definition}
+
+    \subsection{Alternative Interpretation of Poisson Process}
+    We can construct a Poisson process as the sum of multiple random variables with Exponential distributions.
+    \begin{proposition}\label{Prop:AltDefOfPoissonProcess}
+        Let $\tau_1,\tau_2,\dots,\tau_n$ be independent random variables with exponential distribution $Exp(\lambda)$. Let $T_n=\sum_{i=1}^n\tau_i$, $N(s)=\max\{n|T_n \le s\}$
+
+        Then $N(s)$ is a Poisson process.
+    \end{proposition}
+    \begin{remark}
+        If we think of $\tau_i$ as the time interval between the arrival time of customers in a store, then $N(s)$ is the number of customer arrivals before time $s$.
+    \end{remark}
+
+    To prove Proposition \ref{Prop:AltDefOfPoissonProcess}, we first introduce a theorem.
+
+    \begin{theorem}\label{Thm:SumOfExpHasGammaDistribution}
+        Let $\tau_1, \tau_2, \dots, \tau_n$ be independent random variables with Exponential distribution $Exp(\lambda)$. Let $T_n = \sum_{i=1}^n\tau_n$, then $T_n$ has a \emph{Gamma distribution} $\Gamma(n, \lambda n)$
+        \[ f_{T_n}(t) = \lambda e^{-\lambda t}\frac{(\lambda t)^{n-1}}{(n-1)!} \quad \forall t \ge 0 \]
+    \end{theorem}
+    \begin{proof}
+        Prove by induction on $n$.
+        \begin{itemize}
+            \item \textbf{Base. } $n=1$. $f_{T_1}(t) = \lambda e^{-\lambda t}$ obviouly holds.
+            \item \textbf{Hypothesis. } Suppose it holds for $n$.
+            \item \textbf{Step. }
+            \begin{align*}
+                f_{T_{n+1}}(t) &= \int_0^t f_{T_n}(s)\cdot\lambda e^{-\lambda(t-s)}\mathrm{d}s\\
+                &= \int_0^t \lambda e^{-\lambda s}\frac{(\lambda s)^{n-1}}{(n-1)!}\lambda e^{-\lambda(t-s)}\mathrm{d}s \quad \text{(Plug in the hypothesis)}\\
+                &= \frac{\lambda^{n+1}}{(n-1)!}e^{-\lambda t}\int_0^t s^{n-1}\mathrm{d}s \quad \text{(Move the constants out)}\\
+                &= \frac{\lambda^{n+1}}{n!}e^{-\lambda t}t^n
+            \end{align*}
+            which is exactly $\Gamma(n+1, \lambda(n+1))$, so we are done.
+        \end{itemize}
+    \end{proof}
+    \begin{remark}
+        Theorem \ref{Thm:SumOfExpHasGammaDistribution} states that the arrival time of the $n$-th customer has a Gamma distribution.
+    \end{remark}
+
+    We can now prove Proposition \ref{Prop:AltDefOfPoissonProcess}.
+    \subsection{Proof of Equivalence of the two Definitions}
+    \begin{proof}
+        To show that the two definitions are equivalent, we need to show that the three requirements in Definition \ref{Def:PoissonProcess} can be satisfied by the alternative definition \ref{Prop:AltDefOfPoissonProcess}.
+        \begin{enumerate}
+            \item $N(0)=0$ is trivial.
+            \item We begin proving (2) of Definition \ref{Def:PoissonProcess} from the case $s=0$. Notice that $N(t)=n \Leftrightarrow T_n \le t \wedge T_{n+1} > t$, i.e. the $n$-th customer has arrived, but the $(n+1)$-th has not. So we only need to prove the latter has Poisson distribution.
+            \begin{align*}
+                \mathbb{P}[N(t)=n] &= \mathbb{P}[T_n \le t, T_{n+1} > t]\\
+                &= \int_0^tf_{T_n}(s)\cdot\mathbb{P}[\tau_{n+1} > t-s]\mathrm{d}s \quad \text{(Enumerate all possible values of $t$)}\\
+                &= \int_0^t\lambda e^{-\lambda s}\frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda(t-s)}\mathrm{d}s \quad \text{(Theorem \ref{Thm:SumOfExpHasGammaDistribution})}\\
+                &= \frac{\lambda^n}{(n-1)!}e^{-\lambda t}\int_0^t s^{n-1}\mathrm{d}s \quad \text{(Move out the constants)}\\
+                &= \frac{(t\lambda)^n}{n!}\cdot e^{-\lambda t}
+            \end{align*}
+            which is exactly the expression of $Poisson(\lambda t)$, so we are done.
+
+            When $s > 0$, by the lack of memory property, $N(t+s)-N(s)$ must have the same distribution as $N(t) - N(0) = N(t)$. Of course this can also be verified by some moderate calculations.
+            \item (3) of Definitiion \ref{Def:PoissonProcess} can be proved using a similar argument. Notice that the lack-of-memory property and (2) implies that the ``number of arrivals'' after $s$ is independent of the arrivals before $s$. Therefore $N(t_n) - N(t_{n-1})$ is independent of $N(r)$ for all $r < t_{n-1}$. So the result can be proved by induction.
+        \end{enumerate}
+    \end{proof}
+    
