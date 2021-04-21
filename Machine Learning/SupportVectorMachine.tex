@@ -1,0 +1,173 @@
+\chapter{Support Vector Machines}
+Super Vegetable Me
+\newpage
+
+
+\section{Max Margin Classifiers}
+    The goal is to find an \emph{optimal} separating hyperplane $w^Tx+b = 0$ such that the margin between different classes is \emph{maximized}. In the following section we assume the data are linear separable.
+
+    \subsection{Notations}
+        \begin{itemize}
+            \item $x^{(i)}$: $i$-th sample
+            \item $y^{(i)} \in \{1, -1\}$: $i$-th label
+        \end{itemize}
+
+    \subsection{Basic Problem Formulation}
+        \begin{itemize}
+            \item $w^Tx + b = 0$ is the separating hyperplane
+            \item For $x$ on the hyperplane, $w^Tx + b = 0$
+            \item For $x$ on the upper boarder of the margin, $w^Tx+b = 1$, this can always be satisfied by scaling $w$ and $b$
+            \item For $x$ on the lower boarder of the margin , $w^Tx+b = -1$
+            \item For $x$ with label $y=1$, we want $w^Tx+b\ge1$
+            \item For $x$ with label $y=-1$, we want $w^Tx+b\le1$
+        \end{itemize}
+        Let $h(x) = w^Tx + b$. For $x$ with $y=1$, we want $h(x) \ge 1$, and conversely for $x$ with $y=-1$, we want $h(x) \le -1$. Or in a compact way, for all $x$, we want
+        \[ y(w^Tx + b) \ge 1 \]
+
+    \subsection{Formulation into an Optimization Problem}
+        Let $w_o^Tx+b_o=0$ be the optimal separating hyperplane, with normal vector $\frac{w_o}{\|w_o\|}$.
+        \begin{enumerate}
+            \item For any $x$, let $x_p$ be the point on $w_o^Tx+b=0$ s.t. $x - x_p$ is perpendicular to $w_o^Tx+b_o=0$
+            \item $x = x_p + r\left(\frac{w_o}{\|w_o\|}\right)$, where $r$ is a scaling factor
+            \item $h(x_p) = w_o^Tx_p + b_o = 0$
+            \item $w_o^Tx_p = -b_o$
+            \item $h(x) = w_o^Tx + b_o = w_o^T\left(x_p + r\left(\frac{w_o}{\|w_o\|}\right)\right) + b_o = w_o^Tx_p + r\left(\frac{w_o^Tw_o}{\|w_o\|}\right) + b_o = r\|w_o\|$
+            \item For a support vector $x^{(s)}$, $|r| = g(x^{(s)})/\|w_o\| = 1/\|w_o\|$
+            \item So the margin of separation is $2r = 2/\|w_o\|$
+            \item Maximizing $1/\|w\|$ is equivalent to minimizing $\|w\|^2 = w^Tw$
+        \end{enumerate}
+        Therefore
+        \begin{align*}
+            \min \quad &\frac{1}{2}w^Tw\\
+            \text{s.t.} \quad & y^{(i)}(w^Tx^{(i)}+b) \ge 1
+        \end{align*}
+
+
+\section{Dual Formulation of SVM}
+    \subsection{Lagrangian and KKT Conditions of Hard-Margin SVM}
+        We consider the minimization problem:
+        \begin{align*}
+             \min \quad &\frac{1}{2}w^Tw\\
+             \text{s.t.} \quad & y^{(i)}(w^Tx^{(i)}+b) \ge 1
+        \end{align*}
+        Let $\alpha_i$ be the Lagrangian Multipliers, then the Lagrangian is
+        \[ \mathcal{L}(w,b,\alpha) = \frac{1}{2}w^Tw - \sum_{i=1}^N \alpha_i y^{(i)}(w^Tx^{(i)} + b - 1) \]
+        The KKT Conditions are
+        \[
+        \begin{cases}
+            \nabla_w \mathcal{L} = w - \sum_{i=1}^N \alpha_i y^{(i)}x^{(i)} = 0\\
+            \nabla_b \mathcal{L} = \sum_{i=1}^N \alpha_i y^{(i)} = 0\\
+            d_i(w^Tx^{(i)} + b) \ge 1\\
+            \alpha_i \ge 0\\
+            \alpha_i(y^{(i)}(w^Tx^{(i)} + b) - 1) =0
+        \end{cases}    
+        \]
+        \begin{remark}
+            \begin{itemize}
+                \item If $\alpha_i > 0$, $x^{(i)}$ lies on the decision margin and corresponds to a support vector.
+                \item If $\alpha_i = 0$, $x^{(i)}$ does not lie on the decision margin.
+            \end{itemize}
+        \end{remark}
+
+    \subsection{Dual Formulation of SVM}
+        Notice that $w$ can be represented by $\alpha_i$ and $x^{(i)}$
+        \[ w = \sum_{i=1}^N \alpha_i y^{(i)}x^{(i)} \]
+        We can derive the dual problem of SVM from the Lagrangian,
+        \begin{align*}
+            \mathcal{L}(w,b,\alpha) &= \frac{1}{2}w^Tw - \sum_{i=1}^N \alpha_i y^{(i)}(w^Tx^{(i)} + b - 1)\\
+            &= \frac{1}{2}w^Tw - \sum_{i=1}^N \alpha_i y^{(i)}w^Tx^{(i)} -b\sum_{i=1}^N \alpha_i y^{(i)} + \sum_{i=1}^N \alpha_i
+        \end{align*}
+        Using the KKT conditions and substitute $w$, we can replace the term $w^Tw$ by
+        \[ w^Tw = \left(\sum_{i=1}^N \alpha_i y^{(i)}x^{(i)}\right)^T\left(\sum_{i=1}^N \alpha_i y^{(i)}x^{(i)}\right) = \sum_{i=1}^N\sum_{j=1}^N \alpha_i\alpha_j y^{(i)}y^{(j)} x^{(i)T}x^{(j)} \]
+        and similarly the second term can be replaced by
+        \[ -\sum_{i=1}^N \alpha_iy^{(i)}w^Tx^{(i)} = -\sum_{i=1}^N\sum_{j=1}^N \alpha_i\alpha_j y^{(i)}y^{(j)} x^{(i)T}x^{(j)} \]
+        Therefore the Lagrangian dual function is
+        \[ \phi(\alpha) = \sum_{i=1}^N\alpha_i - \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N \alpha_i\alpha_j y^{(i)}y^{(j)} x^{(i)T}x^{(j)} \]
+        So we derived the dual problem of hard-margin SVM
+        \begin{align*}
+            \max \quad &\phi(\alpha) = \sum_{i=1}^N\alpha_i - \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N \alpha_i\alpha_j y^{(i)}y^{(j)} x^{(i)T}x^{(j)}\\
+            \text{s.t.} \quad & \sum_{i=1}^N \alpha_i y^{(i)} = 0\\
+            \quad & \alpha_i \ge 0
+        \end{align*}
+        \begin{remark}
+            This problem an be solved efficiently (by computers) using the SMO algorithm.
+        \end{remark}
+
+
+\section{Soft Margin SVM}
+    \subsection{Slac Variables}
+        If the data is not linear separable, we can introduce slack variables $\xi_i$.
+
+        So the primal problem is
+        \begin{align*}
+            \min \quad & \frac{1}{2}w^Tw + C\sum_{i=1}^N\xi_i\\
+            \text{s.t.} \quad &y^{(i)}(w^Tx^{(i)} + b) \ge 1 - \xi_i\\
+            \quad & \xi_i \ge 0
+        \end{align*}
+        where $C$ is a user-defined hyperparameter.
+        \begin{remark}
+            $\xi_i$ implies the location of $x^{(i)}$
+            \begin{itemize}
+                \item $\xi_i = 0$: Data point outside region of separation and correcty separated.
+                \item $0 < \xi_i \le 1$: Data point inside region of separation but on the correct side of hyperplane.
+                \item $\xi_i > 1$: Data point inside region of separation and on the wrong side of hyperplane.
+            \end{itemize}
+            The choice of $C$ is  related to the performance of the model
+            \begin{itemize}
+                \item Large $C$: hard to train, but likely to have high performance
+                \item Small $C$: easy to train, but likely to have poor performance
+            \end{itemize}
+        \end{remark}
+    
+    \subsection{Dual Formulation}
+    The Lagrangian is
+    \[ \mathcal{L}(w,b,\xi,\alpha,\beta) = \frac{1}{2}w^Tw + C\sum_{i}\xi_i - \sum_i \alpha_i(y^{(i)}(w^Tx^{(i)})-1+\xi_i) - \sum_i \beta_i\xi_i \]
+    and the KKT Conditions are
+    \[
+    \begin{cases}
+        \nabla_w\mathcal{L} = 0, \quad \nabla_b\mathcal{L} = 0, \quad \nabla_{\xi_i}\mathcal{L} = 0\\
+        (y^{(i)}(w^Tx^{(i)})-1+\xi_i) \ge 1-\xi_i, \quad \xi_i \ge 0\\
+        \alpha_i(y^{(i)}(w^Tx^{(i)})-1+\xi_i) = 0, \quad \beta_i\xi_i = 0
+    \end{cases}    
+    \]
+    Notice that the introduction of $\xi_i$ doesn't affect the expression of $\nabla_w\mathcal{L}$ and $\nabla_b\mathcal{L}$, and therefore
+    \[ w = \sum_i \alpha_iy^{(i)}x^{(i)} \]
+    \[ \sum_i \alpha_i y^{(i)} = 0 \]
+    still hold.
+
+    In addition we now have
+    \[ \nabla_{\xi_i}\mathcal{L} = C - \alpha_i - \beta_i = 0 \]
+
+    After some algebra
+    \begin{align*}
+        \phi(\alpha, \beta) &= \inf\mathcal{L} = \frac{1}{2}w^Tw - \sum_i alpha_i(y^{(i)}(w^Tx^{(i)})-1)
+    \end{align*}
+
+    Notice that $\alpha_i + \beta_i = C$ can be replaced by $\alpha_i \le C$, therefore
+    \begin{align*}
+        \max \quad &\phi(\alpha) = \sum_{i=1}^N\alpha_i - \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N \alpha_i\alpha_j y^{(i)}y^{(j)} x^{(i)T}x^{(j)}\\
+        \text{s.t.} \quad & \sum_{i=1}^N \alpha_i y^{(i)} = 0\\
+        \quad & 0 \le \alpha_i \le C
+    \end{align*}
+
+
+\section{Kernel Tricks}
+    If the data is not linear separable, we can transform data into higher dimension for separation.
+
+    Suppose we want to find a function $\varphi(x)$ that maps $x$ into a higher dimension. So the decision hyperplane becomes
+    \[ y = w^T\varphi(x) + b \]
+    where $\varphi(\cdot)$ is called the kernel function.
+    The mathematical framework does not change, and all we have to do is to replace $x$ with $\varphi(x)$ in all previous derivations.
+    \[ w = \sum_i \alpha_i y^{(i)}\varphi(x^{(i)}) \]
+    \[ \phi(\alpha) = \sum_{i=1}^N\alpha_i - \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N \alpha_i\alpha_j y^{(i)}y^{(j)} \varphi^T(x^{(i)})\varphi(x^{(j)}) \]
+
+    While it is sometimes hard to determin $\varphi(\cdot)$, it is usually easier to define ``result'' of the inner product $\varphi^T(x)\varphi(x)$, denoted by $K(x_i, x_j)$ For example
+    \[ K(x_i, x_j) = \varphi^T(x)\varphi(x) = \exp\left\{ -\frac{\|x_i-x_j\|^2}{\sigma^2} \right\} \]
+    Notice that in the dual problem, all terms related with $x$ comes in pairs $(x_i,x_j)$, so we can always replace the pair with $K(x_i,x_j)$
+    \begin{remark}
+        Although
+        \[ w = \sum_i \alpha_i y^{(i)}\varphi(x^{(i)}) \]
+        notice that $w$ is used to compute $w^T \varphi(x)$, and therefore
+        \[ y = w^T\varphi(x) + b = \sum_i \alpha_i y^{(i)}\varphi^T(x^{(i)})\varphi(x) = \sum_i \alpha_i y^{(i)} K(x^{(i)}, x) + b \]
+        However this operation increases complexity. \textbf{EXPENSIVE!}
+    \end{remark}

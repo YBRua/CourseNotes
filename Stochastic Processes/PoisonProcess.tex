@@ -1,5 +1,5 @@
 \chapter{Poison Processes}
-“好想退休哦”
+\emph{“好想退休哦。”}
 \newpage
 
 \section{Poisson Distribution}
@@ -149,4 +149,163 @@
             \item (3) of Definitiion \ref{Def:PoissonProcess} can be proved using a similar argument. Notice that the lack-of-memory property and (2) implies that the ``number of arrivals'' after $s$ is independent of the arrivals before $s$. Therefore $N(t_n) - N(t_{n-1})$ is independent of $N(r)$ for all $r < t_{n-1}$. So the result can be proved by induction.
         \end{enumerate}
     \end{proof}
+
+
+\section{Associating Another R.V. with a Poisson Process}
+
+    \subsection{A Property of Poisson Process}
+        We can associate some i.i.d. random variables $Y_i$ with each arrival. For example, $Y_i$ can be the gender of the $i$-th customer arriving at some restaurant; or if customers arrive in cars, $Y_i$ can be the number of passengers in a car. Let $P_j = \mathbb{P}[Y_i = j]$. Let $N_j(t)$ be the total number of $i \le N(t)$ with $Y_i = j$.
+
+        \begin{theorem}\label{Thm:ThinningOfPoissonProcess}
+            $N_j(t)$ are \emph{independent} Poisson Processes with rate $\lambda P_j$.
+        \end{theorem}
+        \begin{proof}
+            We will prove the result using the first definition of Poisson Distribution \ref{Def:PoissonProcess}. We only need to consider the simplest cases where $Y_i \in \{0,1\}$.
+            \begin{align*}
+                \mathbb{P}[N_0(t) = j, N_1(t) = k] &= e^{-\lambda t}\frac{(\lambda t)^{j+k}}{(j+k)!}\cdot C^{j+k}_j P_0^j P_1^k \\
+                &= e^{-\lambda t}\frac{(\lambda t)^{j+k}}{(j+k)!}\frac{(j+k)!}{j! \cdot k!}P_0^j P_1^k\\
+                &= e^{-P_0\lambda t}\frac{(P_0\lambda t)^j}{j!} \cdot e^{-P_1\lambda t} \frac{(P_1 \lambda t)^k}{k!}
+            \end{align*}
+            This is exactly the product of two Poisson Processes, with rate $P_0\lambda$ and $P_1\lambda$ respectively. Therefore we have completed our proof.
+        \end{proof}
+        \begin{remark}
+            One tricky fact behind this theorem is that, suppose we are interested in the gender of customers arriving at a restaurant. Assume that the probability that the customer is male or female are equal. If one day 40 males came to the restaurant, this does not give any implication to the number of females coming to the restaurant because they are independent.
+        \end{remark}
+
+    \subsection{Examples}
+        \subsubsection{Finding typos in a book.} Two editors read a 300-page manuscript. Editor $A$ finds $100$ typos, Editor $B$ finds $120$ typos, and $80$ of these typos are the same. Suppose $A$ and $B$ have probability $P_A$ and $P_B$ of discovering a typo, and suppose the typos in the book is a rate $\lambda$ Poisson Process. How can we estimate $\lambda$, $P_A$ and $P_B$?
     
+        We can associate a random variable with each typos appearing in the manuscript.
+        \begin{enumerate}
+            \item Neither $A$ or $B$ found it. $(1-P_A)(1-P_B)$
+            \item Only $A$ found it. $P_A(1-P_B)$
+            \item Only $B$ found it. $P_B(1-P_A)$
+            \item Both $A$ and $B$ found it. $P_AP_B$
+        \end{enumerate}
+        From Theorem \ref{Thm:ThinningOfPoissonProcess}, we know that the four cases follow four independent Poisson Processes. So we can estimate the parameters by solving
+        \[
+        \begin{cases}
+            300P_A(1-P_B)\lambda &= 20\\
+            300P_B(1-P_B)\lambda &= 40\\
+            \lambda P_AP_B &= 80
+        \end{cases}
+        \quad \Longrightarrow \quad
+        \begin{cases}
+            P_A &= 2/3\\
+            P_B &= 4/5\\
+            \lambda &= 1/2
+        \end{cases}
+        \]
+    
+    \subsubsection{Coupon Collector Once Again.}
+    We revisit the Coupon Collector's problem, but this time we assume the probability of the $j$-th coupon is $P_j$.
+    \begin{itemize}
+        \item Let $N_j$ be the number of gachas before we first get a coupon of the $j$-th category.
+        \item Let $N = \max_{1 \le j \le n}\{N_j\}$ is the total number of gachas we need to collect all categories of coupons.
+    \end{itemize}
+    We want to find $\mathbb{E}[N]$.
+
+    We re-formulate the problem into the following: suppose we owns a restaurant, and the customers coming to the restaurant is a Poisson Process of rate $\lambda = 1$. Each customer brings a coupon, let $Y_j$ be the category of the coupon brought by the $j$-th customer. Therefore $N_j(t)$ is a Poisson Process with rate $P_j$. Let $X_j$ be the random variable \emph{in this Poisson Process setting} denoting the first time to meet a customer with a category $j$ coupon, and we now alternatively consider $X = \max \{X_j\}$.
+
+    We are interested in $\mathbb{P}[X \le t]$, i.e. the probability that we have got all categories of coupons before time $t$.
+    \begin{align*}
+        \mathbb{P}[X \le t] &= \mathbb{P}[X_1 \le t, X_2 \le t, \dots X_n \le t]\\
+        &= \mathbb{P}[X_1 \le t] \cdot \mathbb{P}[X_2 \le t] \cdot \cdots \cdot \mathbb{P}[X_n \le t]
+    \end{align*}
+    By the alternative definition of Poisson Process \ref{Prop:AltDefOfPoissonProcess}, $X_j$ has an Exponential Distribution with rate $P_j$. Therefore
+    \[ \mathbb{P}[X \le t] = \prod_{i=1}^n (1-e^{-P_jt}) \]
+    \[ \mathbb{P}[X > t] = 1 - \prod_{i=1}^n (1-e^{-P_jt}) \]
+    \begin{proposition}\label{Prop:AltComputationOfExpectation}
+        If $X \ge 0$, then
+        \[ \mathbb{E}[X] = \sum_{t=0}^{\infty} \mathbb{P}[X \ge t] = \sum_{i=0}^{\infty}i\cdot\mathbb{P}[X=i] \]
+        \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t\]
+    \end{proposition}
+    By Proposition \ref{Prop:AltComputationOfExpectation},
+    \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t = \int_0^{\infty}1 - \prod_i (1-e^{-P_it})\mathrm{d}t \]
+    We have figured out $\mathbb{E}[X]$, but how is $\mathbb{E}[X]$ related to $\mathbb{E}[N]$?
+
+    Notice that $X$ denotes the exact time at which the customer carrying the $N$-th coupon arrives. If $\tau_i$ denotes the time interval between the arrival of the $(i-1)$-th and the $i$-th customers, then
+    \[ X = \sum_{i=1}^N \tau_i \]
+    Take expectation on both sides
+    \[ \mathbb{E}[X] = \mathbb{E}\left[ \sum_{i=1}^N \tau_i \right] = \mathbb{E}[N]\cdot\mathbb{E}[\tau_1] = \mathbb{E}[N] \]
+    Notice that $N$ is a random variable, but we somehow still exchanged the summation and expectation in the second equation, this holds because of Wald's Equation, which will be covered in the future. For now, notice that once $N$ is determined, $\mathbb{E}[X|N]$ is determined.
+    \[ \mathbb{E}[X|N] = N\mathbb{E}[\tau_1] = N \]
+    Take expectations on both sides again
+    \[ \mathbb{E}[\mathbb{E}[X|N]] = \mathbb{E}[X] = \mathbb{E}[N] \]
+    \begin{remark}
+        The original Coupon Collector's problem is a special case where $P_j$ are uniform. It can be proved\footnote{“我也不会积，但是我用Mathematica跑了一下他们确实相等” -- Chihao} that the integral equals to the sum of harmonic series.
+    \end{remark}
+
+
+\section{Conditioning}
+
+    \subsection{Conditioning}
+        Let $T_1, T_2, \dots, T_n$ be the arrival times of a Poisson Process with rate $\lambda$. Let $U_1, U_2, \dots, U_n$ be independent uniform random variables on $[0,t]$. Let $V_1, V_2, \dots, V_n$ be $U_i$'s re-arranged in increasing order, then
+        \begin{theorem}[Conditioning]\label{Thm:ConditioningOfPoissonProcess}
+            If we condition on $N(t)=n$, then the distribution of $T_1, \dots, T_n$ is the same as the distribution of $V_1, \dots, V_n$.
+        \end{theorem}
+        \begin{sketchproof}~{}
+            \begin{itemize}
+                \item The joint distribution of $T_1,\dots,T_n$ given $N(t)=n$ is $n!/t^n$ (by brutal force calculation).
+                \item The resulting distribution is uniform over $[0,t]$ because the space has volume $t^n$ and $n!$ possible orderings.
+            \end{itemize}
+        \end{sketchproof}
+        \begin{remark}
+            This property is useful when computing $\mathbb{P}[N(s)=m|N(t)=n]$
+            \[ \mathbb{P}[N(s)=m|N(t)=n] = C^n_m \left(\frac{s}{t}\right)^m\left(1-\frac{s}{t}\right)^{n-m} \]
+        \end{remark}
+
+
+\section{Poisson Approximation}
+    \subsection{Motivating Example: m-balls-in-n-bins}\label{subsec:m-balls-in-n-bins}
+        Suppose we throw balls randomly into several bins, and we want to know how many balls there are in the bin with the most balls.
+
+        If we consider the number of balls in each bin, the number follows a Bernoulli distribution. However, since the number of balls in different bins are not independent, analyzing the problem in this way can be complicated.
+
+        Alternatively, we can analyze the problem by constructing a Poisson Process.
+
+        \begin{itemize}
+            \item Let $X_i$ be the number of balls in the $i$-th bin.
+            \item $X_i \sim Bernoulli(m, \frac{1}{n})$.
+            \item $\sum_i X_i = m$.
+            \item We are interested in $X = \max X_i$.
+        \end{itemize}
+
+    \subsection{Poisson Approximation}
+        \begin{theorem}[Poisson Approximation]\label{Thm:PoissonApproximation}
+            Let $(X_1,\dots,X_n)$ be a sequence of random variables where each $X_i$ has a Bernoulli distribution, then its distribution is the same as $(Y_1, \dots, Y_n)$ conditioned on $\sum_i Y_i = m$, where $Y_i \sim Poisson(\lambda)$ are \emph{independent} Poisson variables with rate $\lambda$.
+        \end{theorem}
+
+    \subsection{m-balls-in-n-bins: MaxLoad Revisited}
+        With Theorem \ref{Thm:PoissonApproximation}, we can solve the motivating example in Section \ref{subsec:m-balls-in-n-bins}.
+        \begin{theorem}
+            Let $X = \max_i X_i$. Then there exist constants $c_1$, $c_2$ such that
+            \[ \mathbb{P}\left[\frac{c_1\log n}{\log\log n} < X < \frac{c_2\log n}{\log\log n}\right] = 1 - O\left(\frac{1}{n}\right) \]
+        \end{theorem}
+        \begin{proof}
+            We first calculate $\mathbb{P}\left[ X \ge \frac{c_1\log n}{\log\log n} \right]$.
+            \begin{align*}
+                \mathbb{P}\left[ X \ge \frac{c_1\log n}{\log\log n} \right] &= \mathbb{P}[\exists i: X_i \ge k]\\
+                &\le n\mathbb{P}[X_1 \ge k] \quad \text{(Union Bound)}\\
+                &\le n C^k_n\left(\frac{1}{n}\right)^k\\
+                &\le n\cdot \left(\frac{en}{k}\right)^k n^{-k} \quad \text{(Mafs)}\\
+                &= n\cdot\left(\frac{e}{k}\right)^k
+            \end{align*}
+        \end{proof}
+        Using the theorem above, we can derive an important tool.
+        \begin{theorem}
+            Let $X_i$ be Bernoulli random variables, and let $Y_i$ be independent Poisson random variables with rate $\lambda = m/n$. For any function $f$ from $\mathbb{N}^n$ to $\mathbb{N}$,
+            \[ \mathbb{E}[f(X_1, \dots, X_n)] \le e\sqrt{m}\cdot\mathbb{E}[f(Y_1,\dots,Y_m)] \]
+        \end{theorem}
+        \begin{proof}
+            \begin{align*}
+                \mathbb{E}[f(Y_1,\dots,Y_n)] &= \sum_{k=0}^{\infty}\mathbb{E}[f(Y_1,\dots,Y_n) | \sum_i Y_i = k] \cdot \mathbb{P}[\sum_i Y_i = k] \quad \text{(Total Probability)}\\
+                &\ge \mathbb{E}[f(Y_1,\dots,Y_n)|\sum Y_i = m]\cdot \mathbb{P}[\sum Y_i = m]\\
+                &= \mathbb{E}[f(X_1,\dots,X_m)]\cdot\mathbb{P}[\sum Y_i = m] \quad \text{(Thm \ref{Thm:PoissonApproximation})}
+            \end{align*}
+            If we let each $Y_i$ has a Poisson distribution of rate $m/n$, by additivity of Poisson variables we have $\sum Y_i \sim Poisson(m)$, and then
+            \begin{align*}
+                \mathbb{E}[f(Y_1,\dots,Y_n)] &= \mathbb{E}[f(X_1,\dots,X_n)]\cdot e^{-m}\frac{m^m}{m!}\\
+                &\ge \mathbb{E}[f(X_1,\dots,X_n)]\cdot\frac{1}{e\sqrt{m}}
+            \end{align*}
+        \end{proof}

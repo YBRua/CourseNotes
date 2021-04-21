@@ -1,0 +1,24 @@
+\chapter{Pattern Recognition}
+\newpage
+
+
+\section{Bayes Decision Theory}
+    The teacher somehow failed to make it clear. See \textsc{AI2611 Machine Learning} Notes.
+
+\section{Maximum Likelihood Estimation}
+    \paragraph{Assumption.} $\theta$ is a determinisitc unknown parameter.
+    \paragraph{Goal.} Find an estimation $\hat{\theta}$ that maximizes $p(X|\theta)$.
+    
+    If we assume $X_i$ are i.i.d.
+    \[ p(X|\theta) = \prod_{i=1}^N p(x_i|\theta) \]
+    and the log likelihood is
+    \[ \mathcal{L}(\theta) = \log p(X|\theta) \]
+
+\section{Sufficient Estimators of Gaussian Distribution}
+    Let
+    \[ \Gamma_0 = \sum_{i=1}^N 1 = N \]
+    \[ \Gamma_1 = \sum_{i=1}^N x_i \]
+    \[ \Gamma_2 = \sum_{i=1}^N x_ix_i^T \]
+    Then
+    \[ \mu_{ML} = \frac{\Gamma_1}{\Gamma_0} \]
+    \[ \Sigma_{ML} = \frac{\Gamma_2}{\Gamma_0} - \mu_{ML}\mu_{ML}^T \]
