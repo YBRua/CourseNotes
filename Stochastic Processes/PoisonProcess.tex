@@ -152,8 +152,9 @@
 
 
 \section{Associating Another R.V. with a Poisson Process}
+    In some cases, we can use Poisson Processes to approximate Binomial Distributions.
 
-    \subsection{A Property of Poisson Process}
+    \subsection{Thinning}
         We can associate some i.i.d. random variables $Y_i$ with each arrival. For example, $Y_i$ can be the gender of the $i$-th customer arriving at some restaurant; or if customers arrive in cars, $Y_i$ can be the number of passengers in a car. Let $P_j = \mathbb{P}[Y_i = j]$. Let $N_j(t)$ be the total number of $i \le N(t)$ with $Y_i = j$.
 
         \begin{theorem}\label{Thm:ThinningOfPoissonProcess}
@@ -257,8 +258,8 @@
 
 
 \section{Poisson Approximation}
-    \subsection{Motivating Example: m-balls-in-n-bins}\label{subsec:m-balls-in-n-bins}
-        Suppose we throw balls randomly into several bins, and we want to know how many balls there are in the bin with the most balls.
+    \subsection{Motivating Example: Max Load}\label{subsec:m-balls-in-n-bins}
+        Consider a m-ball-into-n-bin problem. Suppose we throw balls randomly into several bins, and we want to know how many balls there are in the bin with the most balls.
 
         If we consider the number of balls in each bin, the number follows a Bernoulli distribution. However, since the number of balls in different bins are not independent, analyzing the problem in this way can be complicated.
 
@@ -275,25 +276,66 @@
         \begin{theorem}[Poisson Approximation]\label{Thm:PoissonApproximation}
             Let $(X_1,\dots,X_n)$ be a sequence of random variables where each $X_i$ has a Bernoulli distribution, then its distribution is the same as $(Y_1, \dots, Y_n)$ conditioned on $\sum_i Y_i = m$, where $Y_i \sim Poisson(\lambda)$ are \emph{independent} Poisson variables with rate $\lambda$.
         \end{theorem}
+        \begin{proof}
+            Let $a_1, \dots, a_n \ge 0$ be $n$ positive integers s.t. $\sum_i a_i = m$. We calculate $\mathbb{P}[X_1 = a_1, \dots, X_n = a_n]$ and $\mathbb{P}[Y_1 = a_1, \dots, Y_n = a_n|\sum_i Y_i=m]$ to show that they are equal to each other.
+
+            We can think of $a_1,\dots,a_n$ as several bins on an axis, and we throw balls into these bins. There are $n^m$ different kind of throws and $m!$ different permutations of different balls. However, the order of balls in the same bin does not matter, so we shoud divide $m!$ by $a_1!\cdot \cdots \cdot a_n!$.
+            \begin{align*}
+                \mathbb{P}[X_1 = a_1, \dots, X_n = a_n]
+                &= \frac{1}{n^m} \cdot \frac{m!}{a_1! \dots a_n!}
+            \end{align*}
+
+            \begin{align*}
+                \mathbb{P}[Y_1 = a_1, \dots, Y_n = a_n | \sum_iY_i = m]
+                &= \frac{\mathbb{P}[Y_1=a_1,\dots,Y_n=a_n]}{\mathbb{P}[\sum_i Y_i = m]}\\
+                &= \frac{\prod_{i=1}^n \mathbb{P}[Y_i = a_i]}{\mathbb{P}[\sum_i Y_i = m]} \quad \text{(Independence of $Y_i$)}\\
+                &= \frac{\prod_{i=1}^n e^{-\lambda}\frac{\lambda^{a_i}}{a_i!}}{e^{-\lambda n} \cdot \frac{(\lambda n)^m}{m!}} \quad \text{(Denominator is a sum of Poisson)}\\
+                &= \frac{1}{n^m} \cdot \frac{m!}{a_1! \dots a_n!} \quad \text{(Mafs)}
+            \end{align*}
+
+        \end{proof}
 
     \subsection{m-balls-in-n-bins: MaxLoad Revisited}
         With Theorem \ref{Thm:PoissonApproximation}, we can solve the motivating example in Section \ref{subsec:m-balls-in-n-bins}.
         \begin{theorem}
-            Let $X = \max_i X_i$. Then there exist constants $c_1$, $c_2$ such that
+            Let $m=n$. Let $X = \max_i X_i$. Then there exist constants $c_1$, $c_2$ such that
             \[ \mathbb{P}\left[\frac{c_1\log n}{\log\log n} < X < \frac{c_2\log n}{\log\log n}\right] = 1 - O\left(\frac{1}{n}\right) \]
         \end{theorem}
         \begin{proof}
-            We first calculate $\mathbb{P}\left[ X \ge \frac{c_1\log n}{\log\log n} \right]$.
+            We first proof the \emph{upper bound}. Proving the upper bound is equivalent to proving
+            \[\mathbb{P}\left[ X \ge \frac{c_2\log n}{\log\log n} \right] = O\left(\frac{1}{n}\right) \]
             \begin{align*}
-                \mathbb{P}\left[ X \ge \frac{c_1\log n}{\log\log n} \right] &= \mathbb{P}[\exists i: X_i \ge k]\\
+                \mathbb{P}\left[ X \ge \frac{c_2\log n}{\log\log n} \right] &= \mathbb{P}[\exists i: X_i \ge k]\\
                 &\le n\mathbb{P}[X_1 \ge k] \quad \text{(Union Bound)}\\
                 &\le n C^k_n\left(\frac{1}{n}\right)^k\\
                 &\le n\cdot \left(\frac{en}{k}\right)^k n^{-k} \quad \text{(Mafs)}\\
                 &= n\cdot\left(\frac{e}{k}\right)^k
             \end{align*}
+            Therefore it is sufficient to show that $n\cdot e^k / k^k < 1/n^{1+\epsilon}$ for some $\epsilon > 0$. Take logarithm on both sides,
+            \[ (2+\epsilon)\log n + k - k\log k < 0 \]
+            Hence $k\log k > 3\log n$ suffices. Plug in $k = \frac{c_2\log n}{\log\log n}$.
+            \begin{align*}
+                k\log k &= \frac{c_2\log n}{\log\log n} (\log\log n - \log\log\log n + \log c_2)\\
+                &> c_2\log n\left(1- \frac{\log\log\log n}{\log\log n}\right)\\
+                &> \frac{c_2}{2}\log n
+            \end{align*}
+            So we can choose $c_2 = 6$.
+            
+            The proof of \emph{lower bound} requires Theorem \ref{Thm:BadEventBound}. Let $X < \frac{c_1\log n}{\log\log n}$ be a ``bad event''. This is equivalent to
+            \[ \forall i, \quad X_i < \frac{c_1\log n}{\log\log n} \]
+            Denote this bad event by $\mathcal{B}$, let $f = \mathbb{I}[\mathcal{B}|X_1,\dots,X_n]$ be an indicator of the bad event. By Theorem \ref{Thm:BadEventBound},
+            \begin{align*}
+                \mathbb{E}[f] &= \mathbb{P}[\mathcal{B}]\\
+                &\le e\sqrt{n} \mathbb{E}[\mathbb{I}[\mathcal{B}|(Y_1,\dots,Y_n)]]\\
+                &= e\sqrt{n} \mathbb{P}[\forall i \quad Y_i < \frac{c_1\log n}{\log\log n}] \quad \text{(Independence of $Y_i$)}\\
+                &= e\sqrt{n}\prod_{i=1}^n \mathbb{P}[Y_i < RHS]\\
+                &= e\sqrt{n}(1-\mathbb{P}[Y_i \ge RHS])^n\\
+                &\le e\sqrt{n}(1-\mathbb{P}[Y_i = RHS])^n\\
+                &= e\sqrt{n}\left(1-\frac{1}{ek!}\right)^n\\
+                &\le e\sqrt{n} e^{-\frac{n}{ek!}} < \frac{1}{n} \quad \text{(Mafs)}
+            \end{align*}
         \end{proof}
-        Using the theorem above, we can derive an important tool.
-        \begin{theorem}
+        \begin{theorem}\label{Thm:BadEventBound}
             Let $X_i$ be Bernoulli random variables, and let $Y_i$ be independent Poisson random variables with rate $\lambda = m/n$. For any function $f$ from $\mathbb{N}^n$ to $\mathbb{N}$,
             \[ \mathbb{E}[f(X_1, \dots, X_n)] \le e\sqrt{m}\cdot\mathbb{E}[f(Y_1,\dots,Y_m)] \]
         \end{theorem}
@@ -309,3 +351,9 @@
                 &\ge \mathbb{E}[f(X_1,\dots,X_n)]\cdot\frac{1}{e\sqrt{m}}
             \end{align*}
         \end{proof}
+        \begin{remark}~{}
+            \begin{itemize}
+                \item $f$ is usually chosen to be some indicator function $\mathbb{I}$ of some ``bad event''. (In order to show that the probability that this ``bad event'' happens is very small.)
+                \item Choosing $\lambda = m/n$ is to maximize $\mathbb{P}[\sum_i Y_i=m]$.
+            \end{itemize}
+        \end{remark}
