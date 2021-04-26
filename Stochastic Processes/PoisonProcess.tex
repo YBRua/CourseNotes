@@ -9,11 +9,13 @@
         \[ \mathbb{P}[X=k] = \frac{\lambda^k}{k!}e^{-\lambda} \]
     \end{definition}
     \begin{remark}
-        If we view $k$ as a constant w.r.t. $n$, then the Poisson distribution can be seen as the limitation of a Bernoulli distribution $Bermoulli(n, p)$ with $p = \frac{\lambda}{n}$, as $n\to\infty$.
+        If we view $\lambda$ as a constant, then the Poisson distribution can be seen as the limitation of a Binomial distribution $Bermoulli(n, p)$ with $p = \frac{\lambda}{n}$, as $n\to\infty$.
     \end{remark}
     \begin{theorem}
         If $n$ is large, then $Bernoulli(n, \lambda/n)$ is approximately $Poisson(\lambda)$.
     \end{theorem}
+
+    Suppose we want to compute the number of customers arriving at some restaurant. If we divide the time interval to be sufficiently small s.t. at most one customer arrives at each interval and the probability is uniformly $p$, then the total number of arrivals has a Poisson distribution.
 
     \subsection{Expectation and Variance of Poisson Distribution}
     Let $X$ be a random variable with a Poisson distribution, then
@@ -77,6 +79,8 @@
 
         If we consider the problem of ``Who finishes first between $X_1$ and $X_2$'', then
         \[ \mathbb{P}[Y=X_1]=\sum_{s=0}^\infty \mathbb{P}[X_1=s,X_2>s] = \int_0^{+\infty}p_1(s)\mathbb{P}[X_2>s]\mathrm{d}s = \frac{\lambda_1}{\lambda_1 + \lambda_2} \]
+        And an exponential race among $n$ random variables is
+        \[ \mathbb{P}[Y=X_i] = \frac{\lambda_i}{\sum_j \lambda_j} \]
 
 
 \section{Poisson Processes}
@@ -98,7 +102,7 @@
     \begin{proposition}\label{Prop:AltDefOfPoissonProcess}
         Let $\tau_1,\tau_2,\dots,\tau_n$ be independent random variables with exponential distribution $Exp(\lambda)$. Let $T_n=\sum_{i=1}^n\tau_i$, $N(s)=\max\{n|T_n \le s\}$
 
-        Then $N(s)$ is a Poisson process.
+        Then $N(s)$ is a Poisson process with rate $\lambda$.
     \end{proposition}
     \begin{remark}
         If we think of $\tau_i$ as the time interval between the arrival time of customers in a store, then $N(s)$ is the number of customer arrivals before time $s$.
@@ -131,28 +135,28 @@
 
     We can now prove Proposition \ref{Prop:AltDefOfPoissonProcess}.
     \subsection{Proof of Equivalence of the two Definitions}
-    \begin{proof}
-        To show that the two definitions are equivalent, we need to show that the three requirements in Definition \ref{Def:PoissonProcess} can be satisfied by the alternative definition \ref{Prop:AltDefOfPoissonProcess}.
-        \begin{enumerate}
-            \item $N(0)=0$ is trivial.
-            \item We begin proving (2) of Definition \ref{Def:PoissonProcess} from the case $s=0$. Notice that $N(t)=n \Leftrightarrow T_n \le t \wedge T_{n+1} > t$, i.e. the $n$-th customer has arrived, but the $(n+1)$-th has not. So we only need to prove the latter has Poisson distribution.
-            \begin{align*}
-                \mathbb{P}[N(t)=n] &= \mathbb{P}[T_n \le t, T_{n+1} > t]\\
-                &= \int_0^tf_{T_n}(s)\cdot\mathbb{P}[\tau_{n+1} > t-s]\mathrm{d}s \quad \text{(Enumerate all possible values of $t$)}\\
-                &= \int_0^t\lambda e^{-\lambda s}\frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda(t-s)}\mathrm{d}s \quad \text{(Theorem \ref{Thm:SumOfExpHasGammaDistribution})}\\
-                &= \frac{\lambda^n}{(n-1)!}e^{-\lambda t}\int_0^t s^{n-1}\mathrm{d}s \quad \text{(Move out the constants)}\\
-                &= \frac{(t\lambda)^n}{n!}\cdot e^{-\lambda t}
-            \end{align*}
-            which is exactly the expression of $Poisson(\lambda t)$, so we are done.
+        \begin{proof}
+            To show that the two definitions are equivalent, we need to show that the three requirements in Definition \ref{Def:PoissonProcess} can be satisfied by the alternative definition \ref{Prop:AltDefOfPoissonProcess}.
+            \begin{enumerate}
+                \item $N(0)=0$ is trivial.
+                \item We begin proving (2) of Definition \ref{Def:PoissonProcess} from the case $s=0$. Notice that $N(t)=n \Leftrightarrow T_n \le t \wedge T_{n+1} > t$, i.e. the $n$-th customer has arrived, but the $(n+1)$-th has not. So we only need to prove the latter has Poisson distribution.
+                \begin{align*}
+                    \mathbb{P}[N(t)=n] &= \mathbb{P}[T_n \le t, T_{n+1} > t]\\
+                    &= \int_0^tf_{T_n}(s)\cdot\mathbb{P}[\tau_{n+1} > t-s]\mathrm{d}s \quad \text{(Enumerate all possible values of $t$)}\\
+                    &= \int_0^t\lambda e^{-\lambda s}\frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda(t-s)}\mathrm{d}s \quad \text{(Theorem \ref{Thm:SumOfExpHasGammaDistribution})}\\
+                    &= \frac{\lambda^n}{(n-1)!}e^{-\lambda t}\int_0^t s^{n-1}\mathrm{d}s \quad \text{(Move out the constants)}\\
+                    &= \frac{(t\lambda)^n}{n!}\cdot e^{-\lambda t}
+                \end{align*}
+                which is exactly the expression of $Poisson(\lambda t)$, so we are done.
 
-            When $s > 0$, by the lack of memory property, $N(t+s)-N(s)$ must have the same distribution as $N(t) - N(0) = N(t)$. Of course this can also be verified by some moderate calculations.
-            \item (3) of Definitiion \ref{Def:PoissonProcess} can be proved using a similar argument. Notice that the lack-of-memory property and (2) implies that the ``number of arrivals'' after $s$ is independent of the arrivals before $s$. Therefore $N(t_n) - N(t_{n-1})$ is independent of $N(r)$ for all $r < t_{n-1}$. So the result can be proved by induction.
-        \end{enumerate}
-    \end{proof}
+                When $s > 0$, by the lack of memory property, $N(t+s)-N(s)$ must have the same distribution as $N(t) - N(0) = N(t)$. Of course this can also be verified by some moderate calculations.
+                \item (3) of Definitiion \ref{Def:PoissonProcess} can be proved using a similar argument. Notice that the lack-of-memory property and (2) implies that the ``number of arrivals'' after $s$ is independent of the arrivals before $s$. Therefore $N(t_n) - N(t_{n-1})$ is independent of $N(r)$ for all $r < t_{n-1}$. So the result can be proved by induction.
+            \end{enumerate}
+        \end{proof}
 
 
-\section{Associating Another R.V. with a Poisson Process}
-    In some cases, we can use Poisson Processes to approximate Binomial Distributions.
+\section{Thinning}
+    Thinning is associating another random variable with a Poisson Process.
 
     \subsection{Thinning}
         We can associate some i.i.d. random variables $Y_i$ with each arrival. For example, $Y_i$ can be the gender of the $i$-th customer arriving at some restaurant; or if customers arrive in cars, $Y_i$ can be the number of passengers in a car. Let $P_j = \mathbb{P}[Y_i = j]$. Let $N_j(t)$ be the total number of $i \le N(t)$ with $Y_i = j$.
@@ -198,50 +202,146 @@
         \end{cases}
         \]
     
-    \subsubsection{Coupon Collector Once Again.}
-    We revisit the Coupon Collector's problem, but this time we assume the probability of the $j$-th coupon is $P_j$.
-    \begin{itemize}
-        \item Let $N_j$ be the number of gachas before we first get a coupon of the $j$-th category.
-        \item Let $N = \max_{1 \le j \le n}\{N_j\}$ is the total number of gachas we need to collect all categories of coupons.
-    \end{itemize}
-    We want to find $\mathbb{E}[N]$.
+        \subsubsection{Coupon Collector Once Again.}
+        We revisit the Coupon Collector's problem, but this time we assume the probability of the $j$-th coupon is $P_j$.
+        \begin{itemize}
+            \item Let $N_j$ be the number of gachas before we first get a coupon of the $j$-th category.
+            \item Let $N = \max_{1 \le j \le n}\{N_j\}$ is the total number of gachas we need to collect all categories of coupons.
+        \end{itemize}
+        We want to find $\mathbb{E}[N]$.
 
-    We re-formulate the problem into the following: suppose we owns a restaurant, and the customers coming to the restaurant is a Poisson Process of rate $\lambda = 1$. Each customer brings a coupon, let $Y_j$ be the category of the coupon brought by the $j$-th customer. Therefore $N_j(t)$ is a Poisson Process with rate $P_j$. Let $X_j$ be the random variable \emph{in this Poisson Process setting} denoting the first time to meet a customer with a category $j$ coupon, and we now alternatively consider $X = \max \{X_j\}$.
+        We re-formulate the problem into the following: suppose we owns a restaurant, and the customers coming to the restaurant is a Poisson Process of rate $\lambda = 1$. Each customer brings a coupon, let $Y_j$ be the category of the coupon brought by the $j$-th customer. Therefore $N_j(t)$ is a Poisson Process with rate $P_j$. Let $X_j$ be the random variable \emph{in this Poisson Process setting} denoting the first time to meet a customer with a category $j$ coupon, and we now alternatively consider $X = \max \{X_j\}$.
 
-    We are interested in $\mathbb{P}[X \le t]$, i.e. the probability that we have got all categories of coupons before time $t$.
-    \begin{align*}
-        \mathbb{P}[X \le t] &= \mathbb{P}[X_1 \le t, X_2 \le t, \dots X_n \le t]\\
-        &= \mathbb{P}[X_1 \le t] \cdot \mathbb{P}[X_2 \le t] \cdot \cdots \cdot \mathbb{P}[X_n \le t]
-    \end{align*}
-    By the alternative definition of Poisson Process \ref{Prop:AltDefOfPoissonProcess}, $X_j$ has an Exponential Distribution with rate $P_j$. Therefore
-    \[ \mathbb{P}[X \le t] = \prod_{i=1}^n (1-e^{-P_jt}) \]
-    \[ \mathbb{P}[X > t] = 1 - \prod_{i=1}^n (1-e^{-P_jt}) \]
-    \begin{proposition}\label{Prop:AltComputationOfExpectation}
-        If $X \ge 0$, then
-        \[ \mathbb{E}[X] = \sum_{t=0}^{\infty} \mathbb{P}[X \ge t] = \sum_{i=0}^{\infty}i\cdot\mathbb{P}[X=i] \]
-        \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t\]
-    \end{proposition}
-    By Proposition \ref{Prop:AltComputationOfExpectation},
-    \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t = \int_0^{\infty}1 - \prod_i (1-e^{-P_it})\mathrm{d}t \]
-    We have figured out $\mathbb{E}[X]$, but how is $\mathbb{E}[X]$ related to $\mathbb{E}[N]$?
+        We are interested in $\mathbb{P}[X \le t]$, i.e. the probability that we have got all categories of coupons before time $t$.
+        \begin{align*}
+            \mathbb{P}[X \le t] &= \mathbb{P}[X_1 \le t, X_2 \le t, \dots X_n \le t]\\
+            &= \mathbb{P}[X_1 \le t] \cdot \mathbb{P}[X_2 \le t] \cdot \cdots \cdot \mathbb{P}[X_n \le t]
+        \end{align*}
+        By the alternative definition of Poisson Process \ref{Prop:AltDefOfPoissonProcess}, $X_j$ has an Exponential Distribution with rate $P_j$. Therefore
+        \[ \mathbb{P}[X \le t] = \prod_{i=1}^n (1-e^{-P_jt}) \]
+        \[ \mathbb{P}[X > t] = 1 - \prod_{i=1}^n (1-e^{-P_jt}) \]
+        \begin{proposition}\label{Prop:AltComputationOfExpectation}
+            If $X \ge 0$, then
+            \[ \mathbb{E}[X] = \sum_{t=0}^{\infty} \mathbb{P}[X \ge t] = \sum_{i=0}^{\infty}i\cdot\mathbb{P}[X=i] \]
+            \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t\]
+        \end{proposition}
+        By Proposition \ref{Prop:AltComputationOfExpectation},
+        \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t = \int_0^{\infty}1 - \prod_i (1-e^{-P_it})\mathrm{d}t \]
+        We have figured out $\mathbb{E}[X]$, but how is $\mathbb{E}[X]$ related to $\mathbb{E}[N]$?
 
-    Notice that $X$ denotes the exact time at which the customer carrying the $N$-th coupon arrives. If $\tau_i$ denotes the time interval between the arrival of the $(i-1)$-th and the $i$-th customers, then
-    \[ X = \sum_{i=1}^N \tau_i \]
-    Take expectation on both sides
-    \[ \mathbb{E}[X] = \mathbb{E}\left[ \sum_{i=1}^N \tau_i \right] = \mathbb{E}[N]\cdot\mathbb{E}[\tau_1] = \mathbb{E}[N] \]
-    Notice that $N$ is a random variable, but we somehow still exchanged the summation and expectation in the second equation, this holds because of Wald's Equation, which will be covered in the future. For now, notice that once $N$ is determined, $\mathbb{E}[X|N]$ is determined.
-    \[ \mathbb{E}[X|N] = N\mathbb{E}[\tau_1] = N \]
-    Take expectations on both sides again
-    \[ \mathbb{E}[\mathbb{E}[X|N]] = \mathbb{E}[X] = \mathbb{E}[N] \]
-    \begin{remark}
-        The original Coupon Collector's problem is a special case where $P_j$ are uniform. It can be proved\footnote{“我也不会积，但是我用Mathematica跑了一下他们确实相等” -- Chihao} that the integral equals to the sum of harmonic series.
-    \end{remark}
+        Notice that $X$ denotes the exact time at which the customer carrying the $N$-th coupon arrives. If $\tau_i$ denotes the time interval between the arrival of the $(i-1)$-th and the $i$-th customers, then
+        \[ X = \sum_{i=1}^N \tau_i \]
+        Take expectation on both sides
+        \[ \mathbb{E}[X] = \mathbb{E}\left[ \sum_{i=1}^N \tau_i \right] = \mathbb{E}[N]\cdot\mathbb{E}[\tau_1] = \mathbb{E}[N] \]
+        Notice that $N$ is a random variable, but we somehow still exchanged the summation and expectation in the second equation, this holds because of Wald's Equation, which will be covered in the future. For now, notice that once $N$ is determined, $\mathbb{E}[X|N]$ is determined.
+        \[ \mathbb{E}[X|N] = N\mathbb{E}[\tau_1] = N \]
+        Take expectations on both sides again
+        \[ \mathbb{E}[\mathbb{E}[X|N]] = \mathbb{E}[X] = \mathbb{E}[N] \]
+        \begin{remark}
+            The original Coupon Collector's problem is a special case where $P_j$ are uniform. It can be proved\footnote{“我也不会积，但是我用Mathematica跑了一下他们确实相等” -- Chihao} that the integral equals to the sum of harmonic series.\footnote{“这个积分我会积” -- Kuan}\footnote{“不愧是常州数学帝” -- Chihao}
+        \end{remark}
 
+    \subsection{Nonhomogeneous Thinning}
+        Now consider another case. Suppose $P_i$ now depends on the arrival time $s$.
+        \begin{theorem}[Nonhomogeneous Thinning]
+            \label{Thm:NonhomogeneousThinning}
+            $N_i(t)$'s have \emph{independent} Poisson distribution with mean $\lambda\int_0^t P_i(s)\mathrm{d}s$.
+        \end{theorem}
+        \begin{proof}
+            Suppose there are $k$ categories. Suppose until time $t$, each type $i$ have total number $n_i$.
+            \begin{align*}
+                &\mathbb{P}[N_1(t)=n_1,\dots,N_k(t)=n_k]\\
+                &=\mathbb{P}\left[ N_1(t)=n_1,\dots,N_k(t)=n_k|N(t)=\sum_i n_i \right]\mathbb{P}\left[ N(t) = \sum_i n_i \right] \quad \text{Always holds}\\
+                &= \frac{\left(\sum_{i=1}^kn_i\right)!}{n_1!\cdots n_k!}p_1^{n_1}\cdots p_k^{n_k} \cdot e^{-\lambda t}\frac{(\lambda t)^{\sum_in_i}}{(\sum_i n_i)!}\\
+                &= \prod_{i=1}^k e^{-\lambda t P_i} \frac{(\lambda t P_i)^{n_i}}{n_i!}
+            \end{align*}
+            where
+            \[ P_i = \frac{1}{t}\int_0^t P_i(s)\mathrm{d}s \]
+        \end{proof}
+        \begin{remark}
+            Actually it is a non-homogeneous Poisson Process with rate
+            \[ \lambda(t) = \lambda\cdot P_i(t) \]
+        \end{remark}
+
+        \begin{definition}[Nonhomogeneous Poisson Process]\label{Def:NonhomogeneousPoissonProcess}
+            $\{ N(t) | t \ge 0 \}$ is a \textbf{nonhomogeneous Poisson Process} with rate $\lambda(s)$ if
+            \begin{enumerate}
+                \item $N(0)=0$
+                \item $N(t)$ has independent increments.
+                \item $N(t)-N(s)$ has distribution $Poisson\left(\int_s^t \lambda(\tau)\mathrm{d}\tau\right)$
+            \end{enumerate}
+        \end{definition}
+        \begin{remark}
+            In this case, the time intervals are not exponential distributions, and they are not independent.
+        \end{remark}
+
+    \subsection{Applications of Nonhomogeneous Thinning}
+
+        \subsubsection{M/$G$/$\infty$ Queue}
+        Consider a queue at some counters in a bank. M stands for a Poisson Process representing the incoming flow of customers. $G$ is a distribution of the time to serve the customers, $G(t) = \mathbb{P}[ServiceTime \le t]$. $\infty$ is the number of counters. Let
+        \begin{itemize}
+            \item $X(t)$: the number of customers completed services before time $t$.
+            \item $Y(t)$: the number of customers being served at time $t$.
+        \end{itemize}
+
+        Notice that
+        \[ p_1(s) = G(t-s) \quad p_2(s) = 1 - G(t-s) = \bar{G}(t-s) \]
+        Therefore
+        \[ \mathbb{E}[X(t)] = \mathbb{E}[N_1(t)] = \lambda\int_0^t G(t-s)\mathrm{d}s = \lambda\int_0^t G(s)\mathrm{d}s \]
+        \[ \mathbb{E}[Y(t)] = \mathbb{E}[N_2(t)] = \lambda\int_0^t \bar{G}(s)\mathrm{d}s \]
+
+        \subsubsection{Cars in a Tunnel}
+        Consider a tunnel\footnote{“刚才Kuan提醒我隧道内不能超车” -- Chihao} of length $l$. Suppose we are driving a car, once the car enters the tunnel, its speed cannot change. Assume other NPC cars enter the tunnel with a Poisson distribution of rate $\lambda$. Suppse the speeds of NPC cars have a distribution $G$, and are also fixed once an NPC car enters the tunnel.
+
+        We want to choose an initial speed $x$ to minimize the time we 超车 or 被超车。
+
+        Let $t_0 = l/x$. If we enter the tunnel at time $s$, then we must exit the tunnel at time $s + t_0$. For an NPC car with speed $X$, the time interval that the NPC car stays in the tunnel is $T=l/X$.
+
+        \[ F(t) = \mathbb{P}[T < t] = \mathbb{P}[l/X < t] = \mathbb{P}[X > l/t] = \bar{G}[l/t] \]
+
+        Let $t$ denote the time when an NPC car enters the tunnel. We divide NPC cars into $3$ categories:
+        \begin{enumerate}
+            \item 超车。$t > s$ and $t + T < s + t_0$
+            \item 被超车。$t < s$ and $t + T > s + t_0$
+            \item No thing happens. Omitted.
+        \end{enumerate}
+        At any given time $t$, we have
+        \[
+            p(t) =
+            \begin{cases}
+                \mathbb{P}[t + T > s + t_0] = \bar{F}(s+t_0-t) \quad &(t < s)\\
+                \mathbb{P}[t + T < s + t_0] = \bar{F}(s+t_0-t) \quad &(s < t < s+t_0)\\
+                0 \quad &(t > s + t_0)
+            \end{cases}
+        \]
+        Notice that only $T$ in the above equation is a random variable.
+        \begin{align*}
+            \mathbb{E}[N_{encountered}(s+t_0)] &= \lambda \left( \int_0^s \bar{F}(s-t_0-t)\mathrm{d}t + \int_s^{s+t_0} F(s+t_0-t)\mathrm{d}t \right)\\
+            &= \lambda \left( \int_{t_0}^{s+t_0} \bar{F}(t)\mathrm{d}t + \int_0^{t_0} F(t)\mathrm{d}t \right)
+        \end{align*}
+        To maximize the expectation, we take the derivative w.r.t. $t_0$.
+        \[ \frac{\mathrm{d}}{\mathrm{d}t_0} = \lambda \left( \bar{F}(s+t_0) - \bar{F}(t_0) + F(t_0) \right) = 0 \]
+        If the system has been running for a long time, $\bar{F}(s+t_0) \approx 0$, so
+        \[ F(t_0) = \bar{F}(t_0) = \frac{1}{2} \]
+        and
+        \[ G\left(\frac{l}{t_0}\right) = \frac{1}{2} \]
+        So we choose an initial speed $x$ such that
+        \[ G(x) = \frac{1}{2} \]
+
+        \subsubsection{HIV Patients}
+        We want to estimate the number of HIV patients, suppose a patient may or may not show symptoms. Assume the number of patients with HIV virus has a Poisson distribution with an unknown rate $\lambda$. Suppose we know a distribution $G$ representing ``how long a patient with HIV virus shows symptoms''.
+
+        We divide people into 2 types by whether they show symptoms or not.
+        \begin{equation}\label{Eq:NumOfPatientsWithSymptoms} \mathbb{E}[N_1(t)] = \lambda \int_0^t G(t-s)\mathrm{d}s = \lambda\int_0^t G(s)\mathrm{d}s \end{equation}
+        \[ \mathbb{E}[N_2(t)] = \lambda \int_0^t \hat{G}(t-s)\mathrm{d}s = \lambda\int_0^t \hat{G}(s)\mathrm{d}s \]
+        where $\lambda$ is unknown.
+
+        However, we do know the number of patients who have already shown symptoms. Therefore we can estimate $\lambda$ with Eq (\ref{Eq:NumOfPatientsWithSymptoms}), and estimate $\mathbb{E}[N_2(t)]$ with $\hat{\lambda}$.
 
 \section{Conditioning}
 
     \subsection{Conditioning}
-        Let $T_1, T_2, \dots, T_n$ be the arrival times of a Poisson Process with rate $\lambda$. Let $U_1, U_2, \dots, U_n$ be independent uniform random variables on $[0,t]$. Let $V_1, V_2, \dots, V_n$ be $U_i$'s re-arranged in increasing order, then
+        Let $T_1, T_2, \dots, T_n$ be the arrival times of a Poisson Process with rate $\lambda$. Let $U_1, U_2, \dots, U_n$ be independent uniform random variables on $[0,t]$. Let $V_1, V_2, \dots, V_n$ be sequence $U_i$ re-arranged in increasing order, then
         \begin{theorem}[Conditioning]\label{Thm:ConditioningOfPoissonProcess}
             If we condition on $N(t)=n$, then the distribution of $T_1, \dots, T_n$ is the same as the distribution of $V_1, \dots, V_n$.
         \end{theorem}

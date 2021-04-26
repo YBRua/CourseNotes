@@ -15,6 +15,10 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**Apr.26, 2021**
+- Updated AI2513
+  - Poisson Process II.
+
 **Apr.13, 2021**
 - Updated AI2651
   - 隐马尔科夫模型（未完成）
