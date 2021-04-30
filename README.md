@@ -15,6 +15,10 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**Apr.30, 2021**
+- Updated 2611
+  - K-Means clustering
+
 **Apr.26, 2021**
 - Updated AI2513
   - Poisson Process II.
