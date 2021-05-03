@@ -37,26 +37,26 @@ def viterbi(init, transition, emission, state, observation):
     phi = np.zeros((len(state), len(observation)))
     # previous maximizing estimator
     prev = np.zeros((len(state), len(observation)))
-    
+
     phi[:, 0] = np.log(init) + np.log(emission[:, observation[0]])
     prev[:, 1] = -1
-    
+
     for ob in range(1, len(observation)):
         score = np.log(transition).T + phi[:, ob-1]
         candidate = np.max(score, axis=1)
-        
+
         prev[:, ob] = np.argmax(score, axis=1)
         phi[:, ob] = np.log(emission[:, observation[ob]]) + candidate
-        
+
     ptr = np.argmax(phi[:, len(observation)-1])
     idx = len(observation) - 1
     while idx >= 0:
         hidden[idx] = ptr
         ptr = int(prev[ptr, idx])
         idx -= 1
-            
+
     return hidden
-    
+
 
 A = np.array([
     [0.2, 0.3, 0.5],
