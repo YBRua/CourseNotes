@@ -15,6 +15,12 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**May.03, 2021**
+- Updated Speech Recognition
+  - Hidden Markov Models
+  - LVCSR
+  - [Demo](./Speech%20Recognition/markdownNotes/code_demo/viterbi_demo.py) for Viterbi Algorithm
+
 **Apr.30, 2021**
 - Updated 2611
   - K-Means clustering
