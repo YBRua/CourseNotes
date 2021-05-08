@@ -3,85 +3,141 @@
 
 
 \section{K-Means}
-    \begin{itemize}
-        \item Dataset: $H=\{x^{(1)},x^{(2)},\dots,x^{(n)}\}$
-        \item $d$ dimensions
-        \item Want to divide $H$ into disjoint subsets $\{H_1,H_2,\dots,H_c\}$
-    \end{itemize}
+\begin{itemize}
+    \item Dataset: $H=\{x^{(1)},x^{(2)},\dots,x^{(n)}\}$
+    \item $d$ dimensions
+    \item Want to divide $H$ into disjoint subsets $\{H_1,H_2,\dots,H_c\}$
+\end{itemize}
 
-    \subsection{Objective Function}
-        Find an assignment such that the samples in the same class are as close to each other as possible.
-        \[ J_c \triangleq \sum_{i=1}^c\sum_{x\in H_i} \|x-m_i\|^2 \]
-        where $m_i$ is the centroid of each class.
+\subsection{Objective Function}
+Find an assignment such that the samples in the same class are as close to each other as possible.
+\[ J_c \triangleq \sum_{i=1}^c\sum_{x\in H_i} \|x-m_i\|^2 \]
+where $m_i$ is the centroid of each class.
 
-    \subsection{Before K-Means}
-        Let
-        \[ J_i = \sum_{x\in H_i}\|x-m_i\|^2 \]
+\subsection{Before K-Means}
+Let
+\[ J_i = \sum_{x\in H_i}\|x-m_i\|^2 \]
 
-        \subsubsection{Framework}
-        \begin{enumerate}
-            \item Initialize
-            \item Re-assign data samples to make the loss smaller.
-        \end{enumerate}
+\subsubsection{Framework}
+\begin{enumerate}
+    \item Initialize
+    \item Re-assign data samples to make the loss smaller.
+\end{enumerate}
 
-        \subsubsection{Update Rule}
-        Suppose a sample $\hat{x}$ is moved from $H_i$ to $H_j$. Let $n_j$ be the number of samples in $H_j$.
-        \[ m^*_j = \frac{n_jm_j + \hat{x}}{n_j+1} = m_j - m_j + \frac{n_jm_j + \hat{x}}{n_j+1} = m_j + \frac{\hat{x}-m_j}{n_j+1} \]
-        \[ m^*_i = \frac{n_im_i - \hat{x}}{n_i-1} = m_i + \frac{m_i - \hat{x}}{n_i+1} \]
+\subsubsection{Update Rule}
+Suppose a sample $\hat{x}$ is moved from $H_i$ to $H_j$. Let $n_j$ be the number of samples in $H_j$.
+\[ m^*_j = \frac{n_jm_j + \hat{x}}{n_j+1} = m_j - m_j + \frac{n_jm_j + \hat{x}}{n_j+1} = m_j + \frac{\hat{x}-m_j}{n_j+1} \]
+\[ m^*_i = \frac{n_im_i - \hat{x}}{n_i-1} = m_i + \frac{m_i - \hat{x}}{n_i+1} \]
 
-        \begin{align*}
-            J_j^* &= \sum_{x\in H_j}\| x-m_j^* \|^2 + \| \hat{x} - m_j^* \|^2\\
-            &= \sum_{x\in H_j}\|x-m_j-\frac{\hat{x}-m_j}{n_j+1}\|^2 + \| \frac{n_j}{n_j+1}(\hat{x}-m_j) \|^2\\
-            &= \sum_{x\in H_j} \| x - m_j \|^2 - \frac{2}{n_j+1}\sum_{x\in H_j}(\hat{x}-m_j)^T(x-m_j)\\
-            &\quad + \frac{1}{(n_j+1)^2}\sum_{x\in H_j}\| \hat{x} -m_j \|^2 + \frac{n_j^2}{(n_j+1)^2}\|\hat{x}-m_j\|^2\\
-            &= J_j + \frac{n_j}{(n_j+1)^2}\|\hat{x}-m_j\|^2 + \frac{n_j^2}{(n_j+1)^2}\|\hat{x}-m_j\|^2
-        \end{align*}
-        Notice that the second term is $0$ and the $\|\hat{x}-m_j\|^2$ in the first term is constant w.r.t. $x$ in the summation.
+\begin{align*}
+    J_j^* & = \sum_{x\in H_j}\| x-m_j^* \|^2 + \| \hat{x} - m_j^* \|^2                                                \\
+          & = \sum_{x\in H_j}\|x-m_j-\frac{\hat{x}-m_j}{n_j+1}\|^2 + \| \frac{n_j}{n_j+1}(\hat{x}-m_j) \|^2           \\
+          & = \sum_{x\in H_j} \| x - m_j \|^2 - \frac{2}{n_j+1}\sum_{x\in H_j}(\hat{x}-m_j)^T(x-m_j)                  \\
+          & \quad + \frac{1}{(n_j+1)^2}\sum_{x\in H_j}\| \hat{x} -m_j \|^2 + \frac{n_j^2}{(n_j+1)^2}\|\hat{x}-m_j\|^2 \\
+          & = J_j + \frac{n_j}{(n_j+1)^2}\|\hat{x}-m_j\|^2 + \frac{n_j^2}{(n_j+1)^2}\|\hat{x}-m_j\|^2
+\end{align*}
+Notice that the second term is $0$ and the $\|\hat{x}-m_j\|^2$ in the first term is constant w.r.t. $x$ in the summation.
 
-        Therefore
-        \[ J^*_j = J_j + \frac{n_j}{n_j+1}\|\hat{x}-m_j\|^2 \]
-        \[ J^*_i = J_i - \frac{n_i}{n_i+1}\|\hat{x}-m_j\|^2 \]
+Therefore
+\[ J^*_j = J_j + \frac{n_j}{n_j+1}\|\hat{x}-m_j\|^2 \]
+\[ J^*_i = J_i - \frac{n_i}{n_i+1}\|\hat{x}-m_j\|^2 \]
 
-        \subsubsection{Convergence}
-        Always converges, because the loss function is always decreasing and has a lower bound $0$.
+\subsubsection{Convergence}
+Always converges, because the loss function is always decreasing and has a lower bound $0$.
 
-        But it is SLOW.
+But it is SLOW.
 
-    \subsection{K-Means}
-        \subsubsection{Procedure}
-        \begin{enumerate}
-            \item Update centroids
-            \item Re-assign points
-        \end{enumerate}
+\subsection{K-Means}
+\subsubsection{Procedure}
+\begin{enumerate}
+    \item Update centroids
+    \item Re-assign points
+\end{enumerate}
 
-        \subsubsection{Mathematical Framework}
-        Let $r_{ik} \in \{0,1\}$ denote that the $i$-th sample is classified into the $k$-th class. $\sum_kr_{ik} = 1$. Then the loss function is
-        \[ J = \sum_i \sum_k \| x_i - m_k \|r_{ik} \]
+\subsubsection{Mathematical Framework}
+Let $r_{ik} \in \{0,1\}$ denote that the $i$-th sample is classified into the $k$-th class. $\sum_kr_{ik} = 1$. Then the loss function is
+\[ J = \sum_i \sum_k \| x_i - m_k \|r_{ik} \]
 
-        \subsubsection{Convergence Analysis}
-        In E-Step, the loss always goes down because each sample finds the nearest centroid.
-        \[ J_c^{(old)} = \sum_i\sum_kr_{ik}^{(old)}\|x_i-m)k\| \ge \sum_i\sum_k\|x_i-m_k\| = J_c^{(new)} \]
+\subsubsection{Convergence Analysis}
+In E-Step, the loss always goes down because each sample finds the nearest centroid.
+\[ J_c^{(old)} = \sum_i\sum_kr_{ik}^{(old)}\|x_i-m)k\| \ge \sum_i\sum_k\|x_i-m_k\| = J_c^{(new)} \]
 
-        In M-Step,
-        \begin{align*}
-            J_c^k(old) &= \sum_{i\in H_k}\|x_i - m_k^{(old)}\|^2\\
-            &= \sum_{i\in H_k}\| x_i - m_k^{(new)} + m_k^{(new)} - m_k^{(old)} \|^2\\
-            &= \sum_{i\in H_k} \|x_i - m_k^{(new)}\|^2\\
-            &\quad + \sum_{i\in H_k}\|m_k^{(old)} - m_k^{(new)}\|^2\\
-            &\quad + \sum_{i\in H_k}(x_i-m_k^{(new)})^T(m_k^{(old)}-m_k^{(new)})
-        \end{align*}
-        The first term is $J_c^k(new)$, the second term is non-negative and the third term is zero.
+In M-Step,
+\begin{align*}
+    J_c^k(old) & = \sum_{i\in H_k}\|x_i - m_k^{(old)}\|^2                               \\
+               & = \sum_{i\in H_k}\| x_i - m_k^{(new)} + m_k^{(new)} - m_k^{(old)} \|^2 \\
+               & = \sum_{i\in H_k} \|x_i - m_k^{(new)}\|^2                              \\
+               & \quad + \sum_{i\in H_k}\|m_k^{(old)} - m_k^{(new)}\|^2                 \\
+               & \quad + \sum_{i\in H_k}(x_i-m_k^{(new)})^T(m_k^{(old)}-m_k^{(new)})
+\end{align*}
+The first term is $J_c^k(new)$, the second term is non-negative and the third term is zero.
 
-        \subsubsection{Remarks}
+\subsubsection{Remarks}
+\begin{itemize}
+    \item Generally K-Means has good performance.
+    \item Initialization matters.
+    \item The choice of $k$ matters.
+\end{itemize}
+
+\subsection{Agglomerative Clustering}
+\begin{enumerate}
+    \item Initialize: everypoint is its own cluster.
+    \item Find the most similar pair of clusters.
+    \item Merge.
+\end{enumerate}
+
+
+\section{Gaussian Mixture Model}
+    K-Means can be easily affected by outliers.
+
+    \subsection{Multivariate Gaussian Distribution}
+        \[ p(x) = \frac{1}{(2\pi|\Sigma|)^{d/2}}\exp\left\{ -\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) \right\} \]
+
+    \subsection{Gaussian Mixture Model}
+        Suppose the data has a distribution that can be modeled by the weighted sum of $K$ Gaussian distributions. Let $\pi_k = p(x=k)$ be the likelihood of the $k$-th Gaussian.
+        \[ p(x) = \sum_{k=1}^Np(x=k)p(x|k) = \sum_{k=1}^K\pi_k \mathcal{N}(x|\mu_k,\Sigma_k) \]
+
+        So the parameters of a GMM are
         \begin{itemize}
-            \item Generally K-Means has good performance.
-            \item Initialization matters.
-            \item The choice of $k$ matters.
+            \item $\pi_k$
+            \item $\mu_k$
+            \item $\Sigma_k$
         \end{itemize}
 
-    \subsection{Agglomerative Clustering}
-        \begin{enumerate}
-            \item Initialize: everypoint is its own cluster.
-            \item Find the most similar pair of clusters.
-            \item Merge.
-        \end{enumerate}
+        Given the parameters of a GMM, the probabilities can be calculated.
+        \begin{itemize}
+            \item Prior: $p(x=k)=\pi_k$
+            \item Likelihood: $p(x|x=k)=\mathcal{N}(x|\mu_k,\Sigma_k)$
+            \item Joint Distribution: $p(x,x=k)=p(x=k)p(x|x=k)=\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)$
+            \item Evidence: $p(x) = \sum_{k=1}^Kp(x,x=k)=\sum_{k=1}^K\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)$
+            \item Posterior: $p(x=k|x)=\frac{p(x,x=k)}{p(x)}=\frac{\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)}{\sum_{i=1}^K\pi_i\mathcal{N}(x|\mu_i,\Sigma_i)}$
+        \end{itemize}
+
+    \subsection{Estimating Parameters}
+        Clustering using a GMM is simply estimating the parameters of the model.
+
+        Suppose we have a dataset $D = \{x^{(1)},x^{(2)},\dots,x^{(N)}\}$. We maximize the log likelihood
+        \[ \mathcal{L}(\theta) = \ln p(D|\theta) = \sum_{n=1}^N\ln\left\{\sum_{k=1}^K\pi_k\mathcal{N}(x^{(n)}|\mu_k,\Sigma_k)\right\} \]
+
+        However, traditional MLE methods do not work due to the complexity of $\mathcal{L}$. To illustrate this, we take derivative w.r.t. $\mu_k$
+        \[ \frac{\partial \mathcal{L}}{\partial \mu_k} = -\sum_{n=1}^N\frac{\pi_k\mathcal{N}(x^{(n)}|\mu_k,\Sigma_k)}{\sum_j\pi_j\mathcal{N}(x^{(n)}|\mu_j,\Sigma_j)}\Sigma_k^{-1}(x_n-\mu_k) \]
+        but we cannot derive a closed-form solution of $\mu_k$.
+
+        Instead, this is an exponential function that can be solved by iterative numerical methods, let
+        \[ \gamma(z_{nk}) = \frac{\pi_k\mathcal{N}(x^{(n)}|\mu_k,\Sigma_k)}{\sum_j\pi_j\mathcal{N}(x^{(n)}|\mu_j,\Sigma_j)} \]
+        \[ N_k = \sum_{n=1}^N \gamma(z_{nk}) \]
+
+        To solve for $\mu_k$, we run multiple iterations, in each iteration, we first fix $\theta = (\pi_k,\mu_k,\Sigma_k)$ and update $\gamma(z_{nk})$, and then fix $\gamma(z_{nk})$ and update $\theta$.
+
+        \subsubsection{Estimating Mean and Covariance Matrix}
+        Using previous conclusions,
+        \[ \mu_k = \frac{1}{N_k}\sum_{n=1}^N\gamma(z_{nk})x^{(n)} \]
+        Similarly if we solve for $\Sigma_k$,
+        \[ \Sigma_k = \frac{1}{N_k}\sum_{n=1}^N\gamma(z_{nk})(x^{(n)}-\mu_k)(x^{(n)}-\mu_k)^T \]
+
+        \subsubsection{Estimating Mixture Coefficients}
+        Notice that $\sum_k\pi_k = 1$, so maximizing w.r.t. $\pi_k$ is an ECP.
+
+    
+\section{Spectual Clustering}
+    K-Means and GMM may have poor performance when the data is non-convex.

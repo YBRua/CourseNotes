@@ -1,0 +1,76 @@
+\chapter{Continuous Time Markov Chain}
+\emph{“为了把连续的情况说清楚它还要发明一堆黑话。”}
+\newpage
+
+
+\section{Definition of Continuous Time Markov Chains}
+    \subsection{Continuous Time Markov Chain}
+        In the case of continuous time, it is technically difficult to specify the ``conditional probability given all of $X_r$ for all $r<s$''. Therefore instead, the Continuous Time Markov Chain is defined by
+
+        \begin{definition}[Continuous Time Markov Chain]\label{Def:ContinuousTimeMarkovChain}
+            A stochastic process $X(t)$ is a \textbf{Continuous Time Markov Chain} if $\forall s,t \ge 0$, $\forall 0 \le s_0 < \cdots < s_n < s$
+            \[ \mathbb{P}[X_{s+t} = j | X_s = i, X_{s_n} = i_n,\dots,X_{s_0}=i_0] = \mathbb{P}[X_t=j | X_0 = i] \]
+        \end{definition}
+
+        Given the current state, the previous states in the past is irrelevant for predicting the future, so we can simply ``throw away'' the previous states before $s$.
+
+    \subsection{Transition Probability}
+        In continuous case, the matrix-multiplication version of multistep transition probability cannot be applied directly. Instead we define a transition probability for each $t>0$.
+        \[ p_t(i,j) = \mathbb{P}[X_t=j|X(0)=i] \]
+
+        Recall the Chapman-Kolmogorov Equality \ref{Thm:ChapmanKolmogorovEquality}, it still holds in the continuous case.
+
+        \begin{theorem}[Chapman-Kolmogorov Equality, Continuous Case]\label{Thm:ContinuousChapmanKolmogorovEquality}
+            \[ \sum_{k}p_s(i,k)p_t(k,j) = p_{s+t}(i,j) \]
+        \end{theorem}
+        \begin{remark}
+            This sugguests that if we know the transition probability for all $t<t_0$ (for some $t_0>0$), then we will be able to know the transition probability for all $t' \in \mathbb{R}$, by using the equality for sufficiently many times until $s+t=t'$.
+        \end{remark}
+
+        This further suggests that $p_t$ can be determined by its derivative at $t=0$.
+        \begin{definition}[Jump Rate]\label{Def:JumpRate}
+            If the limit exists (assume it always does),
+            \[ q(i,j) = \lim_{h \to 0}\frac{p_h(i,j)}{h} \quad \text{for $j \neq i$} \]
+            then $q(i,j)$ is defined as the \textbf{jump rate} from $i$ to $j$.
+        \end{definition}
+
+    \subsection{A VERY Important Example}\label{Sub:CTMCCoreExample}
+        Let\footnote{“因为这个例子太重要了所以我给它起了个名字叫Example Star”--Chihao}
+        \begin{itemize}
+            \item $Y_n$ is a Markov Chain with transition matrix $u(i,j)$.
+            \item $N(t)$ be a Poison Process with rate $\lambda$.
+            \item $X(t)$ be a random variable defined as $X(t)=Y_{N(t)}$
+        \end{itemize}
+        That is, the discrete Markov chain $Y_n$ takes a jump according to the transition probability at each new arrival of the Poisson process $N(t)$.
+
+        \subsubsection{Jump Rate of VERY Important Example.}
+        By enumerating over all number of arrivals $n$
+        \[ p_h(i,j) = \sum_{n=0}^\infty e^{-\lambda h}\frac{(\lambda h)^n}{n!} \cdot u^n(i,j) \]
+
+        Notice that the probability of at least 2 jumps before time $h$ is 1 minus the probability of 0 and 1 jump,
+        \[ 1 - (e^{-\lambda h}+\lambda h e^{-\lambda h}) \approx (\lambda h)^2/2! = o(h) \]
+        So it converges to 0 when divided by $h$ and as $h \to 0$.
+        Therefore
+        \[ \frac{p_h(i,j)}{h} \approx \lambda e^{-\lambda h}u(i,j) \to \lambda u(i,j) \]
+
+
+\section{More Examples}
+    \subsection{The Poisson Process}
+        Let $X(t)$ be the number of arrivals up to time $t$ in $Poisson(\lambda)$.
+
+        Notice that at each new arrival, $X$ goes from $i$ to $i+1$ (with probability 1).
+        
+        Therefore $\forall n$
+        \[ q(n, n+1) = \lambda \]
+
+    \subsection{M/M/s Queue}
+        We now consider a queue. Customers arrive according to a Poisson process of rate $\lambda$; the time to serve a customer is modeled by another Poisson process of rate $\mu$; there are only $s$ counters.
+
+        Since the customers come in rate $\lambda$, we have
+        \[ q(n, n+1) = \lambda \]
+
+        Since the customers leave in rate $\mu$, we can use an exponential race in \ref{Subs:ExponentialRace} to model the process, and therefore
+        \[ q(n, n-1) = \begin{cases}
+            \mu n & \quad n < s\\
+            \mu s & \quad n \ge s
+        \end{cases} \]
