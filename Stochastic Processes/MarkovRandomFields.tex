@@ -1,0 +1,159 @@
+\chapter{Markov Random Fields}
+\emph{“但是你们肯定没我懂”}
+\newpage
+
+
+\section{Markov Random Fields}
+    A stochastic process is a collection of random variables $\{X_t|x\in\mathbb{T}\}$ where $\mathbb{T}$ is a subset of reals $\mathbb{R}$. And a \textbf{Random Field} is a generalization of a stochastic process.
+
+    \subsection{Markov Random Fields}
+        \begin{definition}[Random Field]
+            A \textbf{Random Field} is a collection of random variables $\{X_s:s\in\mathcal{G}\}$, where $\mathcal{G}$ is not necessarily a subset of $\mathbb{R}$. And we will consider $\mathcal{G}$ to be a set of nodes of a \emph{graph}. 
+        \end{definition}
+
+        \begin{definition}
+            Given a graph $\mathcal{G}$ with nodes $V=\{1,2,\dots,n\}$, let $\mathcal{N}(t)$ denote the set of neighbours of $t$. The collection of $\{X_1, \dots, X_n\}$ is a \textbf{Markov Random Field} if
+            \[ \forall v \quad \mathbb{P}\left[X_v = i \middle\vert \bigwedge_{w \in V-\{v\}} X_w = j_w\right] = \mathbb{P}\left[X_v = i \middle\vert \bigwedge_{w\in\mathcal{N}(v)}X_w=j_w\right] \]
+            i.e. the state of current node is only dependent on its neightbours.
+        \end{definition}
+
+    \subsection{Some Notations}
+        Let $x$ be the values of random varialbes $[X_1,\dots,X_n]$(a vector of length $n$), where each element $x_v$ (the state of each node) come from a state space $\{1,2,\dots,q\}$. Let $S$ be a subset of $V$, then
+        \begin{itemize}
+            \item We use $x_S$ to denote the values of random varialbes $X_v \quad v \in S$. (a vector $[x_v]$ of length $|S|$, where $v\in S$)
+            \item We use $p(x_S)$ to denote $\mathbb{P}[X_S=x_S]$.
+        \end{itemize}
+        $p(x_S)$ is the probability that the nodes in $S$ have states in $x_S$.
+
+        Let $S$, $T$ be two subsets of $V$, let $x$ be the vector of nodes in $S$, let $y$ be the vector of nodes in $T$, then
+        \begin{itemize}
+            \item We use $p(x_S|y_T)$ to denote $\mathbb{P}[X_S=x_S|X_T=y_T]$
+        \end{itemize}
+
+
+\section{Gibbs Distribution}
+    \subsection{Completeness}
+        \begin{definition}[Complete Graphs]\label{Def:CompleteGraph}
+            A set of nodes $C$ is \textbf{complete} if all distinct nodes in $C$ are neightbours of each other.
+        \end{definition}
+        \begin{remark}
+            That is, $C$ is not complete if two of its nodes are not neightbours.
+        \end{remark}
+
+        \begin{definition}[Clique]\label{Def:Clique}
+            A \textbf{clique} of a set $C$ is a maximal complete set of nodes in $C$.
+        \end{definition}
+
+    \subsection{Gibbs Distribution}
+        \begin{definition}[Gibbs Distribution]\label{Def:GibbsDistribution}
+            Let $\mathcal{G}$ be a finite graph. A \textbf{Gibbs Distribution} with respect to $\mathcal{G}$ is a probability mass function that can be expressed in the form of
+            \[ p(x) = \prod_{\text{$C$ complete}}V_C(x) \]
+            where $V_C(\cdot)$ is a function that only depends on the values $x_C = [x_v:v \in C]$ of $x$ at the nodes in a clique $C$. That is, if $x_C = y_C$, then $V_C(x) = V_C(y)$.
+        \end{definition}
+
+    \subsection{Examples of Gibbs Distibutions}
+        \subsubsection{Independent Sets on a Graph}
+        Let $\mathcal{G}=(V,E$ be a graph. We want to generate a mask $\{0,1\}^{|V|}$ such that the result is a independent set. \emph{The uniform distribution of all independent sets of $\mathcal{G}$ has a Gibbs distribution}.
+
+        Let $A$ be any complete sub-graph of $\mathcal{G}$, we define a weight function $w_A$ on $A$
+        \[ w_A(x) = \begin{cases}
+            0 &\quad |A| = 2, x_A = [1,1]\\
+            1 &\quad o.w.
+        \end{cases} \] 
+
+        Therefore
+        \[ p(x) \sim w_A(x) = \prod_{\{i,j\}\in E}\mathbb{I}[x(i) \neq 1 \vee x(j) \neq 1] \]
+
+        \subsubsection{Proper Coloring}
+        Consider the coloring of a graph, suppose there are $q$ colors, let $\Omega=\{1,2,\dots,q\}^{|V|}$ be the sample space consisting of all possible color assignment to each node in $V$. Let $c$ be a mapping from $V$ to $\Omega$, which represents a way to color all the nodes. A coloring is \textbf{proper} if no neighbouring nodes have the same color. We will show that \emph{the uniform distribution of all proper colorings on the graph has a Gibbs distribution}.
+        \[ \forall \{i,j\} \in E \quad c(i) \neq c(j) \]
+
+        We define a weight function $w_A(x)$ on all complete subgraphs of $\mathcal{G}$ by
+        \[ w_A(x) = \begin{cases}
+            0 &\quad c(i) = c(j), |A|=2\\
+            1 &\quad o.w.
+        \end{cases} \]
+
+        And Therefore
+        \[ p(x) \sim w_A(x) = \prod_{\{i,j\} \in E}\mathbb{I}[c(i) \neq c(j)] \]
+
+        \subsubsection{Ising Model}
+        Let $\Omega = \{0,1\}^V$. \verb|NotImplementedError: '太快了'|
+
+    \subsection{Hammersley-Clifford Theorem}
+        \begin{theorem}[Hammersley-Clifford]\label{Thm:HammersleyClifford}
+            Suppose that $X=(X_1,\dots,X_n)$ has a positive joint probability mass function $\mu(X) > 0 \quad \forall X$. Then $X$ is a Markov random field on $\mathcal{G}$ if and only if $X$ has a Gibbs distribution w.r.t. $\mathcal{G}$.
+        \end{theorem}
+
+        The proof of the theorem is skipped due to time limitation. Can be found in References.
+
+
+\section{Hidden Markov Models}
+    A Hidden Markov Model is a Markov random fields in which some random variables are observable, while others are not.
+
+    Suppose a hidden random variable chain is a Markov Chain $\{X_t\}$ with initial distribution $\xi$ and transition probability $A$, and suppose each hidden state $X_t$ emits an observation $Y_t$ according to a probability matrix $B$. We can only oberseve $Y_t$, and we want to estimate $\theta ] \{\xi, A, B\}$.
+
+    Given a sequence of observations $y = (y_1, y_2, \dots ,y_n)$, our goal is to find
+    \[ \hat{\theta} = \arg\max_{\theta} p_{\theta}(y) = \sum_x p_{\theta}(x,y) \]
+
+    If we can directly maximize $p_{\theta}(y)$, then we are done. But this is practically impossible because we need to enumerate over all possible $x$.
+    
+    \subsection{Expectation Maximization}
+        Let $L(\theta) = p_{\theta}(y)$. Maximizing $L(\theta)$ is equivalent to maximizing $\mathcal{L}(\theta) = \log L(\theta)$.
+
+        The EM algorithm maximizes the \emph{Expectation} of $p_{\theta}(X,y)$ due to the complexity of directly maximizing $p_{\theta}(x,y)$. Furthermore, it maximizes $\mathbb{E}[p_{\theta_t}(X,y)]$ using a current estimator $\theta_t$ of $\theta$, and update $\theta_t$ iteratively.
+
+        The general framework for the M-Step of an EM Algorithm is
+        \[ \theta_{t+1} = \arg\max_{\theta} \mathbb{E}_{\theta_t}\left[ \log p_{\theta}(X,y)|Y=y \right] \]
+
+        \subsubsection{Proof Of Correctness}
+        \begin{definition}[KL Divergence]\label{Def:KLDivergence}
+            The \textbf{KL-Divergence} is used to measure the difference of two distributions
+            \[ D_{KL}(p\|q) = \sum_i p_i\log p_i - \sum_i p_i \log q_i \]
+        \end{definition}
+        \begin{proposition}[Non-negativity of KL Divergence]\label{Prop:PositivityOfKLDivergence}
+            \[ D_{KL}(p\|q) \ge 0 \]
+            The equality is achieved if and only if $p=q$.
+        \end{proposition}
+
+        \begin{lemma}\label{Lem:IncreasingLowerBoundOfEMAlgo}
+            If there exist $\theta_0$ and $\theta_1$ such that
+            \[ \mathbb{E}_{\theta_0}[p_{\theta_1}(X,y)|Y=y] > \mathbb{E}_{\theta_0}[p_{\theta_0}(X,y)|y] \]
+            Then
+            \[ p_{\theta_1}(y) > p_{\theta_0}(y) \]
+        \end{lemma}
+        \begin{proof}
+            By assuption of the lemma, we move the LHS to RHS,
+            \begin{align*}
+                0 &< \mathbb{E}_{\theta_0}\left[ \log \frac{p_{\theta_1}(X,y)}{p_{\theta_0}(X,y)} \middle\vert Y=y \right]\\
+                &= \sum_x p_{\theta_0}(x|y) \log \frac{p_{\theta_1}(x,y)}{p_{\theta_0}(x,y)} \quad \text{(Definition of conditional expectation)}\\
+                &= \sum_x p_{\theta_0}(x|y) \log \frac{p_{\theta_1}(y)}{p_{\theta_0}(y)} - \sum_x p_{\theta_0}(x,y)\log\frac{p_{\theta_0}(x|y)}{p_{\theta_1}(x|y)} \quad \text{(乘法定理)} \\
+                &\le \log\frac{p_{\theta_1}(y)}{p_{\theta_0}(y)}
+            \end{align*}
+        \end{proof}
+
+    \subsection{Applying EM to HMM}
+        \[ p_{\theta}(x,y) = \xi(x_0) \cdot \prod_{t=0}^{n-1}A(x_t,x_{t+1}) \cdot \prod_{t=0}^n B(x_t, y_t) \]
+        Taking logarithm and expectation,
+        \[ \mathbb{E}_{\theta_0}\left[ \log p_{\theta}(X,y)|y \right] = \mathbb{E}_{\theta_0}[\log\xi(x_0)|y] + \sum_{t=0}^{n-1}\mathbb{E}_{\theta_0}[\log A(x_t,x_{t+1})|y] + \sum_{t=0}^n\mathbb{E}_{\theta_0}[\log B(x_t,y_t)|y] \]
+
+        Notice that the first term only involves $\xi$, the second term only involves $A$ and the last tern only involes $B$.
+
+        \subsubsection{Maximizing Term 1}
+        \[ Term1 = \sum_i \mathbb{P}_{\theta_0}[x=i|y]\log\xi(i) \]
+        By Property of KL-Divergence \ref{Prop:PositivityOfKLDivergence}, $Term1$ is maximized when $\xi(i) = \mathbb{P}_{\theta_0}[x=i|y]$.
+
+        \subsubsection{Maximizing Term 2}
+        \[ Term2 = \sum_{t=0}^{n-1}\sum_i\sum_j \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y] \cdot \log A(i,j) \]
+        Exchange the summations,
+        \[ \sum_i\sum_j \left(\sum_t \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y] \cdot \log A(i,j)\right) \]
+        Again by \ref{Prop:PositivityOfKLDivergence}, $A(i,j)$ is maximized when
+        \[ A(i,j) = \frac{\sum_t \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y]}{\sum_j\sum_t \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y]} \]
+
+        \subsubsection{Maximizing Term 3}
+        \begin{align*}
+            Term3 &= \sum_i \sum_t \mathbb{P}_{\theta_0}[x_t=i|y]\cdot\log B(i,y_t)\\
+            &= \sum_i \sum_j \sum_{t:y_t=j}\mathbb{P}_{\theta_0}[x_t=i|y]\log B(i,j)
+        \end{align*}
+        By Mafs, $B(i,j)$ is maximized when
+        \[ B(i,j) = \frac{\sum_{t:y_t=j}\mathbb{P}_{\theta_0}[x_t=i|j]}{\sum_j\sum_{t:y_t=j}\mathbb{P}_{\theta_0}[x_t=i|j]} \]

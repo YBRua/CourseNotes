@@ -24,7 +24,7 @@
             \[ \sum_{k}p_s(i,k)p_t(k,j) = p_{s+t}(i,j) \]
         \end{theorem}
         \begin{remark}
-            This sugguests that if we know the transition probability for all $t<t_0$ (for some $t_0>0$), then we will be able to know the transition probability for all $t' \in \mathbb{R}$, by using the equality for sufficiently many times until $s+t=t'$.
+            This sugguests that if we know the transition probability for all $t<t_0$ (for some $t_0>0$), then we will be able to know the transition probability for all $t' \in \mathbb{R}$, by using the equality for sufficiently many times and keep doing the summation until $s+t=t'$.
         \end{remark}
 
         This further suggests that $p_t$ can be determined by its derivative at $t=0$.
@@ -74,3 +74,161 @@
             \mu n & \quad n < s\\
             \mu s & \quad n \ge s
         \end{cases} \]
+
+
+\section{Constructing a CT Markov Chain}
+    Given a jump rate $q(i,j)$, let
+    \[ \lambda_i = \sum_{j \neq i}q(i,j) \]
+    $\lambda_i$ is the rate that the chain leaves $i$.
+    \begin{itemize}
+        \item If $\lambda_i = \infty$, then the chain leaves $i$ immediately.
+        \item If $\lambda_i = 0$, then the chain will never leave $i$.
+    \end{itemize}
+    If $\lambda_i > 0$, let
+    \[ u(i,j) = \frac{q(i,j)}{\lambda_i} \]
+    be the probability that the chain goes to $j$ when it leaves $i$.
+
+    \subsection{Informal Construction}
+        \begin{itemize}
+            \item If $X_t$ is in a state $i$ with $\lambda_i=0$, then the chain never leaves and we are done.
+            \item If $X_t$ is in a state $i$ with $\lambda_i > 0$, then we first let the chain stay at $i$ according to an Exponential distribution with rate $\lambda_i$, then choose a destination according to $u(i,j)$.
+        \end{itemize}
+
+
+\section{Computing the Transition Probability}
+    Given the jump rate $q(i,j)$, the transition probability can be calculated By
+    \begin{align*}
+        p_{t+h}(i,j) - p_t(i,j) &= \sum_k p_h(i,k)p_t(k,j) - p_t(i,j) \quad \text{(CK Equation \ref{Thm:ContinuousChapmanKolmogorovEquality})}\\
+        &= \sum_{k \neq i} p_h(i,k)p_t(k,j) + (p_h(i,i)-1)p_t(i,j)\\
+        &\triangleq A + B
+    \end{align*}
+
+    Multiply by $1/h$ and take limitation, then Expression A becomes
+    \begin{align*}
+        \lim_{h \to 0} \frac{1}{h}A &= \sum_{k \neq i}\lim_{h \to 0}\frac{1}{h}p_h(i,k)p_t(k,j)\\
+        &= \sum_{k \neq i}q(i,k)p_t(k,j)
+    \end{align*}
+
+    and Expression B becomes
+    \begin{align*}
+        \lim_{h \to 0} \frac{1}{h}B &= \lim_{h \to 0}\frac{\sum_{k \neq i}p_h(i,k)}{h}p_t(i,j)\\
+        &= \left(\sum_{k \neq i}q(i,k)\right)p_t(i,j)\\
+        &= -\lambda_i p_t(i,j)
+    \end{align*}
+
+    And therefore
+    \begin{equation}\label{Eq:TransitionProbabilityKeyEq}
+         \lim_{h \to 0}\frac{1}{h}\left(p_{t+h}(i,j) - p_t(i,j)\right) = \sum_{k \neq i}q_(i,k)p_t(k,j) - \lambda_i p_t(i,j) 
+    \end{equation}
+
+    Notice that the LHS of equation (\ref{Eq:TransitionProbabilityKeyEq}) is the derivative of $p_t(i,j)$, and therefore
+    \[ p'_t(i,j) = \sum_{k \neq i}q_(i,k)p_t(k,j) - \lambda_i p_t(i,j) \]
+
+    Further notice that  hte first term $\sum_{k \neq i}q_(i,k)p_t(k,j)$ in RHS of (\ref{Eq:TransitionProbabilityKeyEq}) can be re-written in a matrix multiplication. Let
+    \[ Q(i,j) = \begin{cases}
+        q(i,j) &\quad i \neq j\\
+        -\lambda_i &\quad i = j
+    \end{cases} \]
+
+    And therefore
+    \begin{equation}\label{Eq:KolmogorovBackwardEquation}
+        P'_t = QP_t
+    \end{equation}
+    This equation is also known as the \textbf{Kolmogorov Backward Equation}.
+
+    This looks similar to a differential equation and the solution is
+    \[ P_t = e^{Qt} = \sum_{n=0}^{\infty}\frac{(tQ)^n}{n!} \]
+    where $e^{Qt}$ is defined as
+    \[ e^Q = \sum_{n=0}^{\infty} \frac{Q^n}{n!} \]
+
+    Furthermore, if we write $\sum_{k}p_t(i,k)p_h(k,j)$ instead of $\sum_{k}p_h(i,k)p_t(k,j)$ in the first step of derivation, we will end up with the \textbf{Kolmogorov Forward Equation}.
+    \begin{equation}\label{Eq:KolmogorovForwardEquation}
+        P'_t = P_tQ
+    \end{equation}
+
+    \subsection{Example: Poisson Process Revisited}
+        In the previous sections, we know that given the jump rate $q(i,j)$, we are able to compute the transition probability and simulate the continuous time Markov chain.
+
+        Let $X(t)$ be the number of arrivals of a Poisson process up to time $t$. $p_t(i,j)$ is the probability that the number rises from $i$ to $j$ in time interval $t$. By definition of the Poisson process, the arrival between $0$ and $t$ has a Poisson distribution of rate $\lambda t$, and $p_t(i,j)$ is simply the probability that the number of arrivals between $0$ and $t$ is $j-i$.
+        \[ p_t(i,j) = e^{-\lambda t}\frac{(\lambda t)^{j-i}}{(j-i)!} \]
+
+        We can use the result to verify the forward and backward equation \ref{Eq:KolmogorovForwardEquation} and \ref{Eq:KolmogorovBackwardEquation}.
+
+    \subsection{Example: Two State Markov Chain}
+        Suppose there are only two states $\Omega = \{1,2\}$. The two-state continuous-time Markov chain can be specified by
+        \[ q(1,2) = \lambda \quad q(2,1) = \mu \]
+        and
+        \[ Q = \begin{bmatrix}
+            -\lambda & \lambda\\
+            \mu & -\mu
+        \end{bmatrix} \]
+
+        By Kolmogorov backward equation \ref{Eq:KolmogorovBackwardEquation},
+        \[
+        \begin{bmatrix}
+            p'_t(1,1) & p'_t(1,2)\\
+            p'_t(2,1) & p'_t(2,2)
+        \end{bmatrix} = 
+        \begin{bmatrix}
+            -\lambda & \lambda\\
+            \mu & -\mu
+        \end{bmatrix}
+        \begin{bmatrix}
+            p_t(1,1) & p_t(1,2)\\
+            p_t(2,1) & p_t(2,2)
+        \end{bmatrix}
+        \]
+
+        Since there are only two states, it suffices to compute $p_t(1,1)$ and $p_t(2,1)$ only.
+        \[ p'_t(1,1) = -\lambda p_t(1,1) + \lambda p_t(2,1) \]
+        \[ p'_t(2,1) = \mu p_t(1,1) - \mu p_t(2,1) \]
+
+        Therefore
+        \[ \left(p_t(1,1)-p_t(2,1)\right)' = -(\lambda + \mu)\left(p_t(1,1)-p_t(2,1)\right) \]
+
+        Solving the differential equation gives us
+        \[ p_t(1,1) - p_t(2,1) = e^{-(\lambda + \mu)t} \]
+
+        Plug the result back into the expression for $p'_t(1,1)$,
+        \[ p'_t(1,1) = -\lambda e^{-(\lambda + \mu)t} \]
+
+        Integrate over $t$
+        \[ p_t(1,1) = p_o(1,1) - \lambda\int_0^t e^{-(\lambda + \mu)s}\mathrm{d}s = \frac{\mu}{\mu + \lambda}+\frac{\lambda}{\mu + \lambda} e^{-(\lambda + \mu)t} \]
+
+
+\section{Limiting Behaviour: Continuous Time}
+    \subsection{Irreducibility, Continuous Case}
+        The intuition remains the same: the chain can jump from any state $i$ to any state $j$ in finite steps.
+        \begin{definition}[Continuous Time Irreducibility]
+            A continuous-time Markov chain is \textbf{irreducible} if there exists a sequence $k_0 = i, k_1, \dots, k_n=j$ such that
+            \[ q(k_{m-1},k_m) > 0 \quad \forall 1 \le m \le n \]
+        \end{definition}
+
+        \begin{lemma}\label{Lem:NecessaryConditionOfIrreducibility}
+            If $X(t)$ is irreducible and $t>0$, then
+            \[ p_t(i,j) > 0 \quad \forall i,j \]
+        \end{lemma}
+
+    \subsection{Stationary Distribution}
+        \begin{lemma}[Stationary Distribution, Continuous Case]\label{Lem:ContinuousTimeStationaryDistribution}
+            A distribution $\pi$ is a stationary distribution if and only if
+            \[ \pi^T Q = 0 \]
+        \end{lemma}
+        \begin{remark}
+            Using the definition of $Q$ we can prove that
+            \[ \sum_{i \neq j}\pi(i)q(i,j) = \lambda_j\pi(j) \]
+            The LHS is the rate that the chain ``gets into'' state $j$, and the RHS is the rate that the chain ``gets out of'' state $j$. So the intuition of continuous-time stationary distribution is that the rate that a chain goes in and goes out of a state are equal.
+        \end{remark}
+
+    \subsection{Convergence}
+        \begin{theorem}[Convergence of CT Markov Chain]\label{Thm:ConvergenceOfCTMarkovChain}
+            If a continuous time Markov chain is irreducible and has a stationary distribution $\pi$, then
+            \[ \lim_{t\to\infty}p_t(i,j) = \pi(j) \]
+        \end{theorem}
+
+    \subsection{Detailed Balance Condition, Continuous Case}
+        \begin{theorem}[Detailed Balance Condition]\label{Thm:DetailedBalanceConditionOfCTMarkovChain}
+            If
+            \[ \forall i \neq j \quad \pi(i)q(i,j) = \pi(j)q(j,i) \]
+            then $\pi$ is a stationary distribution.
+        \end{theorem}
