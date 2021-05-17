@@ -1,0 +1,231 @@
+\chapter{(Discrete) Martingale}
+\emph{这个词中文叫做“鞅”。}
+\newpage
+
+
+\section{Definition of a Martingale}
+    \subsection{Definition}
+        \begin{definition}[Martingale]\label{Def:Martingale}
+            A stochastic process is a \textbf{Martingale} if
+            \[ \forall t \ge 0 \quad \mathbb{E}[X_{t+1}|X_0,\dots,X_t] = X_t \]
+        \end{definition}
+
+        For conciseness in this chapter we use
+        \[ X_{(m,n)} = (X_m,\dots,X_n) \]
+        to denote a portion of the stochastic process from time $m$ to $n$.
+
+        \begin{definition}[Generalized Martingale]\label{Def:GeneralizedMartingale}
+            Given two stochastic processes $X_t$ and $Z_t$. $Z_t$ is a \textbf{martingale} \emph{with respect to} $X_t$ if
+            \[ \forall t \ge 0 \quad \mathbb{E}[Z_{t+1} | X_{(0,t)}] = Z_t \]
+        \end{definition}
+        \begin{remark}
+            Definition \ref{Def:Martingale} is a special case of \ref{Def:GeneralizedMartingale} where $Z_t = X_t$.
+        \end{remark}
+
+    \subsection{Fancier Definitions}
+        Recall measure theory stuff in the first lecture.
+        Let $\mathcal{F}_n = (X_0,\dots,X_n)$ be the smallest $\mathcal{F}$-measurable $\sigma$-algebra.
+        \begin{definition}[Filteration]
+            $\{\mathcal{F}_n\}$ is called a \textbf{filteration} if
+            \[ \mathcal{F}_0 \subseteq \mathcal{F}_1 \subseteq \cdots \subseteq \mathcal{F}_n \]
+        \end{definition}
+
+        \begin{definition}[Martingale (Fancy)]\label{Def:FancyMartingale}
+            $\{Z_t\}$ is a \textbf{martingale} \emph{w.r.t. a filteration} $\{\mathcal{F}_t\}$ if
+            \begin{enumerate}
+                \item $\forall t \ge 0$, $Z_t$ is $\mathcal{F}_t$-measurable.
+                \item $\mathbb{E}[Z_{t+1}|\mathcal{F}_t] = Z_t$. Or equivalently $\mathbb{E}[Z_{t+1}] = \mathbb{E}[Z_t]$
+            \end{enumerate}
+        \end{definition}
+
+    \subsection{Examples}
+        \subsubsection{Random Walk on 1-d Integers}
+        Consider the random walk on $\mathbb{Z}$. Let $X_t \in \{-1, 1\}$ be a uniform-at-random r.v. denoting the direction of the $t$-th move.
+
+        Let $Z_t = \sum_{i=1}^tX_i$ and $Z_0=0$, then $Z_t$ is a martingale w.r.t. $X_t$.
+
+        \[ \mathbb{E}[Z_{t+1}|X_{(0,t)}] = \mathbb{E}[Z_t + X_{t+1}|X_{(0,t)}] = Z_t + \mathbb{E}[X_{t+1}|X_{(0,t)}] = Z_t \]
+
+        \subsubsection{Branching Process}
+        The branching process is introduced in section \ref{Sub:BranchingProcess}.
+
+        Let $Z_t$ be the number of people in the $t$-th generation, let $X_{ti}$ be the children of the $i$-th people in the $t$-th generation.
+
+        Assume $\mathbb{E}[X_{ti}] = \mu$.
+
+        Notice that we have
+        \[ Z_{t+1} = \sum_{i=1}^{Z_t}X_{ti} \]
+
+        \[ \mathbb{E}[Z_{t+1}|\mathcal{F}_t] = \mathbb{E}[Z_{t+1}|Z_t] \]
+
+        Since
+        \[ \mathbb{E}[Z_{t+1}|Z_t=z] = \mathbb{E}[\sum_{i=1}^zX_{ti}|Z_t=z] = \mu z \]
+
+        Therefore
+        \[ \mathbb{E}[Z_{t+1}|\mathcal{F}_t] = \mu Z_t \]
+
+        $Z_t$ is \emph{not} a martingale because of the scaling factor $\mu$.
+        \[ \mathbb{E}[Z_{t+1}|Z_t] \neq Z_t \]
+
+        However if we let
+        \[ M_t = \mu^{-t}Z_t \]
+
+        Then $\{M_t\}$ is a martingale w.r.t. $\{\mathcal{F}_t\}$
+
+        \subsubsection{Polya's Urn}
+        Suppose we have an urn (buskets/bottles/whatever) containing two kinds of balls: black balls and white balls.
+        
+        Suppose we start from time $t=2$ (so that the urn contains $t$ balls at time $t$); suppose the urn has one black ball and one white ball at the beginning.
+        
+        Each time we draw a ball at random and replace it together with a ball of the same color.
+
+        Let $X_t$ be the number of white balls after time $t$. Let $Z_t = X_t/t$ be the ratio of white balls. We claim that $\{Z_t\}$ is a martingale.
+
+        \begin{align*}
+            \mathbb{E}\left[Z_{t+1}|X_{(2,t)}\right] &= \frac{1}{t+1}\mathbb{E}[X_{t+1}|X_{(2,t)}]\\
+            &= \frac{1}{t+1}\left(\frac{X_t}{t}\left(X_t+1\right) + \frac{t-X_t}{t}\left(X_t\right)\right)\\
+            &= \frac{1}{t+1}\frac{X_t + tX_t}{t} = \frac{X_t}{t} = Z_t
+        \end{align*}
+
+        \subsubsection{Likelihood Ratio}
+        Suppose we have a ``dataset'' $X_1,\dots,X_t$ that has a (true) underlying pdf $f$; suppose we have a hypothesis (or estimation) $g$.
+
+        Let 
+        \[ M_t \triangleq \frac{g(X_1)\cdot \cdots \cdot g(X_t)}{f(X_1)\cdot \cdots \cdot f(X_t)} \]
+
+        We claim that $\{M_t\}$ is a martingale.
+
+        \begin{align*}
+            \mathbb{E}[M_{t+1}|X_{(1,t)}] &= M_t\cdot\mathbb{E}\left[\frac{g(X_{t+1})}{f(X_{t+1})}|X_{(1,t)}\right]\\
+            &= M_t \cdot \mathbb{E}\left[\frac{g(X_{t+1})}{f(X_{t+1})}\right]\\
+            &= M_t \int \frac{g(x)}{f(x)}\mathrm{d}x \\
+            &= M_t
+        \end{align*}
+
+
+\section{Stopping Time}
+    \subsection{Introduction}
+        By definition \ref{Def:FancyMartingale},
+        \[ \forall t \ge 0 \quad \mathbb{E}[Z_t] = \mathbb{E}[Z_0] \]
+
+        If $\tau$ is a random variable, will the result still hold?
+        \[\mathbb{E}[Z_{\tau}] \questeq \mathbb{E}[Z_0]\]
+        This does not always hold, but in some cases it holds.
+
+    \subsection{Stopping Time and Optimal Stopping Theorem}
+        \begin{definition}[Stopping Time]\label{Def:StoppingTime}
+            A random variable $\tau \in \mathbb{N}$ is a \textbf{stopping time} if
+            \[ \forall t \in \mathbb{N} \quad [\tau \le t] \text{ is $\mathcal{F}_t$-measurable.} \]
+        \end{definition}
+        \begin{remark}
+            The definition says that $\tau$ is a stopping time with respect to a martingale $X_1,\dots$ if for each integer $k$, the indicator r.v. $\mathbb{I}[\tau = k]$ is a function of $W_{(0,k)}$.
+        \end{remark}
+
+        \begin{theorem}[Optimal Stopping Theorem]\label{Thm:OptimalStoppingTheorem}
+            Let $\{X_t\}$ be a matringale, let $\tau$ be a stopping time w.r.t. $\{\mathcal{F}_t\}$. Then $\mathbb{E}[X_{\tau}] = \mathbb{E}[X_0]$ if \emph{at least one of the following holds}.
+            \begin{enumerate}
+                \item $\tau$ is bounded.
+                \item $\mathbb{P}[\tau < \infty] = 1$ and $\exists M$ s.t. $|X_t| \le M$ for all $t < \tau$.
+                \item $\mathbb{E}[\tau] < \infty$ and $\exists c$ s.t. $\mathbb{E}[|X_{t+1} - X_{t}||\mathcal{F}_t] \le c$. (Expectation of $\tau$ is bounded and the changing rate of $X_t$ can be bounded)
+            \end{enumerate}
+        \end{theorem}
+
+    \subsection{Examples}
+        \subsubsection{Birth Rate of Boys and Girls}
+            Suppose a politically incorrect village has a policy: Each family keep having children until the new child is a boy. We examine the stopping time $\tau$.
+
+            Let $X_t \in \{-1, 1\}$ denote the gender of the child, and $1$ stands for boy and $-1$ stands for girl. Let $Z_t$ denote the difference in number of boys and girls.
+            \[ Z_t = Z_{t-1} + X_t \]
+
+            Obviously
+            \[ \mathbb{E}[\tau] = 1/2 + 2 \times 1/4 + \cdots = \sum_n \frac{n}{2^n} < \infty \]
+            and the changing rate is obviously bounded, so the third condition of theorem \ref{Thm:OptimalStoppingTheorem} holds, and
+            \[ \mathbb{E}[Z_t] = \mathbb{E}[Z_0] = 0 \]
+
+            However\footnote{“我前段时间还在论坛上和别人对线”--Chihao}, if the village uses an even more politically incorrect policy: keep having children until the number of boys is larger than the number of girls by 1. i.e.
+            \[ \tau = \min\{n|Z_n=1\} \]
+            
+            Notice that if we model $X_t$ with the random walk on integers with probability $1/2$, the walk is null recurrent and $\mathbb{E}[\tau] = \infty$ so the theorem cannot be applied.
+            
+            Actually
+            \[ \mathbb{E}[Z_t] = 1 \]
+
+            Further, if the villagers are not extremely 头铁 and they will stop if they have 10 girls in a row without having a boy.
+            \[ \tau = \min\{\min\{n|Z_n=1\}, 10\} \]
+            Then condition (3) of Theorem \ref{Thm:OptimalStoppingTheorem} holds again and $\mathbb{E}[Z_t] = 0$.
+
+        \subsubsection{Random Walk on Integers with Barrier}
+            Consider a random walk $X_t \in \{-1, 1\}$ on integers with two absorbing barriers at $-a$ and $b$. Let $Z_t$ be the position at $t$, let $\tau$ be the r.v. denoting the time when we arrive at either $-a$ or $b$.
+            \[ Z_{t+1} = Z_t + X_{t+1} \]
+
+            Obviously $|Z_t| \le M$, and obviously $\mathbb{P}[\tau < \infty]=1$ because we have a positive probability to walk $(a+b)$ steps toward $b$ and thus we will always stop. So condition (2) of OST \ref{Thm:OptimalStoppingTheorem} holds.
+
+            \[ \mathbb{E}[Z_t] = \mathbb{E}[Z_0] = 0 \Rightarrow -aP_a + b(1-P_a) = 0 \]
+
+            So $P_a = \frac{b}{a+b}$ and $P_b = \frac{a}{a+b}$.
+
+            And we proceed to compute the stopping time. Let
+            \[ Y_t \triangleq Z_t^2 - t \]
+
+            We claim that $Y_t$ is a martingale.
+            \begin{align*}
+                \mathbb{E}[Y_{t+1}|\mathcal{F}_t] &= \mathbb{E}[Z_{t+1}^2 - (t+1)|\mathcal{F}_t]\\
+                &= \mathbb{E}[(Z_t + X_{t+1})^2 - (t+1) | \mathcal{F}_t]\\
+                &= Z_t^2 + 2Z_t\mathbb{E}[X_{t+1}] + \mathbb{E}[X_{t+1}^2] - (t+1)\\
+                &= Z_t^2 - t = Y_t
+            \end{align*}
+
+            It can be shown that $\{Y_t\}$ satisfies (3) of OST \ref{Thm:OptimalStoppingTheorem}. Therefore
+            \[ \mathbb{E}[Y_{\tau}] = \mathbb{E}[Y_0] = 0 \]
+            And since
+            \[ \mathbb{E}[Y_{\tau}] = \mathbb{E}[Z_{\tau}^2] - \mathbb{E}[\tau] = \frac{a^2b}{a+b} + \frac{b^2a}{a+b} + \mathbb{E}[\tau] \]
+            We can solve for
+            \[ \mathbb{E}[\tau] = ab \]
+
+        \subsubsection{Pattern Occurence}
+            Suppose we flip a fair coin, let $\{X_t\}$ be the sequence of results. 
+            
+            Given a sequence $p = (p_1,p_2,\dots,p_N) \in \{0,1\}^N$, we want to know the expected throws before the pattern occurs (as a subsequence) in the result sequence.
+
+            Notice that the expectation depends on $p$. For example it is easier to get sequence $10$ than to get $11$. Because the probability of succeeding, given the previous flip is $1$, is equal, but
+            \begin{itemize}
+                \item For $11$, if we fail and get $0$ in the second flip (got $10$), we will have to start from the beginning.
+                \item For $10$, if we fail and get $1$ in the second flip, (got $11$), we only need to start from the second bit.
+            \end{itemize}
+
+            We construct a martingale, let $A_t$ be a person who joins a gambling at time $j$, and acts as follows
+            \begin{itemize}
+                \item Bet \$1 on $X_t=p_1$.
+                \item If win, bet \$2 on $X_{t+1}=p_2$.
+                \item If win, bet \$4 on $X_{t+2}=p_3$.
+                \item \dots (doubles the bet each time)
+                \item Whenever loses, quit the game.
+            \end{itemize}
+
+            Let $j \in \{1, 2, \dots, N\}$, let $G_j(t)$ be the total money (can be negative) of person $A_j$ at time $t$. Obviously $G_j(t)$ is a martingale, because this is a fair gamble.
+
+            Let $Z(t) = \sum_j G_j(t)$ be the total number of money in the game at time $t$. By linearity of expectation, $Z(t)$ is also a martingale.
+
+            Let $\tau$ be the first time that pattern $p$ occurs in $\{X_t\}$.
+
+            It can be verified that $Z(t)$ satisfies (3) of OST \ref{Thm:OptimalStoppingTheorem}.
+            \[ \mathbb{E}[Z(\tau)] = \mathbb{E}[Z(1)] = 0 \]
+
+            Now suppose the pattern occurs, we compute the expected money for each person $A_j$ (which is another way of computing the LHS).
+
+            All people before $\tau - N$ have all lost the gamble (or otherwise the pattern would have appeared earlier than $\tau$). If a person loses, the total money he has will be $-1$. 
+
+            The person who joined the gamble at $t = \tau-N$ kept winning until the very end\footnote{“肯定赢麻了。”--Chihao}, and he will have earned
+            \[ 1 + 2 + \cdots + 2^{N-1} = 2^N-1 \]
+
+            The situation of the remaining people depens on $p$. For the $l$-last person, he did not lose until the end if and only if the first $l$ bits he betted equals to the first $l$ bits of $p$, i.e. the last $l$ bits of $p$ equals to the first $l$ bits of $p$. To indicate this, let $\chi_j$ denote whether $j$ winned money.
+            \[ \chi_j = \mathbb{I}[p_{(1,j)} = \mathbb{I}p_{m-j+1,m}] \]
+
+            Therefore
+            \[Z(\tau) = -\left(\tau - \sum_{j=1}^m \chi_j\right) + \sum_{j=1}^m \chi_j(2^j-1)\]
+
+            Take expectations on both sides and solve for $\mathbb{E}\tau$
+            \[\mathbb{E}\tau = \sum_{j=1}^m\chi_j \cdot 2^j\]
+
+            For a 4-bit pattern $0101$, $\chi_1=0$, $\chi_2 = 1$, $\chi_3=0$, $\chi_4=1$.
+

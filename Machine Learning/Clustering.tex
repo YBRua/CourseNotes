@@ -139,5 +139,68 @@ The first term is $J_c^k(new)$, the second term is non-negative and the third te
         Notice that $\sum_k\pi_k = 1$, so maximizing w.r.t. $\pi_k$ is an ECP.
 
     
-\section{Spectual Clustering}
+\section{Spectral Clustering}
     K-Means and GMM may have poor performance when the data is non-convex.
+    
+    \subsection{Graph-based Clustering}
+        We use a graph $G=(V,E)$ to represent the dataset. Each sample is a node in $V$ and each edge has a weight $w_{ij}=f(d(i,j))$.
+
+        \begin{enumerate}
+            \item Construct the graph
+            \item Perform edge cuts.
+        \end{enumerate}
+
+    \subsection{Graph Cut}
+        \subsubsection{Definitions and Notations}
+            \begin{itemize}
+                \item Degree of a node $d_i = \sum_{j\in V}w_{ij}$.
+                \item Degree of a subgraph $A_i = \sum_{i \in A}d_i$. There are two cases.
+                    \begin{itemize}
+                        \item $i \in A$, $j \in A$. In this case $w_{ij}$ is counted twice.
+                        \item $i \in A$, $j \notin A$. In this case $w_{ij}$ is counted once.
+                    \end{itemize}
+                \item Cut of a graph $Cut(A, B) = \sum_{i \in A}\sum_{j \in B}w_{ij}$.
+            \end{itemize}
+
+        We minimize
+        \[ \min Cut(A_1,A_2,\dots,A_k) \]
+
+        However, the algorithm may favor isolated clusters and outliers.
+
+        Can be mitigated by normalizing edge cuts.
+        \[ NCut(A,B) = \frac{Cut(A,B)}{d_A} + \frac{Cut(A,B)}{d_B}\]
+        Works. But it's NP-hard.
+
+    \subsection{Optimizing Graph Cuts}
+        \subsubsection{More Notations}
+            \begin{itemize}
+                \item Degree matrix $D_{ij} = \text{$\sum_j w_{ij}$ if $i=j$ else $0$}$
+                \item $L=D-W$
+                \item Define an indicator vector $x$. $x_i = 1$ if $i \in A$ and $x_i=0$ if $i \notin A$, i.e. $i \in B = V-A$. $x$ is unknown and we want to find $x$.
+            \end{itemize}
+
+        We can represent $d_A$ and $d_B$ in matrix form
+        \[ d_A = \sum_{i\in A}d_i = \sum_i d_ix_i = x^TDx \]
+        \[ d_B = \bar{x}^TD\bar{x} \]
+        where $\bar{x}$ is the bitwise NOT of $x$.
+
+        \[ Cut(A, V-A) = \sum_{i\in A}\sum_{j\in B}w_{ij} = \sum_{i \in A}d_i - \sum_{i \in A}\sum_{j \in A}w_{ij} = x^TDx - x^TWx = x^TLx \]
+
+        Therefore
+        \begin{align*}
+            \min_x &\quad x^TLx\\
+            \text{s.t.} &\quad x^TDx \ge \delta
+        \end{align*}
+
+        Can be solved by Lagrangian multipliers
+        \[ \mathcal{L}(x, \lambda_A, \lambda_B) = x^TLx - \lambda_A(x^TDx-\delta) \]
+        \[ D^{-1}Lx = \lambda_A x \]
+        So we find the eigenvector of $D^{-1}L$ and take approximations to make elements of $x$ either $0$ or $1$.
+
+        \subsubsection{Procedure}
+            \begin{enumerate}
+                \item Normalize $L = D^{-1/2}LD^{-1/2}$
+                \item Compute the smallest $k_1$ eigenvalues and corresponding eigenvectors.
+                \item Use eigenvectors to construct $N$ by $k_1$ matrix $P$.
+                \item Use $P$ as the new input of some other clustering algorithm, where each sample has $k_1$ dimension.
+            \end{enumerate}
