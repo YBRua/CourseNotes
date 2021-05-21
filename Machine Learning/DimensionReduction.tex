@@ -3,4 +3,106 @@
 \newpage
 
 
-\section{}
+\section{Principal Component Analysis}
+    \emph{aka. Discrete Karhunen Loeve Transform; Hotelling Transform}
+
+    Let $y \in \mathbb{R}^K$ be a feature vector computed from $x \in \mathbb{R}^D$ where $K \ll D$. PCA determines an orthogonal matrix $W \in \mathbb{R}^{D \times K}$ s.t.
+    \[ y = W^Tx \]
+
+    Assume in this section that $x$ has a distribution with mean $\mu=0$ and covariance matrix $\Sigma$.
+
+    \subsection{Objective Funtion}
+        PCA minimizes the reconstruction error between original $x$ and reconstructed $\hat{x}$.
+
+        Notice that $W$ is orthogonal, so $x$ can be reconstructed by
+        \[ \hat{x} = Wy \]
+
+        Let the reconstruction error be
+        \[ \epsilon = x - \hat{x} = x - WW^Tx \]
+
+        We want to minimize the reconstruction error
+        \[ \|\epsilon\|^2 = \epsilon^T\epsilon = x^Tx - x^TWW^Tx \]
+
+        The minimization is performed over all possible $x$
+        \[ \int p(x)\epsilon(x)^T\epsilon(x)\mathrm{d}x \]
+
+        \[ \mathbb{E}[\epsilon^T\epsilon] = \mathbb{E}[x^Tx] - \mathbb{E}[x^TWW^Tx]\]
+
+    \subsection{Simple Case}
+        If $K=1$, $w$ is a vector and $y$ is a scalar.
+        \[\mathbb{E}[\epsilon^T\epsilon] = \mathbb{E}[x^Tx]-w^T\mathbb{E}[xx^T]w = \mathbb{E}[x^Tx] - w^T \Sigma w\]
+        where $\Sigma = XX^T$.
+
+        We maximize the normalized second term
+        \[ \max_w \quad J \triangleq \frac{w^TXX^Tw}{w^TW} \]
+
+        Or it can also be formulated as a equality constrained maximization and solved by Lagrangian.
+
+        The solution is
+        \[ XX^Tw=Jw \]
+
+        So the problem becomes finding the eigenvalues of $XX^T$, to maximize $J$, we find the largest eigenvalue of $XX^T$.
+
+    \subsection{General Case}
+        By the matrix cookbook,
+        \[ \mathbb{E}[x^TW^TWx] = \mathrm{Tr}[W \Sigma W^T] + \mu^TW^TW\mu \]
+
+        Therefore
+        \[ \mathbb{E}[\epsilon^T\epsilon] = \mathbb{E}[x^Tx] - \mathrm{Tr}[W^T \Sigma W] \]
+
+        Minimizing $\mathbb{E}[\epsilon^T\epsilon]$ is equivalent to maximizing $\mathbb{Tr}[W \Sigma W^T]$.
+
+        Since $\Sigma = XX^T$, the objective function is
+        \begin{align*}
+            \max_W &\quad \mathrm{Tr}[W^TXX^TW]\\
+            \text{s.t.} &\quad W^TW = I
+        \end{align*}
+
+    \subsection{Solution}
+        
+
+    \subsection{Geometric Interpretation}
+        \begin{itemize}
+            \item PCA is a shift and rotation of axis.
+            \item $w_1$ is the direction of greatest elongation
+            \item $w_2$ is the second largest elongation that is orthogonal to $w_1$
+        \end{itemize}
+
+
+\section{Multi-Dimensional Scaling}
+    MDS aims to keep the distances of samples in the mapped space that same as the distances in the original space.
+
+    In this section we also assume the data samples have $\mu=0$.
+
+    \[ \min \left(\sum_{i<j}\|\hat{x}_i-\hat{x}_j-d_{ij}\|\right)^{1/2} \]
+    where $\hat{x}$ are mapped (instead of reconstructed) samples.
+
+    Let $T=XX^T$ and $t_{ij}=\hat{x}_i^T\hat{x}_j$.
+
+    The distance between $\hat{x}_i$ and $\hat{x}_j$ is given by
+    \[d_{ij}^2 = (\hat{x}_i-\hat{x}_j)^T(\hat{x}_i-\hat{x}_j)\]
+
+    Therefore
+    \[ t_{ij} = -\frac{1}{2}(d_{ij}^-\hat{x}_i^2-\hat{x}_j^2) \]
+
+    We also have
+    \[\sum_j d_{ij}^2 = n\hat{x}_i^2 + \sum_j\hat{x}_j^2 - 2x_i\sum_j\hat{x}_j = n\hat{x}_i^2 + \sum_j\hat{x}_j^2\]
+    \[\sum_i d_{ij}^2 = n\hat{x}_j^2 + \sum_i\hat{x}_i^2 - 2x_i\sum_i\hat{x}_i = n\hat{x}_j^2 + \sum_i\hat{x}_i^2\]
+    \[\sum_{ij}d_{ij}^2=n\sum_i\hat{x}_i^2 + n\sum_j\hat{x}_j^2 \]
+
+    So we can solve for $t_{ij}$
+    \[ t_{ij} = -\frac{1}{2}\left(d_{ij}^2-\frac{1}{n}\sum_kd_{ik}^2-\frac{1}{n}\sum_kd_{kj}^2-\frac{1}{n}\sum_{kl}d_{kl}^2\right) \]
+    where $d_{ij}$ can be computed from the original dataset.
+
+    Since $T=XX^T$, we can solve for $X$ by decomposing $T$.
+    \[T = U\Lambda U^T = U\Lambda^{1/2}\Lambda^{1/2}U^T\]
+
+    Therefore $X=U\Lambda^{1/2}$
+
+
+\section{Non-Linear Dimension Reduction}
+    \subsection{ISOmetric feature MAPping}
+        Uses the geodesic distance (shortest distance on a plane) instead of Euclidean distance.
+
+    \subsection{Locally Linear Embedding}
+        Assumes that a data sample can be represented by some linear combination of its local neighbors, and that this relationship does not change after dimension reduction.

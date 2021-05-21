@@ -15,6 +15,12 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**May.21**
+- Updated Machine Learning
+  - Dimension Reduction
+- Updated Speech Recognition
+  - Deep Neural Network Models
+
 **May.17**
 - Updated Stochastic Process
   - Martingale.
