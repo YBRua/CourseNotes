@@ -1,0 +1,46 @@
+\chapter{Brownian Motion}
+
+\newpage
+
+
+\section{Definition of Brownian Motions}
+    \subsection{Introduction}
+        We start from a random walk on real axis, but this time we move every $\Delta t$ time. So in time interval $t$ we take $t/\Delta t$ steps. Let $\delta$ be the step size, then
+        \[ X(t) = \delta(X_1 + X_2 + \cdots + X_{t/\Delta t}) \]
+        where $X_i \in \{0,1\}$ with mean $0$ and variance $1$.
+
+        Then
+        \[ \mathbb{E}[X(t)] = 0 \qquad Var[X(t)] = \delta^2\frac{t}{\Delta t} \]
+
+        What happens if $\Delta t \to 0$? Notice that if $\Delta t$ exists in $Var[X(t)]$, then it either goes to 0 or goes to infinity and the problem is meaningless. So we set $\delta = \sigma \sqrt{\Delta t}$ and therefore
+        \[ Var[X(t)] = \sigma^2 t \]
+
+        Recall the Central Limit Theorem in \textsc{Probability and Statistics}
+        \begin{theorem}[Central Limit Theorem]\label{Thm:CentralLimitTheorem}
+            Let $X_1,X_2,\dots$ be a sequence of i.i.d. random variables, with mean $\mu$ and variance $\sigma^2$. Then
+            \[ \frac{\sum_iX_i - n\mu}{\sigma\sqrt{n}} \sim \mathcal{N}(0,1) \]
+        \end{theorem}
+
+        Let $Y_i = \delta X_i$. $Var[Y_i] = \sigma^2 \Delta t$. Then
+        \[ X(t) = \sum_{k=0}^{t/\Delta t} Y_k \sim \sigma \sqrt{\Delta t}\cdot\sqrt{\frac{t}{\Delta t}} \mathcal{N}(0,1) = \mathcal{N}(0, \sigma^2 t) \]
+        
+        \begin{remark}
+            This result implies that the motion $X(t)$ in different time intervals are independent, i.e. $\forall t_1 < t_2 < \cdots < t_n$,
+            \[ X(t_n)-X(t_{n-1}), \dots, X(t_2)-X(t_1), X(t_1) \]
+            are independent.
+
+            Further, $X(t+s)-X(t)$ depends only on $s$.
+
+            This is very similar to the property of a Poisson Process.
+        \end{remark}
+
+    \subsection{Formal Definition}
+        \begin{definition}[Brownian Motion]\label{Def:BrownianMotion}
+            $\{X(t):t>0\}$ is a \textbf{Brownian Motion} Process if
+            \begin{enumerate}
+                \item $X(0) = 0$.
+                \item $\forall t_1 < t_2 < \cdots < t_n$, $X(t_n)-X(t_{n-1}), \dots, X(t_2)-X(t_1), X(t_1)$ are independent.
+                \item $\forall t,s \ge 0$, $X(t+s) - X(t)$ only depends on $s$.
+                \item $X(t) \sim \mathcal{N}(0, \sigma^2 t)$
+            \end{enumerate}
+        \end{definition}

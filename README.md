@@ -15,6 +15,11 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**May.24**
+- Updated Stochastic Process
+  - Discrete Martingale
+  - Brownian Motions
+
 **May.21**
 - Updated Machine Learning
   - Dimension Reduction

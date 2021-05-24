@@ -38,6 +38,12 @@
             \end{enumerate}
         \end{definition}
 
+        \begin{remark}
+            If $\mathbb{E}[X_{t+1}|\mathcal{F}_t] \le X_t$, then it is called a \textbf{Super-martingale}.
+
+            If $\mathbb{E}[X_{t+1}|\mathcal{F}_t] \ge X_t$, then it is called a \textbf{Sub-martingale}.
+        \end{remark}
+
     \subsection{Examples}
         \subsubsection{Random Walk on 1-d Integers}
         Consider the random walk on $\mathbb{Z}$. Let $X_t \in \{-1, 1\}$ be a uniform-at-random r.v. denoting the direction of the $t$-th move.
@@ -112,7 +118,7 @@
         \[\mathbb{E}[Z_{\tau}] \questeq \mathbb{E}[Z_0]\]
         This does not always hold, but in some cases it holds.
 
-    \subsection{Stopping Time and Optimal Stopping Theorem}
+    \subsection{Stopping Time and Optional Stopping Theorem}
         \begin{definition}[Stopping Time]\label{Def:StoppingTime}
             A random variable $\tau \in \mathbb{N}$ is a \textbf{stopping time} if
             \[ \forall t \in \mathbb{N} \quad [\tau \le t] \text{ is $\mathcal{F}_t$-measurable.} \]
@@ -121,7 +127,7 @@
             The definition says that $\tau$ is a stopping time with respect to a martingale $X_1,\dots$ if for each integer $k$, the indicator r.v. $\mathbb{I}[\tau = k]$ is a function of $W_{(0,k)}$.
         \end{remark}
 
-        \begin{theorem}[Optimal Stopping Theorem]\label{Thm:OptimalStoppingTheorem}
+        \begin{theorem}[Optional Stopping Theorem]\label{Thm:OptionalStoppingTheorem}
             Let $\{X_t\}$ be a matringale, let $\tau$ be a stopping time w.r.t. $\{\mathcal{F}_t\}$. Then $\mathbb{E}[X_{\tau}] = \mathbb{E}[X_0]$ if \emph{at least one of the following holds}.
             \begin{enumerate}
                 \item $\tau$ is bounded.
@@ -139,7 +145,7 @@
 
             Obviously
             \[ \mathbb{E}[\tau] = 1/2 + 2 \times 1/4 + \cdots = \sum_n \frac{n}{2^n} < \infty \]
-            and the changing rate is obviously bounded, so the third condition of theorem \ref{Thm:OptimalStoppingTheorem} holds, and
+            and the changing rate is obviously bounded, so the third condition of theorem \ref{Thm:OptionalStoppingTheorem} holds, and
             \[ \mathbb{E}[Z_t] = \mathbb{E}[Z_0] = 0 \]
 
             However\footnote{“我前段时间还在论坛上和别人对线”--Chihao}, if the village uses an even more politically incorrect policy: keep having children until the number of boys is larger than the number of girls by 1. i.e.
@@ -152,13 +158,13 @@
 
             Further, if the villagers are not extremely 头铁 and they will stop if they have 10 girls in a row without having a boy.
             \[ \tau = \min\{\min\{n|Z_n=1\}, 10\} \]
-            Then condition (3) of Theorem \ref{Thm:OptimalStoppingTheorem} holds again and $\mathbb{E}[Z_t] = 0$.
+            Then condition (3) of Theorem \ref{Thm:OptionalStoppingTheorem} holds again and $\mathbb{E}[Z_t] = 0$.
 
         \subsubsection{Random Walk on Integers with Barrier}
             Consider a random walk $X_t \in \{-1, 1\}$ on integers with two absorbing barriers at $-a$ and $b$. Let $Z_t$ be the position at $t$, let $\tau$ be the r.v. denoting the time when we arrive at either $-a$ or $b$.
             \[ Z_{t+1} = Z_t + X_{t+1} \]
 
-            Obviously $|Z_t| \le M$, and obviously $\mathbb{P}[\tau < \infty]=1$ because we have a positive probability to walk $(a+b)$ steps toward $b$ and thus we will always stop. So condition (2) of OST \ref{Thm:OptimalStoppingTheorem} holds.
+            Obviously $|Z_t| \le M$, and obviously $\mathbb{P}[\tau < \infty]=1$ because we have a positive probability to walk $(a+b)$ steps toward $b$ and thus we will always stop. So condition (2) of OST \ref{Thm:OptionalStoppingTheorem} holds.
 
             \[ \mathbb{E}[Z_t] = \mathbb{E}[Z_0] = 0 \Rightarrow -aP_a + b(1-P_a) = 0 \]
 
@@ -175,7 +181,7 @@
                 &= Z_t^2 - t = Y_t
             \end{align*}
 
-            It can be shown that $\{Y_t\}$ satisfies (3) of OST \ref{Thm:OptimalStoppingTheorem}. Therefore
+            It can be shown that $\{Y_t\}$ satisfies (3) of OST \ref{Thm:OptionalStoppingTheorem}. Therefore
             \[ \mathbb{E}[Y_{\tau}] = \mathbb{E}[Y_0] = 0 \]
             And since
             \[ \mathbb{E}[Y_{\tau}] = \mathbb{E}[Z_{\tau}^2] - \mathbb{E}[\tau] = \frac{a^2b}{a+b} + \frac{b^2a}{a+b} + \mathbb{E}[\tau] \]
@@ -208,7 +214,7 @@
 
             Let $\tau$ be the first time that pattern $p$ occurs in $\{X_t\}$.
 
-            It can be verified that $Z(t)$ satisfies (3) of OST \ref{Thm:OptimalStoppingTheorem}.
+            It can be verified that $Z(t)$ satisfies (3) of OST \ref{Thm:OptionalStoppingTheorem}.
             \[ \mathbb{E}[Z(\tau)] = \mathbb{E}[Z(1)] = 0 \]
 
             Now suppose the pattern occurs, we compute the expected money for each person $A_j$ (which is another way of computing the LHS).
@@ -224,8 +230,173 @@
             Therefore
             \[Z(\tau) = -\left(\tau - \sum_{j=1}^m \chi_j\right) + \sum_{j=1}^m \chi_j(2^j-1)\]
 
-            Take expectations on both sides and solve for $\mathbb{E}\tau$
-            \[\mathbb{E}\tau = \sum_{j=1}^m\chi_j \cdot 2^j\]
+            Take expectations on both sides and solve for $\mathbb{E}[\tau]$
+            \[\mathbb{E}[\tau] = \sum_{j=1}^m\chi_j \cdot 2^j\]
 
             For a 4-bit pattern $0101$, $\chi_1=0$, $\chi_2 = 1$, $\chi_3=0$, $\chi_4=1$.
 
+
+\section{Convergence of Non-negative Super-Martingales}
+    \begin{proposition}\label{Prop:BoundOnSuperMartingale}
+        Let $\{X_t\}$ be a nonnegative super-martingale. Suppose $X_0 \le a $, $\forall b > a$, let
+        \[ T_b \triangleq \inf\{ X_t \ge b \} \]
+        then
+        \[ \mathbb{P}[T_b < \infty] \le a/b \]
+    \end{proposition}
+
+    Intuitively, when we are playing a super-martingale starting with money $a$, and we will stop whenever we reach $b$ (if it ever happens), then the larger $b$ is, the less likely we are to reach $b$ within finite steps (because we are expected to lose money in a super-martingale).
+
+    \begin{proof}
+        Let $T_b \wedge t =\triangleq \min\{T_b, t\}$. Since $T_b$ is not necessarily bounded, we cannot apply OST on $T_b$. However, for a fixed $t$, $T_b \wedge t$ is bounded.
+
+        By OST \ref{Thm:OptionalStoppingTheorem}, for each non-negative $t$,
+        \[ \mathbb{E}[X_{T_b \wedge t}] < \mathbb{E}[X_0] \le a \]
+
+        Notice that
+        \[ X_{T_b \wedge t} = \begin{cases}
+            X_t &\quad T_b > t\\
+            b &\quad T_b < t
+        \end{cases} \]
+
+        Therefore we can rewrite $X_{T_b \wedge t}$ into
+        \[ X_{T_b \wedge t} \ge b\mathbb{I}[T_b \le t] \]
+
+        Take expectation on both sides
+        \[ a \ge \mathbb{E}[X_{T_b \wedge t}] \ge b\mathbb{P}[T_b \le t] \]
+
+        Since $t$ is arbitrary,
+        \[ \mathbb{P}[T_b < \infty] \le \mathbb{P}[T_b \le t] \le a/b \]
+    \end{proof}
+
+    \begin{theorem}[Convergence of Super-martingale]\label{Thm:ConvergenceOfSuperMartingale}
+        Any non-negative super-martingale converges with probability 1.
+    \end{theorem}
+    \begin{proof}
+        To prove the theorem, we only need to prove that it neither diverges nor oscillitates. That a super-martingale does not diverge is trivial, because it is lower-bounded. So we only prove that it does not have two sub-sequences that converges to different values.
+
+        The intuition is, since $b > a$, whenever the super-martingale jumps from $a$ to $b$, the probability is $a/b$, if the super-martingale oscillitates, then it would have to jump from $a$ to $b$ for infinitely many times, and this probability would be zero.
+
+        Formally, fix $a$ and $b$ s.t. $a < b$. Let $S_i$ denote the $i$-th time to reach $a$, and let $T_i$ denote the $i$-th time to reach $b$.
+        \[ S_1 = \inf\{ t > T_0 | X_t = a \} \]
+        \[ T_1 = \inf\{ t > S_1 | X_t = b \} \]
+        \[ S_2 = \inf\{ t > T_1 | X_t = a \} \]
+        
+        $S_i$ and $T_i$ are not necessarily bounded, so OST cannot be directly applied. However, we can use the same trick and fix a upper bound: $\forall n \in \mathbb{N}$, the OST implies that
+        \[ \mathbb{E}[X_{S_k \wedge n}] > \mathbb{E}[X_{T_k \wedge n}] \]
+
+        Notice that
+        \[ X_{T_k \wedge n} = \begin{cases}
+            b &\quad T_k \le n\\
+            X_n &\quad T_k > n
+        \end{cases} \]
+        Then
+        \[ X_{T_k \wedge n} = b\mathbb{I}[T_k \le n] + X_n\mathbb{I}[T_k > n] \]
+
+        Similarly
+        \[ X_{S_k \wedge n} = a\mathbb{I}[S_k \le n] + X_n \mathbb{I}[S_k > n] \]
+
+        Subtract the two equations,
+        \[ X_{T_k \wedge n} - X_{S_k \wedge n} = b\mathbb{I}[T_k \le n] - a\mathbb{I}[S_k \le n] + X_n \left( \mathbb{I}[T_k > n] - \mathbb{I}[S_k > n] \right) \]
+
+        Recall that by our definition, $S_k > T_k$ (if $S_k > n$, then $T_k >n$), so the latter term is non-negative and can thus be safely dropped.
+
+        \[ X_{T_k \wedge n} - X_{S_k \wedge n} \ge b\mathbb{I}[T_k \le n] - a\mathbb{I}[S_k \le n]  \]
+
+        Take expectation on both sides,
+        \[ \mathbb{E}[X_{T_k \wedge n} - X_{S_k \wedge n}] \ge b\mathbb{P}[T_k \le n] - a\mathbb{P}[S_k \le n] \]
+
+        By result from the OST we know that $\mathbb{E}[X_{S_k \wedge n}] - \mathbb{E}[X_{T_k \wedge n}] > 0$. Therefore
+        \[ \mathbb{P}[T_k \le n] < \frac{a}{b}\mathbb{P}[S_k \le n] \]
+
+        Since $n$ is arbitrary,
+        \[ \mathbb{P}[T_k < \infty] < \frac{a}{b}\mathbb{P}[S_k < \infty] < \frac{a}{b}\mathbb{P}[T_{k-1} < \infty] \]
+
+        So if $k \to \infty$, then $\mathbb{P}[T_k < \infty] \to 0$, so the super-martingale cannot oscillitate.
+    \end{proof}
+
+
+\section{Stochastic Approximation}
+    Consider the problem of finding the root of $f(x)=0$. Usually, a binary search or the Newton's method can be applied. However, suppose we do not know what $f$ is, and we cannot observe the exact value of $f(x)$.
+
+    $f(x)$ is sealed in a black box with noise, given an input query $x$, what we get is $\tilde{f}(x) + \eta$, where $\eta$ is some kind of random noise. Here we assume the noise has a Gaussian distribution with mean $0$ and variance $1$.
+
+    So we hope to find a sequence of input $\{X_n\}$ such that $X_n \to x^*$ as $n \to \infty$.
+
+    This problem can be solved using an iterative method. Let $X_n$ denote our $n$-th input, let $Y_n = f(X_n) + \eta_n$ be the output we get. In each iteration we update the input by
+    \[ X_{n+1} = X_n - a_nY_n \]
+
+    The problem is to determine $\{a_n\}$. Firstly it is obvious that $a_n$ should converge to $0$, or otherwise, suppose $a_n \to \delta$, and suppose the solution is $X^* = 0$, then even if we have reached the solution $X_n$, the algorithm will still perform an update $X_{n+1} = -\delta \eta_n$, and we moves away from the answer.
+
+    \begin{theorem}[Stochastic Approximation]\label{Thm:StochasticApproximation}
+        Let $f: \mathbb{R} \mapsto \mathbb{R}$ be a real-valued function. Suppose $\mathbb{E}[(X_0)^2] < \infty$. Consider the sequence generated by
+        \[ Y_n = f(X_n) + \eta_n \]
+        \[ X_{n+1} = X_n - a_n Y_n \]
+        where we assume the following conditions
+        \begin{enumerate}
+            \item $X_0$, $\eta_1$, $\eta_2$, \dots, are independent, with $\eta_i$ having mean $0$ and variance $1$.
+            \item For some $1 < |c| < \infty$, $|f(x)| \le c|x|$ for all $x$. (Notice that this implies $f(0)=0$).
+            \item $\forall \delta > 0$, $\inf_{|x|>\delta} xf(x) > 0$. ($f(x) < 0$ for $x < x^*$ and $f(x) > 0$ for $x>x^*$).
+            \item Each $a_n$ is non-negative and $\sum_n a_n = \infty$. ($a_n$ cannot decrease too fast)
+            \item $\sum_n a_n^2 < \infty$. ($a_n$ cannot decrease too slowly)
+        \end{enumerate}
+
+        Then $X_n \to 0$ as $n \to \infty$.
+    \end{theorem}
+    \begin{proof}
+        If we somehow proves that $X_n$ is a super-martingale, then by Theorem \ref{Thm:ConvergenceOfSuperMartingale}, we will be very close to success.
+
+        Consider $\mathbb{E}[X_{n+1}^2 | X_{(0,n)}]$.\footnote{“不要问我为什么，我们经过一番尝试发现$X_n$的期望不太对。”--Chihao}
+        \begin{align*}
+            \mathbb{E}[X_{n+1}^2|X_{(0,n)}] &= \mathbb{E}[(X_n - a_n(f(X_n) + \eta_n))^2 | X_{(0,n)}]\\
+            &= \mathbb{E}[X_n^2|X_{(0,n)}] - \mathbb{E}[2a_nX_n(f(X_n)+\eta_n)|X_{(0,n)}] + \mathbb{E}[a_n^2(f(X_n) + \eta_n)^2|X_{(0,n)}]\\
+            &= X_n^2 - 2a_nX_nf(X_n) + a_n^2(f(X_n))^2 + a_n^2 \quad \text{($\eta_n$ has zero mean)}\\
+            &\le X_n^2 + a_n^2\left(c^2 X_n^2 + 1\right) \quad \text{(all terms are non-negative and Assumption 2)}\\
+            &\le X_n^2 + a_n^2\left(c^2 X_n^2 + c^2\right) \quad \text{(Assumption 2: $c > 1$)}\\
+            &= \left( 1 + a_n^2c^2 \right)X_n^2 + a_n^2c^2
+        \end{align*}
+        
+        Define
+        \[ W_n \triangleq b_n(X_n^2 + 1) \]
+        where
+        \[ b_n = \prod_{k=1}^{n-1}(1 + a_k^2 c^2)^{-1} \]
+
+        It can be verified that $W_n$ is a super-martingale.
+        \begin{align*}
+            \mathbb{E}[W_{n+1}|X_{(0,1)}] &= b_{n+1}\mathbb{E}[X_{n+1}^2|X_{(0,n)}] + b_{n+1}\\
+            &\le b_{n+1}\left( X_n^2 \left( 1+a_n^2c^2 \right) + a_n^2c^2 \right) + b_{n+1}\\
+            &= b_{n+1}(1+a_n^2c^2)(X_n^2+1) = b_n(X_n^2+1) = W_n
+        \end{align*}
+
+        So $W_n$ is a super-martingale and it will converge, by Theorem \ref{Thm:ConvergenceOfSuperMartingale}.
+
+        Recall that
+        \[ W_n \triangleq b_n(X_n^2 + 1) = \frac{(X_n^2 + 1)}{\prod_{k=1}^{n-1}(1 + a_k^2 c^2)} \]
+        $\sum_n a_n^2 < \infty$ implies that the denominator also converges, and therefore $X_n^2$ converges.
+
+        We then show that $X_n^2 \to 0$. Let $\delta > 0$ and let $D \triangleq \{x:|x| > \delta\}$. To show $X_n^2 \to 0$, it suffices to show that for any $m$, a ``bad event'' $B_m \triangleq \bigcap_{n \ge m}^{\infty} \{X_n \in D\}$ has probability 0.
+
+        Suppose $m < n$.
+
+        By Assumption 3, $\forall \delta > 0$, $\inf_{|x|>\delta} xf(x) \ge \epsilon > 0$. Therefore
+        \[ X_nf(X_n) \ge \epsilon\mathbb{I}[X_n \in D] \ge \epsilon\mathbb{P}[B_m] \]
+
+        Take expectation
+        \[ \mathbb{E}[X_nf(X_n)] \ge \epsilon\mathbb{P}[X_n \in D] \]
+
+        Notice that in the previous derivation of $\mathbb{E}[X_{n+1}^2|X_{(0,n)}]$, we dropped a term $- 2a_nX_nf(X_n)$, and if we add the term back,
+        \[ \mathbb{E}[X_{n+1}^2|X_{(0,n)}] \le W_n - 2a_nb_{n+1}X_nf(X_n) \]
+
+        Take expectations on both sides
+        \[ \mathbb{E}[W_{n+1}] < \mathbb{E}[W_n] - 2a_nb_{n+1}\mathbb{E}[X_nf(X_n)] \]
+
+        Therefore
+        \[ \mathbb{E}[W_{n+1}] < \mathbb{E}[W_n] -2a_nb_{n+1}\epsilon\mathbb{P}[B_m] \]
+
+        Using this result iteratively,
+        \[ \mathbb{E}[W_{n+1}] < \mathbb{E}[W_m] - 2\epsilon\sum_{k=m}^n a_nb_{n+1}\mathbb{P}[B_m] \]
+
+        So we have a upperbound for $\mathbb{P}[B_m]$
+        \[ \mathbb{P}[B_m] \le \frac{\mathbb{E}[W_m]}{2\epsilon\sum_{k=m}^na_nb_{n+1}} \]
+
+        The denominator goes to infinity, and therefore $\mathbb{P}[B_m]$ converges to 0, so we are done.
+    \end{proof}
