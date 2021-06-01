@@ -30,8 +30,16 @@
             \item We use $p(x_S|y_T)$ to denote $\mathbb{P}[X_S=x_S|X_T=y_T]$
         \end{itemize}
 
+        And here comes the problem: In a Markov chain, once the initial distribution and the probability transition matrix are specified, we will be able to construct and simulate the chain. However, for a MRF, even if we know all $\mathbb{P}[X_t=j|\mathcal{N}(j)]$, we may still be unable to construct the MRF, because the joint distribution of all $v \in V$ may not even exist.
+
+        Consider the simplest yet still non-trivial MRF, which consists of only two nodes $X_1$ and $X_2$ taking values in $\{0,1\}$. We have to specify 3 of the 4 values $p(x_1, x_2)$ (only 3 are required because they sum up to 1 so the fourth one is determine once the remaining 3 are specified), such that they satify the 4 specified conditional probabilities $\mathbb{P}[x_1|x_2=1/0]$ and $\mathbb{P}[x_2|x_1=1/0]$. This is generally difficult (just like we cannot generally solve a system of 4 equations containing only 3 unknown variables).
+
+        Therefore in MRF, specifying all conditional probabilities is of little help. Luckily, an alternative exists.
+
 
 \section{Gibbs Distribution}
+    In this section, we discuss the Gibbs Distribution. A random field having the Markov property is equivalent to its having a Gibbs distribution, and the latter one is much more friendly than conditional probabilities.
+
     \subsection{Completeness}
         \begin{definition}[Complete Graphs]\label{Def:CompleteGraph}
             A set of nodes $C$ is \textbf{complete} if all distinct nodes in $C$ are neightbours of each other.
@@ -53,7 +61,7 @@
 
     \subsection{Examples of Gibbs Distibutions}
         \subsubsection{Independent Sets on a Graph}
-        Let $\mathcal{G}=(V,E$ be a graph. We want to generate a mask $\{0,1\}^{|V|}$ such that the result is a independent set. \emph{The uniform distribution of all independent sets of $\mathcal{G}$ has a Gibbs distribution}.
+        Let $\mathcal{G}=(V,E)$ be a graph. We want to generate a mask $\{0,1\}^{|V|}$ such that the result is a independent set. \emph{The uniform distribution of all independent sets of $\mathcal{G}$ has a Gibbs distribution}.
 
         Let $A$ be any complete sub-graph of $\mathcal{G}$, we define a weight function $w_A$ on $A$
         \[ w_A(x) = \begin{cases}
@@ -69,16 +77,25 @@
         \[ \forall \{i,j\} \in E \quad c(i) \neq c(j) \]
 
         We define a weight function $w_A(x)$ on all complete subgraphs of $\mathcal{G}$ by
-        \[ w_A(x) = \begin{cases}
+        \[ w_A(c) = \begin{cases}
             0 &\quad c(i) = c(j), |A|=2\\
             1 &\quad o.w.
         \end{cases} \]
 
         And Therefore
-        \[ p(x) \sim w_A(x) = \prod_{\{i,j\} \in E}\mathbb{I}[c(i) \neq c(j)] \]
+        \[ p(c) \sim w_A(c) = \prod_{\{i,j\} \in E}\mathbb{I}[c(i) \neq c(j)] \]
 
         \subsubsection{Ising Model}
-        Let $\Omega = \{0,1\}^V$. \verb|NotImplementedError: '太快了'|
+        Consider a graph $\mathcal{G}$ whose nodes form a subset of $\mathbb{Z}^d$. For each $v \in V$ there is a corresponding random variable $X_v \in \{0,1\}$ (sometimes in $\{-1,1\}$). The Ising model gives a joint distribution of these random variables.
+
+        Let $\sigma: V \mapsto \{0,1\}$ be the configuration of each node. We consider a special case: let $m(x)$ be the set of monochromatic edges in $E$. By ``monochromatic'' we mean the configuration of the nodes $i,j$ of edge $e=\{i,j\}$ are the same.
+        \[ m(x) = \{\{i,j\}: \sigma(i) = \sigma(j)\} \]
+
+        The Ising model is parametrized by a positive parameter $\beta$ (typically $\beta < 1$). Let
+        \[ w(x) = \beta^{|m(x)|} \]
+
+        Then the distribution $\mu(x) \sim w(x)$ is a Gibbs distribution.
+        \[ \mu(x) \sim w(x) = \prod_{\{i,j\} \in E}\beta^{\mathbb{I}[x(i)\neq x(j)]} \]
 
     \subsection{Hammersley-Clifford Theorem}
         \begin{theorem}[Hammersley-Clifford]\label{Thm:HammersleyClifford}

@@ -106,3 +106,42 @@
 
     \subsection{Locally Linear Embedding}
         Assumes that a data sample can be represented by some linear combination of its local neighbors, and that this relationship does not change after dimension reduction.
+
+        In the original space
+
+        Leet $x_j$ be some neighbors of $x_i$. Let $W \in \mathbb{R}^{N \times N}$.
+        \[ \epsilon(W) = \sum_i \left|x_i - \sum_jW_{ij}x_j\right|^2 \]
+        \begin{align*}
+            \min_W &\quad \epsilon(W)\\
+            \text{s.t.} &\quad W_{ij} = 0\\
+            &\quad \sum_j W_{ij}=1
+        \end{align*}
+
+        The solutions are
+        \[ w_j = \frac{\sum_k c^{-1}_{jk}}{\sum_l\sum_m c_{lm}} \]
+
+        In the mapped space
+        \[ \phi(y) = \sum_i\left| y_i - \sum_j W_{ij}y_j \right|^2 \]
+        \begin{align*}
+            \min_W &\quad \phi(y)\\
+            \text{s.t.} &\quad \sum_i y_i = 0\\
+            &\quad \frac{1}{N} YY^T = I
+        \end{align*}
+        where $Y$'s columns are $y_i$.
+
+        Define an error matrix
+        \[ \delta = Y-YW = \triangleq [\Delta y_1,\Delta y_2,\cdots,\Delta y_N]\]
+
+        The total error is given by
+        \[ \sum_{i=1}^N \Delta y_i^T \Delta y_i \]
+
+        Notice that
+        \[ \delta^T\delta = \begin{bmatrix}
+            \Delta y_1^T \Delta y_1 & \Delta y_1^T \Delta y_2 & \cdots & \Delta y_1^T \Delta y_N\\
+            \Delta y_2^T \Delta y_1 & \Delta y_2^T \Delta y_2 & \cdots & \Delta y_2^T \Delta y_N\\
+            \vdots & \vdots & \ddots & \vdots\\
+            \Delta y_N^T \Delta y_1 & \Delta y_N^T \Delta y_2 & \cdots & \Delta y_N^T \Delta y_N
+        \end{bmatrix} \]
+
+        So the error can be expressed as
+        \[ Tr[\delta^T\delta] = Tr[(Y(I-W))^T(Y(I-W))] = Tr[(I-W)^TY^TY(I-W)] \]

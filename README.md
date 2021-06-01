@@ -15,6 +15,9 @@
 [TH029: 毛泽东思想和中国特色社会主义理论体系概论](./毛泽东思想与中国特色社会主义理论体系概论/TH029.pdf)
 
 # Updates
+**Jun.01**
+- Stochastic Processes and Speech Recognition
+
 **May.24**
 - Updated Stochastic Process
   - Discrete Martingale

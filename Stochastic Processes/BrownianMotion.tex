@@ -2,6 +2,9 @@
 
 \newpage
 
+\newcommand{\cov}{\mathrm{Cov}}
+\newcommand{\var}{\mathrm{Var}}
+
 
 \section{Definition of Brownian Motions}
     \subsection{Introduction}
@@ -35,12 +38,223 @@
         \end{remark}
 
     \subsection{Formal Definition}
-        \begin{definition}[Brownian Motion]\label{Def:BrownianMotion}
-            $\{X(t):t>0\}$ is a \textbf{Brownian Motion} Process if
+        \begin{definition}[Standard Brownian Motion]\label{Def:BrownianMotionStd}
+            $\{W(t):t>0\}$ is a \textbf{Standard Brownian Motion} Process if
             \begin{enumerate}
-                \item $X(0) = 0$.
-                \item $\forall t_1 < t_2 < \cdots < t_n$, $X(t_n)-X(t_{n-1}), \dots, X(t_2)-X(t_1), X(t_1)$ are independent.
-                \item $\forall t,s \ge 0$, $X(t+s) - X(t)$ only depends on $s$.
-                \item $X(t) \sim \mathcal{N}(0, \sigma^2 t)$
+                \item $W(0) = 0$.
+                \item (Independent Increment) $\forall t_1 < t_2 < \cdots < t_n$, $W(t_n)-W(t_{n-1}), \dots, W(t_2)-W(t_1)$, $W(t_1)$ are independent.
+                \item (Stationary) $\forall t,s \ge 0$, $W(t+s) - W(t)$ only depends on $s$.
+                \item (Continuous Path) $W(t) \sim \mathcal{N}(0, t)$
             \end{enumerate}
         \end{definition}
+
+    \subsection{Another Characterizationo of SBM}
+        \begin{definition}[Multivariate Gaussian Distribution]
+            A vector $(X_1, \dots, X_n)$ has a Gaussian Distribution if (and only if)
+            \[ \forall a_1, \dots, a_n \qquad \sum_{i=1}^n a_iX_i \]
+            has a (Univariate) Gaussian Distribution.
+
+            Or equivalently
+            \[ f(X) = (2\pi)^{-n/2}|\det\Sigma|^{-1/2}\exp\left\{(x-\mu)^T\Sigma^{-1}(x-\mu)\right\} \]
+        \end{definition}
+        \begin{remark}
+            The marginal probability given $X_i$ is also a Gaussian Distribution.
+        \end{remark}
+
+        \begin{definition}[Gaussian Process]\label{Def:GaussianProcess}
+            A stochastic process $\{W(t)\}_{t \ge 0}$ is a \textbf{Gaussian Process} if
+            \[ \forall n, \forall t_1 \le t_2 \le \cdots \le t_n, (W(t_1), W(t_2), \dots, W(t_n))\]
+            has a Guassian Distribution.
+        \end{definition}
+
+        \begin{definition}[Alternative Definition of SBM]\label{Def:BrownianMotionStdAlt}
+            A stochastic process $\{W(t)\}$ is a Standard Brownian Motion if
+            \begin{enumerate}
+                \item $W(t)$ is a Guassian Process.
+                \item $W(t)$ has mean zero. $\forall s$, $\mathbb{E}[W(s)] = 0$.
+                \item $\forall s \le t$, $Cov(W(s), W(t)) = s$. ($Cov(W(s), W(t))$ equals to $s$ if $s < t$ else $t$)
+            \end{enumerate}
+        \end{definition}
+        \begin{proof}
+            $\Rightarrow$: A SBM satisfies Definition \ref{Def:BrownianMotionStdAlt}. To see this, we show that any linear combination of $W(s)$ and $W(t)$ is a Gaussian. $\forall a,b$,
+            \begin{align*}
+                aW(s) + bW(t) &= aW(s) + b(W(t) - W(s) + W(s))\\
+                &= (a+b)W(s) + b(W(t)-W(s))
+            \end{align*}
+            This is the sum of two independent Gaussians, so the sum is still a Gaussian, and we are done.
+
+            $W(t)$ has mean zero is straightforward by definition of SBM. So we only need to check condition 3.
+
+            \begin{align*}
+                Cov(W(s), W(t)) &= Cov(W(s), W(t) - W(s) + W(s))\\
+                &= Var(W(s)) + Cov(W(s), W(t) - W(s))\\
+                &=s
+            \end{align*}
+            Notice that the latter term is zero by the independent increment property.
+        \end{proof}
+
+        \subsubsection{A Simple Example}
+            If $W(t)$ is a SBM, then $X(t)=tW(1/t)$ is also a SBM.
+            \begin{proof}
+                We only need to check Definition \ref{Def:BrownianMotionStdAlt}. The first two conditions are easy to check. We consider the covariance.
+                \begin{align*}
+                    Cov(X(s), X(t)) &= Cov(sW(1/s),tW(1/t))\\
+                    &= stCov(W(1/s), W(1/t))\\
+                    &= st\cdot\frac{1}{t} = s
+                \end{align*}
+            \end{proof}
+
+    \subsection{Non-Standard Brownian Motions}
+        \begin{definition}[General Brownian Motion]
+            $\{X(t)\}$ is a $(\mu, \sigma^2)$ Brownian Motion if
+            \[ X(t) = X(0) + \mu t + \sigma W(t) \]
+        \end{definition}
+
+
+\section{First Passage Time and Reflection Principle}
+    Let $W(t)$ be a Brownian Motion. Let $\tau_b$ be the first time for the motion to pass some point $b$,
+    \[ \tau_b \triangleq \inf\left\{ t \ge 0 : W(t) > b \right\} \]
+
+    We are interested in $\mathbb{P}[\tau_b < t]$. $\forall t$
+    \begin{align*}
+        \mathbb{P}[\tau_b < t] &= \mathbb{P}[\tau_b < t, W(t) > b] + \mathbb{P}[\tau_b < t, W(t) \le b] \quad \text{(Total Probability)}\\
+        &= \mathbb{P}[W(t) > b] + \mathbb{P}[W(t) < b | \tau_b < t]\cdot\mathbb{P}[\tau_b < t]\\
+    \end{align*}
+
+    Notice that $W(t) > b$ implies $\tau_b < t$, so
+    \[ \mathbb{P}[\tau_b < t, W(t) > b] = \mathbb{P}[W(t) > b] = 1 - \Phi(\frac{b}{\sqrt{t}}) \]
+
+    Further notice that $\mathbb{P}[W(t) < b | \tau_b < t]$ equals exactly to $1/2$, because the path is continuous, so that starting from $W(\tau_b) = b$, the motion is \emph{equally likely} to go beyond or below $b$. This property is referred to as the \textbf{Reflection Principle}.
+
+    Plugging in all the results and solving for $\mathbb{P}[\tau_b < t]$ yields
+    \[ \mathbb{P}[\tau_b < t] = 2 \left( 1 - \Phi\left(\frac{b}{\sqrt{t}}\right) \right) \]
+
+
+\section{Brownian Bridge}
+    \subsection{Conditional Distributions for Brownian Motion}
+        In this section, we fix $W(u) = x$, i.e. we add a restriction that at time $u$ the process must be at $x$. We are interested in the distribution of $W(t)$ in time interval $[0,u]$, conditioned on $W(u)=x$.
+
+        The resulting process still has a Gaussian distribution, so we only need to compute the mean and covariance.
+
+        Before we formally start, we first introduce a tool.
+        \begin{proposition}\label{Prop:LemmaOfBrownianBridge}
+            \[ W(t) - (t/u)W(u) \]
+            is independent of $W(u)$
+        \end{proposition}
+        \begin{proof}
+            To see this, we only need to show that the covariance $\cov[W(t)-(t/u)W(u), W(u)] = 0$.
+            \begin{align*}
+                \cov[W(t) - (t/u)W(u), W(u)] &= \cov[W(t),W(u)] - \frac{t}{u}\cov[W(u), W(u)]\\
+                &= t - \frac{t}{u} \cdot u = 0
+            \end{align*}
+            So we are done.
+        \end{proof}
+
+        With Proposition \ref{Prop:LemmaOfBrownianBridge} we shall continue.
+
+        \begin{align*}
+            0 &= \mathbb{E}\left[ W(t) - \frac{t}{u}W(u) \right]\\
+            &= \mathbb{E}\left[ W(t) - \frac{t}{u} W(u) \middle| W(u) \right]\\
+            &= \mathbb{E}\left[ W(t) \middle| W(u) \right] - \frac{t}{u}\mathbb{E}[W(u) | W(u)]\\
+            &= \mathbb{E}\left(W(t) | W(u)\right) - \frac{t}{u}W(u)
+        \end{align*}
+
+        Therefore
+        \[ \mu = \mathbb{E}[W(t)|W(u)] = \frac{t}{u}W(u) \]
+
+        We then move on to compute the covariance, $\forall t \in [0, u]$,
+        \begin{align*}
+            \var[W(t) | W(u)] &= \mathbb{E}[(W(t) - \mathbb{E}[W(t)|W(u)])^2 | W(u)]\\
+            &= \mathbb{E}[(W(t)- \frac{t}{u}W(u))^2 | W(u)]\\
+            &= \mathbb{E}[(W(t) - \frac{t}{u}W(u))^2] \quad \text{(By Proposition \ref{Prop:LemmaOfBrownianBridge})}\\
+            &= \mathbb{E}[W^2(t)] - \frac{2t}{u}\mathbb{E}[W(t)W(u)] + \frac{t^2}{u^2}\mathbb{E}[W^2(u)]\\
+            &= t - \frac{2t}{u}t + \frac{t^2}{u^2}u\\
+            &= \frac{ut - t^2}{u} = \frac{t(u-t)}{u}
+        \end{align*}
+        \begin{remark}
+            Since the process is constrained at $t=0$ and $t=u$, the result has a straightforward intuition that the process is more likely to have large variances in the middle of the process.
+        \end{remark}
+
+        \begin{align*}
+            \cov[W(s), W(t) | W(u)] &= \mathbb{E}[W(s) \cdot W(t) | W(u)] - \mathbb{E}[W(s) | W(u)] \cdot \mathbb{E}[W(t) | W(u)]\\
+        \end{align*}
+        The last two terms are exactly the expectation (mean value) computed previously, so we only need to deal with the first term.
+
+        \begin{align*}
+            \mathbb{E}[W(s)W(t)|W(u)] &= \int y \mathbb{E}[W(s)|W(t)=y, W(u)]\cdot p_{W(t)}(y|W(u)) \mathrm{d}y\\
+            &= \int y \mathbb{E}[W(s) | W(t) = y] \cdot p[y|W(u)]\mathrm{d}y \quad \text{(By Independent Increment)}\\
+            &= \int y \cdot \frac{s}{t}y p(y|W(u))\mathrm{d}y\\
+            &= \frac{s}{t}\mathbb{E}[W^2(t)|W(u)]
+        \end{align*}
+        
+        Plug this term back,
+        \[
+            \cov[W(s), W(t) | W(u)] = \frac{s}{t}\mathbb{E}[W^2(t)|W(u)] - \frac{st}{u^2}W^2(u)
+        \]
+
+        where
+        \[ \mathbb{E}[W^2(t)|W(u)] = \mathbb{E}[W(t)|W(u)]^2 + \var[W(t)|W(u)] = \frac{t(u-t)}{u} + \frac{t^2}{u^2}W^2(u) \]
+
+        so the final result is
+        \[ \cov[W(s), W(u) | W(u)] = \frac{s(u-t)}{u} \]
+
+    \subsection{Standard Brownian Bridge}
+        \begin{definition}[Standard Brownian Bridge]\label{Def:BrownianBridgeStd}
+            A Gaussian Process is called a \textbf{Standard Brownian Bridge} if
+            \begin{enumerate}
+                \item $X(0) = X(1) = 1$
+                \item $\cov[X(s), X(t)] = s(1-t)$
+            \end{enumerate}
+        \end{definition}
+        \begin{remark}
+            The Brownian Bridge can be directly constructed from a Brownian Motion by
+            \[ X(t) = W(t) - tW(1) \]
+        \end{remark}
+
+    \subsection{First Passage Time of Brownian Bridge}
+        In this section we consider the first passage time of a Brownian Bridge.
+        \[ \tau_b \triangleq \inf\left\{ t \ge 0 : W(t) > b \right\} \]
+
+        We assume $x < b$, or otherwise $\mathbb{P}[\tau_b < t] = 1$. Consider $\mathbb{P}[\tau_b < t | W(t) = x]$, that is, the probability that we ever reached $b$ before we arrive at $x$ at time $t$.
+
+        By definition of conditional probability,
+        \[ \mathbb{P}[\tau_b < t | W(t) =  x] = \frac{\mathbb{P}[\tau_b < t, W(t) = x]}{\mathbb{P}[W(t) = x]} \]
+
+        We then get a $0/0$ because the probability that a continuous random variable gets a certain value is 0. Instead, we apply some informal notations. Let $\mathrm{d}x$ be a small interval around $x$, we compute
+        \[ \frac{\mathbb{P}[\tau_b < t, W(t) \in \mathrm{d}x]}{\mathbb{P}[W(t) \in \mathrm{d}x]} \]
+
+        Denominator
+        \begin{align*}
+            \mathbb{P}[W(t) \in \mathrm{d}x] &= \mathbb{P}[\frac{1}{\sqrt{u}}W(t) \in \frac{\mathrm{d}x}{\sqrt{u}}]\\
+            &= \Phi(\frac{\mathrm{d}x}{\sqrt{u}})\\
+            &= \frac{1}{\sqrt{u}}\phi(\frac{x}{\sqrt{u}})\mathrm{d}x
+        \end{align*}
+
+        Numerator
+        \begin{align*}
+            \mathbb{P}[\tau_b < t, W(t) \in \mathrm{d}x] &= \mathbb{P}[\tau_b < t] \mathbb{P}[W(t) \in \mathrm{d}x | \tau_b < t]\\
+            &= \mathbb{P}[\tau_b < t]\mathbb{P}[W(t) \in 2b - \mathrm{d}x | \tau_b < t]\\
+            &= \mathbb{P}[W(t) \in 2b-\mathrm{d}x, \tau_b < t]
+        \end{align*}
+
+        Notice that $W(t) \in 2b-\mathrm{d}x$ implies $\tau_b < t$.
+        \begin{align*}
+            \mathbb{P}[\tau_b < t, W(t) \in \mathrm{d}x] &= \mathbb{P}[W(t) \in 2b-\mathrm{d}x] = \frac{1}{\sqrt{u}}\phi\left( \frac{2b-x}{\sqrt{u}}\mathrm{d}x \right)
+        \end{align*}
+
+        The result is
+        \[ \exp\left\{ \frac{-2b(b-x)}{t} \right\} \]
+
+    \subsection{Application to Test for Uniformity}
+        Suppose we have a series of i.i.d. random variables $U_1, \dots, U_n$ having some distribution $F$ on $[0,1]$. We want to test if $F(t)=\mathbb{P}[U < t]=t$, i.e. whether $F$ is a uniform distribution.
+
+        We define
+        \[ F_n(t) = \frac{1}{n} \sum_{i=1}^n \mathbb{I}[U_i < t] \]
+
+        \subsubsection{The Kolmogorov-Smirnov Test}
+            For some large enough $n$, reject if
+            \[ F_n(t) - t \ge b \]
+            for some $t$.
+
+        \subsubsection{Choice of Parameters}
+            We want to choose a proper $b$ so that the probability that we mistakenly reject a uniform distribution is small enough.
