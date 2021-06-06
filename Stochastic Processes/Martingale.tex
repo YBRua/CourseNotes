@@ -116,7 +116,7 @@
 
         If $\tau$ is a random variable, will the result still hold?
         \[\mathbb{E}[Z_{\tau}] \questeq \mathbb{E}[Z_0]\]
-        This does not always hold, but in some cases it holds.
+        Unfortunately the answer is no. But in some cases it does hold.
 
     \subsection{Stopping Time and Optional Stopping Theorem}
         \begin{definition}[Stopping Time]\label{Def:StoppingTime}
@@ -125,6 +125,8 @@
         \end{definition}
         \begin{remark}
             The definition says that $\tau$ is a stopping time with respect to a martingale $X_1,\dots$ if for each integer $k$, the indicator r.v. $\mathbb{I}[\tau = k]$ is a function of $W_{(0,k)}$.
+
+            That is, $\mathbb{I}[\tau = k]$ can be determined by the values of $W_{(0,k)}$.
         \end{remark}
 
         \begin{theorem}[Optional Stopping Theorem]\label{Thm:OptionalStoppingTheorem}
@@ -138,7 +140,7 @@
 
     \subsection{Examples}
         \subsubsection{Birth Rate of Boys and Girls}
-            Suppose a politically incorrect village has a policy: Each family keep having children until the new child is a boy. We examine the stopping time $\tau$.
+            Suppose a politically incorrect village has a policy: Each family keep having children until they give birth to a boy. We examine the stopping time $\tau$.
 
             Let $X_t \in \{-1, 1\}$ denote the gender of the child, and $1$ stands for boy and $-1$ stands for girl. Let $Z_t$ denote the difference in number of boys and girls.
             \[ Z_t = Z_{t-1} + X_t \]
@@ -148,10 +150,12 @@
             and the changing rate is obviously bounded, so the third condition of theorem \ref{Thm:OptionalStoppingTheorem} holds, and
             \[ \mathbb{E}[Z_t] = \mathbb{E}[Z_0] = 0 \]
 
+            Although this policy seems 重男轻女, it actually does not break the balance of birth sex ratio.
+
             However\footnote{“我前段时间还在论坛上和别人对线”--Chihao}, if the village uses an even more politically incorrect policy: keep having children until the number of boys is larger than the number of girls by 1. i.e.
             \[ \tau = \min\{n|Z_n=1\} \]
             
-            Notice that if we model $X_t$ with the random walk on integers with probability $1/2$, the walk is null recurrent and $\mathbb{E}[\tau] = \infty$ so the theorem cannot be applied.
+            Notice that if we model $X_t$ with the random walk on integers with probability $1/2$. Recall that this random walk is null recurrent so the hitting time of the null recurrent state $1$ is infinity $\mathbb{E}[\tau] = \infty$. So the theorem cannot be applied.
             
             Actually
             \[ \mathbb{E}[Z_t] = 1 \]
@@ -160,7 +164,7 @@
             \[ \tau = \min\{\min\{n|Z_n=1\}, 10\} \]
             Then condition (3) of Theorem \ref{Thm:OptionalStoppingTheorem} holds again and $\mathbb{E}[Z_t] = 0$.
 
-        \subsubsection{Random Walk on Integers with Barrier}
+        \subsubsection{Random Walk on Integers with Absorbing Barriers}
             Consider a random walk $X_t \in \{-1, 1\}$ on integers with two absorbing barriers at $-a$ and $b$. Let $Z_t$ be the position at $t$, let $\tau$ be the r.v. denoting the time when we arrive at either $-a$ or $b$.
             \[ Z_{t+1} = Z_t + X_{t+1} \]
 
@@ -225,10 +229,11 @@
             \[ 1 + 2 + \cdots + 2^{N-1} = 2^N-1 \]
 
             The situation of the remaining people depens on $p$. For the $l$-last person, he did not lose until the end if and only if the first $l$ bits he betted equals to the first $l$ bits of $p$, i.e. the last $l$ bits of $p$ equals to the first $l$ bits of $p$. To indicate this, let $\chi_j$ denote whether $j$ winned money.
-            \[ \chi_j = \mathbb{I}[p_{(1,j)} = \mathbb{I}p_{m-j+1,m}] \]
+            \[ \chi_j = \mathbb{I}[p_{(1,j)} = p_{(N-j+1,N)}] \]
+            where $N$ is the length of the pattern.
 
             Therefore
-            \[Z(\tau) = -\left(\tau - \sum_{j=1}^m \chi_j\right) + \sum_{j=1}^m \chi_j(2^j-1)\]
+            \[Z(\tau) = -\left(\tau - \sum_{j=1}^N \chi_j\right) + \sum_{j=1}^N \chi_j(2^j-1)\]
 
             Take expectations on both sides and solve for $\mathbb{E}[\tau]$
             \[\mathbb{E}[\tau] = \sum_{j=1}^m\chi_j \cdot 2^j\]
@@ -272,7 +277,7 @@
         Any non-negative super-martingale converges with probability 1.
     \end{theorem}
     \begin{proof}
-        To prove the theorem, we only need to prove that it neither diverges nor oscillitates. That a super-martingale does not diverge is trivial, because it is lower-bounded. So we only prove that it does not have two sub-sequences that converges to different values.
+        To prove the theorem, we only need to prove that it neither diverges nor oscillitates. Proving a non-negative super-martingale does not diverge is trivial, because it is lower-bounded. So we only prove that it does not have two sub-sequences that converges to different values.
 
         The intuition is, since $b > a$, whenever the super-martingale jumps from $a$ to $b$, the probability is $a/b$, if the super-martingale oscillitates, then it would have to jump from $a$ to $b$ for infinitely many times, and this probability would be zero.
 
