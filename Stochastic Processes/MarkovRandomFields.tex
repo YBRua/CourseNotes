@@ -41,19 +41,19 @@
     In this section, we discuss the Gibbs Distribution. A random field having the Markov property is equivalent to its having a Gibbs distribution, and the latter one is much more friendly than conditional probabilities.
 
     \subsection{Completeness}
-        \begin{definition}[Complete Graphs]\label{Def:CompleteGraph}
+        \begin{definition}[Complete Graphs]\label{def:CompleteGraph}
             A set of nodes $C$ is \textbf{complete} if all distinct nodes in $C$ are neightbours of each other.
         \end{definition}
         \begin{remark}
             That is, $C$ is not complete if two of its nodes are not neightbours.
         \end{remark}
 
-        \begin{definition}[Clique]\label{Def:Clique}
+        \begin{definition}[Clique]\label{def:Clique}
             A \textbf{clique} of a set $C$ is a maximal complete set of nodes in $C$.
         \end{definition}
 
     \subsection{Gibbs Distribution}
-        \begin{definition}[Gibbs Distribution]\label{Def:GibbsDistribution}
+        \begin{definition}[Gibbs Distribution]\label{def:GibbsDistribution}
             Let $\mathcal{G}$ be a finite graph. A \textbf{Gibbs Distribution} with respect to $\mathcal{G}$ is a probability mass function that can be expressed in the form of
             \[ p(x) = \prod_{\text{$C$ complete}}V_C(x) \]
             where $V_C(\cdot)$ is a function that only depends on the values $x_C = [x_v:v \in C]$ of $x$ at the nodes in a clique $C$. That is, if $x_C = y_C$, then $V_C(x) = V_C(y)$.
@@ -98,7 +98,7 @@
         \[ \mu(x) \sim w(x) = \prod_{\{i,j\} \in E}\beta^{\mathbb{I}[x(i)\neq x(j)]} \]
 
     \subsection{Hammersley-Clifford Theorem}
-        \begin{theorem}[Hammersley-Clifford]\label{Thm:HammersleyClifford}
+        \begin{theorem}[Hammersley-Clifford]\label{thm:HammersleyClifford}
             Suppose that $X=(X_1,\dots,X_n)$ has a positive joint probability mass function $\mu(X) > 0 \quad \forall X$. Then $X$ is a Markov random field on $\mathcal{G}$ if and only if $X$ has a Gibbs distribution w.r.t. $\mathcal{G}$.
         \end{theorem}
 
@@ -124,16 +124,16 @@
         \[ \theta_{t+1} = \arg\max_{\theta} \mathbb{E}_{\theta_t}\left[ \log p_{\theta}(X,y)|Y=y \right] \]
 
         \subsubsection{Proof Of Correctness}
-        \begin{definition}[KL Divergence]\label{Def:KLDivergence}
+        \begin{definition}[KL Divergence]\label{def:KLDivergence}
             The \textbf{KL-Divergence} is used to measure the difference of two distributions
             \[ D_{KL}(p\|q) = \sum_i p_i\log p_i - \sum_i p_i \log q_i \]
         \end{definition}
-        \begin{proposition}[Non-negativity of KL Divergence]\label{Prop:PositivityOfKLDivergence}
+        \begin{proposition}[Non-negativity of KL Divergence]\label{prop:PositivityOfKLDivergence}
             \[ D_{KL}(p\|q) \ge 0 \]
             The equality is achieved if and only if $p=q$.
         \end{proposition}
 
-        \begin{lemma}\label{Lem:IncreasingLowerBoundOfEMAlgo}
+        \begin{lemma}\label{lem:IncreasingLowerBoundOfEMAlgo}
             If there exist $\theta_0$ and $\theta_1$ such that
             \[ \mathbb{E}_{\theta_0}[p_{\theta_1}(X,y)|Y=y] > \mathbb{E}_{\theta_0}[p_{\theta_0}(X,y)|y] \]
             Then
@@ -143,7 +143,7 @@
             By assuption of the lemma, we move the LHS to RHS,
             \begin{align*}
                 0 &< \mathbb{E}_{\theta_0}\left[ \log \frac{p_{\theta_1}(X,y)}{p_{\theta_0}(X,y)} \middle\vert Y=y \right]\\
-                &= \sum_x p_{\theta_0}(x|y) \log \frac{p_{\theta_1}(x,y)}{p_{\theta_0}(x,y)} \quad \text{(Definition of conditional expectation)}\\
+                &= \sum_x p_{\theta_0}(x|y) \log \frac{p_{\theta_1}(x,y)}{p_{\theta_0}(x,y)} \quad \text{(definition of conditional expectation)}\\
                 &= \sum_x p_{\theta_0}(x|y) \log \frac{p_{\theta_1}(y)}{p_{\theta_0}(y)} - \sum_x p_{\theta_0}(x,y)\log\frac{p_{\theta_0}(x|y)}{p_{\theta_1}(x|y)} \quad \text{(乘法定理)} \\
                 &\le \log\frac{p_{\theta_1}(y)}{p_{\theta_0}(y)}
             \end{align*}
@@ -158,13 +158,13 @@
 
         \subsubsection{Maximizing Term 1}
         \[ Term1 = \sum_i \mathbb{P}_{\theta_0}[x=i|y]\log\xi(i) \]
-        By Property of KL-Divergence \ref{Prop:PositivityOfKLDivergence}, $Term1$ is maximized when $\xi(i) = \mathbb{P}_{\theta_0}[x=i|y]$.
+        By Property of KL-Divergence \ref{prop:PositivityOfKLDivergence}, $Term1$ is maximized when $\xi(i) = \mathbb{P}_{\theta_0}[x=i|y]$.
 
         \subsubsection{Maximizing Term 2}
         \[ Term2 = \sum_{t=0}^{n-1}\sum_i\sum_j \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y] \cdot \log A(i,j) \]
         Exchange the summations,
         \[ \sum_i\sum_j \left(\sum_t \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y] \cdot \log A(i,j)\right) \]
-        Again by \ref{Prop:PositivityOfKLDivergence}, $A(i,j)$ is maximized when
+        Again by \ref{prop:PositivityOfKLDivergence}, $A(i,j)$ is maximized when
         \[ A(i,j) = \frac{\sum_t \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y]}{\sum_j\sum_t \mathbb{P}_{\theta_0}[x_t=i,x_{t+1}=j|y]} \]
 
         \subsubsection{Maximizing Term 3}

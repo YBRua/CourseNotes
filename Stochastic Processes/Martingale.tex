@@ -3,9 +3,9 @@
 \newpage
 
 
-\section{Definition of a Martingale}
-    \subsection{Definition}
-        \begin{definition}[Martingale]\label{Def:Martingale}
+\section{definition of a Martingale}
+    \subsection{definition}
+        \begin{definition}[Martingale]\label{def:Martingale}
             A stochastic process is a \textbf{Martingale} if
             \[ \forall t \ge 0 \quad \mathbb{E}[X_{t+1}|X_0,\dots,X_t] = X_t \]
         \end{definition}
@@ -14,15 +14,15 @@
         \[ X_{(m,n)} = (X_m,\dots,X_n) \]
         to denote a portion of the stochastic process from time $m$ to $n$.
 
-        \begin{definition}[Generalized Martingale]\label{Def:GeneralizedMartingale}
+        \begin{definition}[Generalized Martingale]\label{def:GeneralizedMartingale}
             Given two stochastic processes $X_t$ and $Z_t$. $Z_t$ is a \textbf{martingale} \emph{with respect to} $X_t$ if
             \[ \forall t \ge 0 \quad \mathbb{E}[Z_{t+1} | X_{(0,t)}] = Z_t \]
         \end{definition}
         \begin{remark}
-            Definition \ref{Def:Martingale} is a special case of \ref{Def:GeneralizedMartingale} where $Z_t = X_t$.
+            definition \ref{def:Martingale} is a special case of \ref{def:GeneralizedMartingale} where $Z_t = X_t$.
         \end{remark}
 
-    \subsection{Fancier Definitions}
+    \subsection{Fancier definitions}
         Recall measure theory stuff in the first lecture.
         Let $\mathcal{F}_n = (X_0,\dots,X_n)$ be the smallest $\mathcal{F}$-measurable $\sigma$-algebra.
         \begin{definition}[Filteration]
@@ -30,7 +30,7 @@
             \[ \mathcal{F}_0 \subseteq \mathcal{F}_1 \subseteq \cdots \subseteq \mathcal{F}_n \]
         \end{definition}
 
-        \begin{definition}[Martingale (Fancy)]\label{Def:FancyMartingale}
+        \begin{definition}[Martingale (Fancy)]\label{def:FancyMartingale}
             $\{Z_t\}$ is a \textbf{martingale} \emph{w.r.t. a filteration} $\{\mathcal{F}_t\}$ if
             \begin{enumerate}
                 \item $\forall t \ge 0$, $Z_t$ is $\mathcal{F}_t$-measurable.
@@ -53,7 +53,7 @@
         \[ \mathbb{E}[Z_{t+1}|X_{(0,t)}] = \mathbb{E}[Z_t + X_{t+1}|X_{(0,t)}] = Z_t + \mathbb{E}[X_{t+1}|X_{(0,t)}] = Z_t \]
 
         \subsubsection{Branching Process}
-        The branching process is introduced in section \ref{Sub:BranchingProcess}.
+        The branching process is introduced in section \ref{sub:BranchingProcess}.
 
         Let $Z_t$ be the number of people in the $t$-th generation, let $X_{ti}$ be the children of the $i$-th people in the $t$-th generation.
 
@@ -111,7 +111,7 @@
 
 \section{Stopping Time}
     \subsection{Introduction}
-        By definition \ref{Def:FancyMartingale},
+        By definition \ref{def:FancyMartingale},
         \[ \forall t \ge 0 \quad \mathbb{E}[Z_t] = \mathbb{E}[Z_0] \]
 
         If $\tau$ is a random variable, will the result still hold?
@@ -119,7 +119,7 @@
         Unfortunately the answer is no. But in some cases it does hold.
 
     \subsection{Stopping Time and Optional Stopping Theorem}
-        \begin{definition}[Stopping Time]\label{Def:StoppingTime}
+        \begin{definition}[Stopping Time]\label{def:StoppingTime}
             A random variable $\tau \in \mathbb{N}$ is a \textbf{stopping time} if
             \[ \forall t \in \mathbb{N} \quad [\tau \le t] \text{ is $\mathcal{F}_t$-measurable.} \]
         \end{definition}
@@ -129,7 +129,7 @@
             That is, $\mathbb{I}[\tau = k]$ can be determined by the values of $W_{(0,k)}$.
         \end{remark}
 
-        \begin{theorem}[Optional Stopping Theorem]\label{Thm:OptionalStoppingTheorem}
+        \begin{theorem}[Optional Stopping Theorem]\label{thm:OptionalStoppingTheorem}
             Let $\{X_t\}$ be a matringale, let $\tau$ be a stopping time w.r.t. $\{\mathcal{F}_t\}$. Then $\mathbb{E}[X_{\tau}] = \mathbb{E}[X_0]$ if \emph{at least one of the following holds}.
             \begin{enumerate}
                 \item $\tau$ is bounded.
@@ -147,7 +147,7 @@
 
             Obviously
             \[ \mathbb{E}[\tau] = 1/2 + 2 \times 1/4 + \cdots = \sum_n \frac{n}{2^n} < \infty \]
-            and the changing rate is obviously bounded, so the third condition of theorem \ref{Thm:OptionalStoppingTheorem} holds, and
+            and the changing rate is obviously bounded, so the third condition of theorem \ref{thm:OptionalStoppingTheorem} holds, and
             \[ \mathbb{E}[Z_t] = \mathbb{E}[Z_0] = 0 \]
 
             Although this policy seems 重男轻女, it actually does not break the balance of birth sex ratio.
@@ -162,13 +162,13 @@
 
             Further, if the villagers are not extremely 头铁 and they will stop if they have 10 girls in a row without having a boy.
             \[ \tau = \min\{\min\{n|Z_n=1\}, 10\} \]
-            Then condition (3) of Theorem \ref{Thm:OptionalStoppingTheorem} holds again and $\mathbb{E}[Z_t] = 0$.
+            Then condition (3) of Theorem \ref{thm:OptionalStoppingTheorem} holds again and $\mathbb{E}[Z_t] = 0$.
 
         \subsubsection{Random Walk on Integers with Absorbing Barriers}
             Consider a random walk $X_t \in \{-1, 1\}$ on integers with two absorbing barriers at $-a$ and $b$. Let $Z_t$ be the position at $t$, let $\tau$ be the r.v. denoting the time when we arrive at either $-a$ or $b$.
             \[ Z_{t+1} = Z_t + X_{t+1} \]
 
-            Obviously $|Z_t| \le M$, and obviously $\mathbb{P}[\tau < \infty]=1$ because we have a positive probability to walk $(a+b)$ steps toward $b$ and thus we will always stop. So condition (2) of OST \ref{Thm:OptionalStoppingTheorem} holds.
+            Obviously $|Z_t| \le M$, and obviously $\mathbb{P}[\tau < \infty]=1$ because we have a positive probability to walk $(a+b)$ steps toward $b$ and thus we will always stop. So condition (2) of OST \ref{thm:OptionalStoppingTheorem} holds.
 
             \[ \mathbb{E}[Z_t] = \mathbb{E}[Z_0] = 0 \Rightarrow -aP_a + b(1-P_a) = 0 \]
 
@@ -185,7 +185,7 @@
                 &= Z_t^2 - t = Y_t
             \end{align*}
 
-            It can be shown that $\{Y_t\}$ satisfies (3) of OST \ref{Thm:OptionalStoppingTheorem}. Therefore
+            It can be shown that $\{Y_t\}$ satisfies (3) of OST \ref{thm:OptionalStoppingTheorem}. Therefore
             \[ \mathbb{E}[Y_{\tau}] = \mathbb{E}[Y_0] = 0 \]
             And since
             \[ \mathbb{E}[Y_{\tau}] = \mathbb{E}[Z_{\tau}^2] - \mathbb{E}[\tau] = \frac{a^2b}{a+b} + \frac{b^2a}{a+b} + \mathbb{E}[\tau] \]
@@ -218,7 +218,7 @@
 
             Let $\tau$ be the first time that pattern $p$ occurs in $\{X_t\}$.
 
-            It can be verified that $Z(t)$ satisfies (3) of OST \ref{Thm:OptionalStoppingTheorem}.
+            It can be verified that $Z(t)$ satisfies (3) of OST \ref{thm:OptionalStoppingTheorem}.
             \[ \mathbb{E}[Z(\tau)] = \mathbb{E}[Z(1)] = 0 \]
 
             Now suppose the pattern occurs, we compute the expected money for each person $A_j$ (which is another way of computing the LHS).
@@ -242,7 +242,7 @@
 
 
 \section{Convergence of Non-negative Super-Martingales}
-    \begin{proposition}\label{Prop:BoundOnSuperMartingale}
+    \begin{proposition}\label{prop:BoundOnSuperMartingale}
         Let $\{X_t\}$ be a nonnegative super-martingale. Suppose $X_0 \le a $, $\forall b > a$, let
         \[ T_b \triangleq \inf\{ X_t \ge b \} \]
         then
@@ -254,7 +254,7 @@
     \begin{proof}
         Let $T_b \wedge t =\triangleq \min\{T_b, t\}$. Since $T_b$ is not necessarily bounded, we cannot apply OST on $T_b$. However, for a fixed $t$, $T_b \wedge t$ is bounded.
 
-        By OST \ref{Thm:OptionalStoppingTheorem}, for each non-negative $t$,
+        By OST \ref{thm:OptionalStoppingTheorem}, for each non-negative $t$,
         \[ \mathbb{E}[X_{T_b \wedge t}] < \mathbb{E}[X_0] \le a \]
 
         Notice that
@@ -273,7 +273,7 @@
         \[ \mathbb{P}[T_b < \infty] \le \mathbb{P}[T_b \le t] \le a/b \]
     \end{proof}
 
-    \begin{theorem}[Convergence of Super-martingale]\label{Thm:ConvergenceOfSuperMartingale}
+    \begin{theorem}[Convergence of Super-martingale]\label{thm:ConvergenceOfSuperMartingale}
         Any non-negative super-martingale converges with probability 1.
     \end{theorem}
     \begin{proof}
@@ -332,7 +332,7 @@
 
     The problem is to determine $\{a_n\}$. Firstly it is obvious that $a_n$ should converge to $0$, or otherwise, suppose $a_n \to \delta$, and suppose the solution is $X^* = 0$, then even if we have reached the solution $X_n$, the algorithm will still perform an update $X_{n+1} = -\delta \eta_n$, and we moves away from the answer.
 
-    \begin{theorem}[Stochastic Approximation]\label{Thm:StochasticApproximation}
+    \begin{theorem}[Stochastic Approximation]\label{thm:StochasticApproximation}
         Let $f: \mathbb{R} \mapsto \mathbb{R}$ be a real-valued function. Suppose $\mathbb{E}[(X_0)^2] < \infty$. Consider the sequence generated by
         \[ Y_n = f(X_n) + \eta_n \]
         \[ X_{n+1} = X_n - a_n Y_n \]
@@ -348,7 +348,7 @@
         Then $X_n \to 0$ as $n \to \infty$.
     \end{theorem}
     \begin{proof}
-        If we somehow proves that $X_n$ is a super-martingale, then by Theorem \ref{Thm:ConvergenceOfSuperMartingale}, we will be very close to success.
+        If we somehow proves that $X_n$ is a super-martingale, then by Theorem \ref{thm:ConvergenceOfSuperMartingale}, we will be very close to success.
 
         Consider $\mathbb{E}[X_{n+1}^2 | X_{(0,n)}]$.\footnote{“不要问我为什么，我们经过一番尝试发现$X_n$的期望不太对。”--Chihao}
         \begin{align*}
@@ -360,7 +360,7 @@
             &= \left( 1 + a_n^2c^2 \right)X_n^2 + a_n^2c^2
         \end{align*}
         
-        Define
+        define
         \[ W_n \triangleq b_n(X_n^2 + 1) \]
         where
         \[ b_n = \prod_{k=1}^{n-1}(1 + a_k^2 c^2)^{-1} \]
@@ -372,7 +372,7 @@
             &= b_{n+1}(1+a_n^2c^2)(X_n^2+1) = b_n(X_n^2+1) = W_n
         \end{align*}
 
-        So $W_n$ is a super-martingale and it will converge, by Theorem \ref{Thm:ConvergenceOfSuperMartingale}.
+        So $W_n$ is a super-martingale and it will converge, by Theorem \ref{thm:ConvergenceOfSuperMartingale}.
 
         Recall that
         \[ W_n \triangleq b_n(X_n^2 + 1) = \frac{(X_n^2 + 1)}{\prod_{k=1}^{n-1}(1 + a_k^2 c^2)} \]

@@ -5,7 +5,7 @@
 
 \section{Finite Space Markov Chain}
 
-    \subsection{Basic Definitions}
+    \subsection{Basic definitions}
     % State Space
     \begin{definition}[State Space]
         A \textbf{state space} $\mathcal{S}$ is a finite or countable set of states, i.e. the values that random variables $X_i$ may take on.
@@ -57,7 +57,7 @@
     \[ \pi_n^T = \pi_0^T P^n \]
     We use $P(i,j)$ to denote the element $(i,j)$ of $P$, we use $P^n$ to denote the $n$-th power of $P$, and we assume that $\pi_i$'s are column vectors.
     % Chapman-Kolmogorov
-    \begin{theorem}[Chapman-Kolmogorov Equality]\label{Thm:ChapmanKolmogorovEquality}
+    \begin{theorem}[Chapman-Kolmogorov Equality]\label{thm:ChapmanKolmogorovEquality}
         \[ P^{m+n}(i,j) = \sum_k P^m(i,k)P^n(k,j) \]
     \end{theorem}
 
@@ -359,7 +359,7 @@ aka. Foundamental Theorem of Markov Chains
 \section{Examples}
 
     %%%%%%%% Galton-Watson Process
-    \subsection{Galton-Watson Process}\label{Sub:BranchingProcess}
+    \subsection{Galton-Watson Process}\label{sub:BranchingProcess}
     \emph{aka. Branching Process}
     \paragraph*{Problem.} What is the probability that a family name eventually extincts?
     \paragraph*{Notations.}
@@ -776,7 +776,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
     \subsection{Time Reversibility}
         \begin{definition}[Time Reversibility]
             A Markov chain is said to be time reversible if there exists a distribution $\pi$ such that
-            \begin{equation}\label{Def:DetailedBalanceCondition}
+            \begin{equation}\label{def:DetailedBalanceCondition}
                 \forall x,y \in \mathcal{S} \quad \pi(x)P(x,y) = \pi(y)P(y,x)
             \end{equation}
         \end{definition}
@@ -784,7 +784,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             \begin{itemize}
                 \item The $\pi$ here is actually the stationay distribution. because
                 \[ (\pi^TP)(y) = \sum_{x\in\mathcal{S}}\pi(x)P(x,y) = \sum_{x\in\mathcal{S}}\pi(y)P(y,x) = \pi(y)\sum_{x\in\mathcal{S}}P(y,x) = \pi(y) \]
-                \item (\ref{Def:DetailedBalanceCondition}) is also called the \textbf{detailed balance condition}.
+                \item (\ref{def:DetailedBalanceCondition}) is also called the \textbf{detailed balance condition}.
                 \item The detailed balance condition implies that $(X_0,X_1,\dots,X_n)$ and $X_n,X_{n-1},\dots,X_0$ have \emph{the same distribution}, and this is the reason why such chains are called time-reversible.
             \end{itemize}
         \end{remark}

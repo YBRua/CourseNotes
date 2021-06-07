@@ -1,0 +1,149 @@
+\chapter{Diffusion}
+\emph{Stochastic everything.}
+\newpage
+
+\section{Describing a Diffusion}
+    \subsection{An Aside on Calculus}
+        Let's forget all the stochastic process stuff for a moment. Consider a smooth function $F(x):\mathbb{R} \mapsto \mathbb{R}$. Let $f(x) = F'(x)$.
+
+        \[ F(x) = F(0) + \int_0^x f(t) \mathrm{d}t \]
+
+        So any smooth function $F$ can be uniquely determined by an initial condition and its derivative $f$.
+
+        \[ f(x) = \lim_{h \to 0} \frac{F(x+h)-F(x)}{h} \]
+
+        That is, we assume the function can be approximated by a linear function near $x$. This gives us some food for thought.
+
+    \subsection{Diffusion}
+        Similar to the derivative in calculus, we assume an arbitrary stochastic process can be approximated by a Brownian motion near $x+h$ as $h \to 0$.
+        \[ x_h = x_0 + \mu(x_0)h + \sigma(x_0)\sqrt{h}z_1 \quad z_1 \sim \mathcal{N}(0,1) \]
+
+        As is in calculus, we define two functions $\mu(t,x)$ and $\sigma^2(t,x)$,
+        \[ \mu(t,x) = \lim_{h \to 0}\frac{1}{h}\mathbb{E}[X(t+h)-X(t)|X(t)=x] \]
+        \[ \sigma^2(t,x) = \lim_{h \to 0}\frac{1}{h}\var[X(t+h)-X(t)|X(t)=x] \]
+
+        A diffusion is \textbf{Time-homogeneous} if $\mu(t,x) = \mu(x)$, $\sigma(t,x) = \sigma(x)$. From now on we only consider time-homogeneous diffusions.
+
+        Once $\mu$ and $\sigma$ are specified,
+        \begin{equation}\label{eq:DiffusionDE} \mathrm{d}X_t = \mu(t,X_t)\mathrm{d}t + \sigma(t,X_t)\mathrm{d}W_t \end{equation}
+        where intuitively $W_t$ is the ``movement of a Brownian motion in a very small interval of time''. But since a Brownian motion is not differentiable, defining $W_t$ is non-trivial. However, if we take the integral of Equation \ref{eq:DiffusionDE}.
+        \[ X_t - X_0 = \int_0^t \mu(X_s)\mathrm{d}s + \int_0^t \sigma(X_s)\mathrm{d}W_s \]
+        where
+        \[ \int_0^t \sigma(X_s)\mathrm{d}s \]
+        is called the \textbf{Ito's Integral}. Due to its complexity we will not give any further details on Ito's Integral, and we will not operate on it in the following parts.
+
+
+\section{Langevin Dynamics}
+    \emph{“大家听说过Langevin吗？肯定听说过。郎之万。--Chihao.”}
+    \subsection{Recap: Gradient Descent}
+        Recall the update rule of Gradient Descent
+        \[ X_t = X_{t-1} - \eta\nabla f(X_{t-1}) \Longrightarrow X_t - X_{t-1} = -\nabla f(X_{t-1})\]
+
+        In the continuous case,
+        \[ \mathrm{d}X_t = -\nabla f(X_t)\mathrm{d}t \]
+
+    \subsection{Langevin Dynamics}
+        A \textbf{Langevin Dynamics} is a continuous version of gradient descent, with an additional Gaussian noise\footnote{“下降完了它还要抖一下--Chihao”}
+        \[ \mathrm{d}X_t = -\nabla f(X_t)\mathrm{d}t + \sqrt{2}\mathrm{d}W_t \]
+
+        \begin{theorem}[Convergence of Langevin Dynamics]\label{thm:ConvergenceOfLangevinDynamics}
+            For any function $f$, $X_t \sim p(X)$, where $p(X)$ is given by
+            \[ p(x) = \frac{e^{-f(x)}}{\sum_x e^{-f(x)}} \]
+        \end{theorem}
+
+        The following sections will be devoted to the convergence analysis. The proofs will be given in 1D cases $X_t \in \mathbb{R}$, but the results apply to $\mathbb{R}^n$. And we further asuume $\sigma(X_t) \in \mathbb{R}$.
+
+    \subsection{Fokker-Planck Equation}
+        Fokker-Planck Equation is the continuous version of Kolmogorov Forward Equation \ref{eq:KolmogorovForwardEquation}.
+
+        Let $p(t,y)$ denote the density of $X_t = y$.
+
+        \begin{equation}\label{eq:Fokker-PlanckEquation}
+            \frac{\partial p(t,y)}{\partial t} = - \sum_{i=1}^n \frac{\partial \mu_i(y)p(t,y)}{\partial y_i} + \frac{1}{2}\sigma^2(y)\sum_{i=1}^n\frac{\partial^2 p(t,y)}{\partial y_i^2}
+        \end{equation}
+        Where $y_i$ and $\mu_i(y)$ denote the $i$-th element of vectory $y$ and $\mu(y)$ respectively.
+
+        To prove \ref{eq:Fokker-PlanckEquation}, we first introduce the backward probability. Fix $y \in \mathbb{R}^n$, let
+        \[ q(t,x) \triangleq p_{X_t}(y|X_0=x) \]
+        Then
+        \begin{equation}\label{eq:Fokker-PlanckBackwardEq}
+            \frac{\partial q(t,x)}{\partial t} = \mu(x)\sum_{i=1}^n \frac{\partial q(t,x)}{\partial x_i} + \frac{1}{2}\sum_{i=1}^n\frac{\partial^2 \sigma^2(x)q(t,x)}{\partial x_i^2}
+        \end{equation}
+
+        \subsubsection{Proof of Backward Equation in 1D}
+            \begin{align*}
+                \partial_t q(t,x) &= \mu(x)\partial_xq(t,x) + \frac{1}{2}\sigma^2(x)\partial_{xx}q(t,x)
+            \end{align*}
+            We prove a more general case. Let $\rho()$ be some function defined on the state space, then we define $g(t,x)$ by
+            \[ g(t,x) = \mathbb{E}_x[\rho(X_t)] \quad \mathbb{E}_x[\cdot]=\mathbb{E}[\cdot|X_0=x] \]
+            Therefore
+            \[ g(t+h,x) = \mathbb{E}_x[\rho(X_{t+h})] = \mathbb{E}_x[\mathbb{E}_x[\rho(X_{t+h})|X_h]] = \mathbb{E}_x[g(t, X_h)] \]
+
+            \begin{align*}
+                LHS &= \lim_{h \to 0}\frac{1}{h}\mathbb{E}_x[g(t,X_h) - g(t,x)]\\
+                &= \lim_{h \to 0}\frac{1}{h}\mathbb{E}_x[g'(t,x)(X_h - x) + \frac{1}{2}g''(t,x)(X_h-x)^2 + o(h)]\\
+                &= \mu(x)g'(t,x) + \frac{1}{2}\sigma^2(x)g''(t,x)
+            \end{align*}
+
+            And our desired backward equation can be proved by letting $\rho(z) = \mathbb{I}[z \le y]$ and take derivative w.r.t. $y$.
+            \[ g(t,x) = \mathbb{E}_x[\rho(X_t)] = \mathbb{P}_x[X_t \le y] \triangleq F(t,x,y) \]
+
+            So $F(t,x,y)$ satisfies the backward equation, and notice that $\partial_y F(t,x,y) = q(t,x)$, so simply take partial derivative of $F$ w.r.t. $y$ yields the desired result.
+
+        \subsubsection{Proof of Forward Equation in 1D}
+            By Markov property,
+            \[ g(s,y) = \mathbb{E}[\rho(X_{t+s})|X_t=y] \]
+
+    \subsection{Proof of Convergence}
+        Let the stationary distribution be $\pi(x)$. Plug $\pi(x)$ into Equation \ref{eq:Fokker-PlanckEquation}.
+        \[ 0 = -\frac{\partial}{\partial x}\left( f'(x) \cdot \pi(x) \right) + \frac{1}{2}\frac{\partial}{\partial x}\pi'(x)\]
+
+        Therefore
+        \[ \pi'(x) = -f'(x)\pi(x) \]
+
+        This is an ordinary differential equation, with solution
+        \[ \pi(x) \sim e^{-f} \]
+
+    \subsection{Convergence Analysis}
+        Suppose the function $f$ is $m$-strongly convex. Recall that an $m$-strongly convex function has a quadratic lower bound
+        \[ f(y) \ge f(x) + \nabla f(x)^T(y-x) + \frac{m}{2}(y-x)^T\nabla^2f(x)(y-x) \]
+
+        \begin{theorem}
+            For an $m$-strongly convex $f$, the Langevin dynamics converges to its stationary distribution exponentially fast.
+
+            Let $x_t$, $y_t$ be two Langevin Dynamics,
+            \[ \mathbb{E}[\|x_t-y_t\|] \le e^{-mt}\|x_0-y_0\| \]
+        \end{theorem}
+        \begin{proof}
+            We construct a coupling. Let $X_t$ and $Y_t$ be two Langevin Dynamics, with the same Gaussian noise. Since they have the same noise, the remaining analysis is very similar to that of an ordinary gradient descent.
+
+            Consider $\|x_t-y_t\|^2$ . To show that it converges very fast, we only need to show that its derivative drops very fast. Thank you, continuity!\footnote{``Everybody should be able to take the gradient of a quadratic function. -- Bo Jiang''}
+            \begin{align*}
+                \mathrm{d}\|x_t-y_t\|^2 &= 2\left(\frac{\mathrm{d}}{\mathrm{d}t}(x_t-y_t)^T(x_t-y_t)\right)\\
+                &= 2(\nabla f(y_t) - \nabla f(x_t))^T(x_t-y_t)
+            \end{align*}
+
+            By strong convexity
+            \[ f(y_t) - f(x_t) \ge \nabla f(x_t)^T(y_t-x_t) + \frac{m}{2}\|x_t-y_t\|^2 \]
+            and
+            \[ f(x_t) - f(y_t) \ge \nabla f(y_t)^T(x_t-y_t) + \frac{m}{2}\|x_t-y_t\|^2 \]
+
+            Add the two equations up
+            \[ 0 \ge (\nabla f(y_t) - \nabla f(x_t))^T(x_t-y_t) + m\|x_t-y_t\|^2 \]
+
+            Therefore
+            \[ \mathrm{d}\|x_t-y_t\|^2 \le -2m\|x_t-y_t\|^2 \]
+
+            Integrate on both sides yields our desired result
+            \[ \|x_t-y_t\|^2 \le e^{-2m}\|x_0-y_0\|^2 \]
+        \end{proof}
+
+    \subsection{Discrete Implementation of Langevin Dynamics}
+        \[ Z_{t+1} = Z_t - \eta\nabla f(Z_t) + \sqrt{2\eta}\xi_t \]
+        where
+        \[ \xi_t \sim \mathcal{N}(0,1) \]
+        \begin{remark}
+            The choice of $\eta$ matters.
+        \end{remark}
+
+        The convergence analysis in the discrete case is beyond the scope.

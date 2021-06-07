@@ -6,7 +6,7 @@
 \newcommand{\var}{\mathrm{Var}}
 
 
-\section{Definition of Brownian Motions}
+\section{definition of Brownian Motions}
     \subsection{Introduction}
         We start from a random walk on real axis, but this time we move every $\Delta t$ time. So in time interval $t$ we take $t/\Delta t$ steps. Let $\delta$ be the step size, then
         \[ X(t) = \delta(X_1 + X_2 + \cdots + X_{t/\Delta t}) \]
@@ -19,7 +19,7 @@
         \[ Var[X(t)] = \sigma^2 t \]
 
         Recall the Central Limit Theorem in \textsc{Probability and Statistics}
-        \begin{theorem}[Central Limit Theorem]\label{Thm:CentralLimitTheorem}
+        \begin{theorem}[Central Limit Theorem]\label{thm:CentralLimitTheorem}
             Let $X_1,X_2,\dots$ be a sequence of i.i.d. random variables, with mean $\mu$ and variance $\sigma^2$. Then
             \[ \frac{\sum_iX_i - n\mu}{\sigma\sqrt{n}} \sim \mathcal{N}(0,1) \]
         \end{theorem}
@@ -37,8 +37,8 @@
             This is very similar to the property of a Poisson Process.
         \end{remark}
 
-    \subsection{Formal Definition}
-        \begin{definition}[Standard Brownian Motion]\label{Def:BrownianMotionStd}
+    \subsection{Formal definition}
+        \begin{definition}[Standard Brownian Motion]\label{def:BrownianMotionStd}
             $\{W(t):t>0\}$ is a \textbf{Standard Brownian Motion} Process if
             \begin{enumerate}
                 \item $W(0) = 0$.
@@ -61,13 +61,13 @@
             The marginal probability given $X_i$ is also a Gaussian Distribution.
         \end{remark}
 
-        \begin{definition}[Gaussian Process]\label{Def:GaussianProcess}
+        \begin{definition}[Gaussian Process]\label{def:GaussianProcess}
             A stochastic process $\{W(t)\}_{t \ge 0}$ is a \textbf{Gaussian Process} if
             \[ \forall n, \forall t_1 \le t_2 \le \cdots \le t_n, (W(t_1), W(t_2), \dots, W(t_n))\]
             has a Guassian Distribution.
         \end{definition}
 
-        \begin{definition}[Alternative Definition of SBM]\label{Def:BrownianMotionStdAlt}
+        \begin{definition}[Alternative definition of SBM]\label{def:BrownianMotionStdAlt}
             A stochastic process $\{W(t)\}$ is a Standard Brownian Motion if
             \begin{enumerate}
                 \item $W(t)$ is a Guassian Process.
@@ -76,7 +76,7 @@
             \end{enumerate}
         \end{definition}
         \begin{proof}
-            $\Rightarrow$: A SBM satisfies Definition \ref{Def:BrownianMotionStdAlt}. To see this, we show that any linear combination of $W(s)$ and $W(t)$ is a Gaussian. $\forall a,b$,
+            $\Rightarrow$: A SBM satisfies definition \ref{def:BrownianMotionStdAlt}. To see this, we show that any linear combination of $W(s)$ and $W(t)$ is a Gaussian. $\forall a,b$,
             \begin{align*}
                 aW(s) + bW(t) &= aW(s) + b(W(t) - W(s) + W(s))\\
                 &= (a+b)W(s) + b(W(t)-W(s))
@@ -96,7 +96,7 @@
         \subsubsection{A Simple Example}
             If $W(t)$ is a SBM, then $X(t)=tW(1/t)$ is also a SBM.
             \begin{proof}
-                We only need to check Definition \ref{Def:BrownianMotionStdAlt}. The first two conditions are easy to check. We consider the covariance.
+                We only need to check definition \ref{def:BrownianMotionStdAlt}. The first two conditions are easy to check. We consider the covariance.
                 \begin{align*}
                     Cov(X(s), X(t)) &= Cov(sW(1/s),tW(1/t))\\
                     &= stCov(W(1/s), W(1/t))\\
@@ -137,7 +137,7 @@
         The resulting process still has a Gaussian distribution, so we only need to compute the mean and covariance.
 
         Before we formally start, we first introduce a tool.
-        \begin{proposition}\label{Prop:LemmaOfBrownianBridge}
+        \begin{proposition}\label{prop:LemmaOfBrownianBridge}
             \[ W(t) - (t/u)W(u) \]
             is independent of $W(u)$
         \end{proposition}
@@ -150,7 +150,7 @@
             So we are done.
         \end{proof}
 
-        With Proposition \ref{Prop:LemmaOfBrownianBridge} we shall continue.
+        With Proposition \ref{prop:LemmaOfBrownianBridge} we shall continue.
 
         \begin{align*}
             0 &= \mathbb{E}\left[ W(t) - \frac{t}{u}W(u) \right]\\
@@ -166,7 +166,7 @@
         \begin{align*}
             \var[W(t) | W(u)] &= \mathbb{E}[(W(t) - \mathbb{E}[W(t)|W(u)])^2 | W(u)]\\
             &= \mathbb{E}[(W(t)- \frac{t}{u}W(u))^2 | W(u)]\\
-            &= \mathbb{E}[(W(t) - \frac{t}{u}W(u))^2] \quad \text{(By Proposition \ref{Prop:LemmaOfBrownianBridge})}\\
+            &= \mathbb{E}[(W(t) - \frac{t}{u}W(u))^2] \quad \text{(By Proposition \ref{prop:LemmaOfBrownianBridge})}\\
             &= \mathbb{E}[W^2(t)] - \frac{2t}{u}\mathbb{E}[W(t)W(u)] + \frac{t^2}{u^2}\mathbb{E}[W^2(u)]\\
             &= t - \frac{2t}{u}t + \frac{t^2}{u^2}u\\
             &= \frac{ut - t^2}{u} = \frac{t(u-t)}{u}
@@ -199,7 +199,7 @@
         \[ \cov[W(s), W(u) | W(u)] = \frac{s(u-t)}{u} \]
 
     \subsection{Standard Brownian Bridge}
-        \begin{definition}[Standard Brownian Bridge]\label{Def:BrownianBridgeStd}
+        \begin{definition}[Standard Brownian Bridge]\label{def:BrownianBridgeStd}
             A Gaussian Process is called a \textbf{Standard Brownian Bridge} if
             \begin{enumerate}
                 \item $X(0) = X(1) = 1$

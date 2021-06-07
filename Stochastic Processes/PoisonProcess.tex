@@ -41,7 +41,7 @@
 
 \section{Exponential Distributions}
 
-    \subsection{Definition of Exponential Distributions}
+    \subsection{definition of Exponential Distributions}
     \begin{definition}[Exponential Distribution]
         A random variable $X$ is said to have an \textbf{exponential distribution} with rate $\lambda$, $X \sim Exp(\lambda)$ if
         \[ \forall t \ge 0 \quad \mathbb{P}[X \le t] = 1 - e^{-\lambda t} \]
@@ -65,7 +65,7 @@
             If we have waited for $s$ units of time, then the probability that we have to wait for $t$ more units is the same as that of we have not waited at all.\footnote{白~{}等~{}了}
         \end{remark}
 
-        \subsubsection{Exponential Races}\label{Subs:ExponentialRace}
+        \subsubsection{Exponential Races}\label{subs:ExponentialRace}
         Let $X_1 \sim Exp(\lambda_1)$, $X_2 \sim Exp(\lambda_2)$ be two independent random variables. Let $Y = \min(X_1, X_2)$, then
         \[ Y \sim Exp(\lambda_1 + \lambda_2) \]
         \begin{proof}
@@ -85,8 +85,8 @@
 
 \section{Poisson Processes}
 
-    \subsection{Definition of Poisson Processes}
-    \begin{definition}[Poisson Process]\label{Def:PoissonProcess}
+    \subsection{definition of Poisson Processes}
+    \begin{definition}[Poisson Process]\label{def:PoissonProcess}
         $\{N(s)|s \ge 0\}$ is a \textbf{Poisson Process}, if
         \begin{enumerate}
             \item $N(0)=0$
@@ -99,7 +99,7 @@
 
     \subsection{Alternative Interpretation of Poisson Process}
     We can construct a Poisson process as the sum of multiple random variables with Exponential distributions.
-    \begin{proposition}\label{Prop:AltDefOfPoissonProcess}
+    \begin{proposition}\label{prop:AltdefOfPoissonProcess}
         Let $\tau_1,\tau_2,\dots,\tau_n$ be independent random variables with exponential distribution $Exp(\lambda)$. Let $T_n=\sum_{i=1}^n\tau_i$, $N(s)=\max\{n|T_n \le s\}$
 
         Then $N(s)$ is a Poisson process with rate $\lambda$.
@@ -108,9 +108,9 @@
         If we think of $\tau_i$ as the time interval between the arrival time of customers in a store, then $N(s)$ is the number of customer arrivals before time $s$.
     \end{remark}
 
-    To prove Proposition \ref{Prop:AltDefOfPoissonProcess}, we first introduce a theorem.
+    To prove Proposition \ref{prop:AltdefOfPoissonProcess}, we first introduce a theorem.
 
-    \begin{theorem}\label{Thm:SumOfExpHasGammaDistribution}
+    \begin{theorem}\label{thm:SumOfExpHasGammaDistribution}
         Let $\tau_1, \tau_2, \dots, \tau_n$ be independent random variables with Exponential distribution $Exp(\lambda)$. Let $T_n = \sum_{i=1}^n\tau_n$, then $T_n$ has a \emph{Gamma distribution} $\Gamma(n, \lambda n)$
         \[ f_{T_n}(t) = \lambda e^{-\lambda t}\frac{(\lambda t)^{n-1}}{(n-1)!} \quad \forall t \ge 0 \]
     \end{theorem}
@@ -130,27 +130,27 @@
         \end{itemize}
     \end{proof}
     \begin{remark}
-        Theorem \ref{Thm:SumOfExpHasGammaDistribution} states that the arrival time of the $n$-th customer has a Gamma distribution.
+        Theorem \ref{thm:SumOfExpHasGammaDistribution} states that the arrival time of the $n$-th customer has a Gamma distribution.
     \end{remark}
 
-    We can now prove Proposition \ref{Prop:AltDefOfPoissonProcess}.
-    \subsection{Proof of Equivalence of the two Definitions}
+    We can now prove Proposition \ref{prop:AltdefOfPoissonProcess}.
+    \subsection{Proof of Equivalence of the two definitions}
         \begin{proof}
-            To show that the two definitions are equivalent, we need to show that the three requirements in Definition \ref{Def:PoissonProcess} can be satisfied by the alternative definition \ref{Prop:AltDefOfPoissonProcess}.
+            To show that the two definitions are equivalent, we need to show that the three requirements in definition \ref{def:PoissonProcess} can be satisfied by the alternative definition \ref{prop:AltdefOfPoissonProcess}.
             \begin{enumerate}
                 \item $N(0)=0$ is trivial.
-                \item We begin proving (2) of Definition \ref{Def:PoissonProcess} from the case $s=0$. Notice that $N(t)=n \Leftrightarrow T_n \le t \wedge T_{n+1} > t$, i.e. the $n$-th customer has arrived, but the $(n+1)$-th has not. So we only need to prove the latter has Poisson distribution.
+                \item We begin proving (2) of definition \ref{def:PoissonProcess} from the case $s=0$. Notice that $N(t)=n \Leftrightarrow T_n \le t \wedge T_{n+1} > t$, i.e. the $n$-th customer has arrived, but the $(n+1)$-th has not. So we only need to prove the latter has Poisson distribution.
                 \begin{align*}
                     \mathbb{P}[N(t)=n] &= \mathbb{P}[T_n \le t, T_{n+1} > t]\\
                     &= \int_0^tf_{T_n}(s)\cdot\mathbb{P}[\tau_{n+1} > t-s]\mathrm{d}s \quad \text{(Enumerate all possible values of $t$)}\\
-                    &= \int_0^t\lambda e^{-\lambda s}\frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda(t-s)}\mathrm{d}s \quad \text{(Theorem \ref{Thm:SumOfExpHasGammaDistribution})}\\
+                    &= \int_0^t\lambda e^{-\lambda s}\frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda(t-s)}\mathrm{d}s \quad \text{(Theorem \ref{thm:SumOfExpHasGammaDistribution})}\\
                     &= \frac{\lambda^n}{(n-1)!}e^{-\lambda t}\int_0^t s^{n-1}\mathrm{d}s \quad \text{(Move out the constants)}\\
                     &= \frac{(t\lambda)^n}{n!}\cdot e^{-\lambda t}
                 \end{align*}
                 which is exactly the expression of $Poisson(\lambda t)$, so we are done.
 
                 When $s > 0$, by the lack of memory property, $N(t+s)-N(s)$ must have the same distribution as $N(t) - N(0) = N(t)$. Of course this can also be verified by some moderate calculations.
-                \item (3) of Definitiion \ref{Def:PoissonProcess} can be proved using a similar argument. Notice that the lack-of-memory property and (2) implies that the ``number of arrivals'' after $s$ is independent of the arrivals before $s$. Therefore $N(t_n) - N(t_{n-1})$ is independent of $N(r)$ for all $r < t_{n-1}$. So the result can be proved by induction.
+                \item (3) of definitiion \ref{def:PoissonProcess} can be proved using a similar argument. Notice that the lack-of-memory property and (2) implies that the ``number of arrivals'' after $s$ is independent of the arrivals before $s$. Therefore $N(t_n) - N(t_{n-1})$ is independent of $N(r)$ for all $r < t_{n-1}$. So the result can be proved by induction.
             \end{enumerate}
         \end{proof}
 
@@ -161,11 +161,11 @@
     \subsection{Thinning}
         We can associate some i.i.d. random variables $Y_i$ with each arrival. For example, $Y_i$ can be the gender of the $i$-th customer arriving at some restaurant; or if customers arrive in cars, $Y_i$ can be the number of passengers in a car. Let $P_j = \mathbb{P}[Y_i = j]$. Let $N_j(t)$ be the total number of $i \le N(t)$ with $Y_i = j$.
 
-        \begin{theorem}\label{Thm:ThinningOfPoissonProcess}
+        \begin{theorem}\label{thm:ThinningOfPoissonProcess}
             $N_j(t)$ are \emph{independent} Poisson Processes with rate $\lambda P_j$.
         \end{theorem}
         \begin{proof}
-            We will prove the result using the first definition of Poisson Distribution \ref{Def:PoissonProcess}. We only need to consider the simplest cases where $Y_i \in \{0,1\}$.
+            We will prove the result using the first definition of Poisson Distribution \ref{def:PoissonProcess}. We only need to consider the simplest cases where $Y_i \in \{0,1\}$.
             \begin{align*}
                 \mathbb{P}[N_0(t) = j, N_1(t) = k] &= e^{-\lambda t}\frac{(\lambda t)^{j+k}}{(j+k)!}\cdot C^{j+k}_j P_0^j P_1^k \\
                 &= e^{-\lambda t}\frac{(\lambda t)^{j+k}}{(j+k)!}\frac{(j+k)!}{j! \cdot k!}P_0^j P_1^k\\
@@ -187,7 +187,7 @@
             \item Only $B$ found it. $P_B(1-P_A)$
             \item Both $A$ and $B$ found it. $P_AP_B$
         \end{enumerate}
-        From Theorem \ref{Thm:ThinningOfPoissonProcess}, we know that the four cases follow four independent Poisson Processes. So we can estimate the parameters by solving
+        From Theorem \ref{thm:ThinningOfPoissonProcess}, we know that the four cases follow four independent Poisson Processes. So we can estimate the parameters by solving
         \[
         \begin{cases}
             300P_A(1-P_B)\lambda &= 20\\
@@ -217,15 +217,15 @@
             \mathbb{P}[X \le t] &= \mathbb{P}[X_1 \le t, X_2 \le t, \dots X_n \le t]\\
             &= \mathbb{P}[X_1 \le t] \cdot \mathbb{P}[X_2 \le t] \cdot \cdots \cdot \mathbb{P}[X_n \le t]
         \end{align*}
-        By the alternative definition of Poisson Process \ref{Prop:AltDefOfPoissonProcess}, $X_j$ has an Exponential Distribution with rate $P_j$. Therefore
+        By the alternative definition of Poisson Process \ref{prop:AltdefOfPoissonProcess}, $X_j$ has an Exponential Distribution with rate $P_j$. Therefore
         \[ \mathbb{P}[X \le t] = \prod_{i=1}^n (1-e^{-P_jt}) \]
         \[ \mathbb{P}[X > t] = 1 - \prod_{i=1}^n (1-e^{-P_jt}) \]
-        \begin{proposition}\label{Prop:AltComputationOfExpectation}
+        \begin{proposition}\label{prop:AltComputationOfExpectation}
             If $X \ge 0$, then
             \[ \mathbb{E}[X] = \sum_{t=0}^{\infty} \mathbb{P}[X \ge t] = \sum_{i=0}^{\infty}i\cdot\mathbb{P}[X=i] \]
             \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t\]
         \end{proposition}
-        By Proposition \ref{Prop:AltComputationOfExpectation},
+        By Proposition \ref{prop:AltComputationOfExpectation},
         \[ \mathbb{E}[X] = \int_0^{\infty} \mathbb{P}[X > t]\mathrm{d}t = \int_0^{\infty}1 - \prod_i (1-e^{-P_it})\mathrm{d}t \]
         We have figured out $\mathbb{E}[X]$, but how is $\mathbb{E}[X]$ related to $\mathbb{E}[N]$?
 
@@ -244,7 +244,7 @@
     \subsection{Nonhomogeneous Thinning}
         Now consider another case. Suppose $P_i$ now depends on the arrival time $s$.
         \begin{theorem}[Nonhomogeneous Thinning]
-            \label{Thm:NonhomogeneousThinning}
+            \label{thm:NonhomogeneousThinning}
             $N_i(t)$'s have \emph{independent} Poisson distribution with mean $\lambda\int_0^t P_i(s)\mathrm{d}s$.
         \end{theorem}
         \begin{proof}
@@ -263,7 +263,7 @@
             \[ \lambda(t) = \lambda\cdot P_i(t) \]
         \end{remark}
 
-        \begin{definition}[Nonhomogeneous Poisson Process]\label{Def:NonhomogeneousPoissonProcess}
+        \begin{definition}[Nonhomogeneous Poisson Process]\label{def:NonhomogeneousPoissonProcess}
             $\{ N(t) | t \ge 0 \}$ is a \textbf{nonhomogeneous Poisson Process} with rate $\lambda(s)$ if
             \begin{enumerate}
                 \item $N(0)=0$
@@ -332,17 +332,17 @@
         We want to estimate the number of HIV patients, suppose a patient may or may not show symptoms. Assume the number of patients with HIV virus has a Poisson distribution with an unknown rate $\lambda$. Suppose we know a distribution $G$ representing ``how long a patient with HIV virus shows symptoms''.
 
         We divide people into 2 types by whether they show symptoms or not.
-        \begin{equation}\label{Eq:NumOfPatientsWithSymptoms} \mathbb{E}[N_1(t)] = \lambda \int_0^t G(t-s)\mathrm{d}s = \lambda\int_0^t G(s)\mathrm{d}s \end{equation}
+        \begin{equation}\label{eq:NumOfPatientsWithSymptoms} \mathbb{E}[N_1(t)] = \lambda \int_0^t G(t-s)\mathrm{d}s = \lambda\int_0^t G(s)\mathrm{d}s \end{equation}
         \[ \mathbb{E}[N_2(t)] = \lambda \int_0^t \hat{G}(t-s)\mathrm{d}s = \lambda\int_0^t \hat{G}(s)\mathrm{d}s \]
         where $\lambda$ is unknown.
 
-        However, we do know the number of patients who have already shown symptoms. Therefore we can estimate $\lambda$ with Eq (\ref{Eq:NumOfPatientsWithSymptoms}), and estimate $\mathbb{E}[N_2(t)]$ with $\hat{\lambda}$.
+        However, we do know the number of patients who have already shown symptoms. Therefore we can estimate $\lambda$ with Eq (\ref{eq:NumOfPatientsWithSymptoms}), and estimate $\mathbb{E}[N_2(t)]$ with $\hat{\lambda}$.
 
 \section{Conditioning}
 
     \subsection{Conditioning}
         Let $T_1, T_2, \dots, T_n$ be the arrival times of a Poisson Process with rate $\lambda$. Let $U_1, U_2, \dots, U_n$ be independent uniform random variables on $[0,t]$. Let $V_1, V_2, \dots, V_n$ be sequence $U_i$ re-arranged in increasing order, then
-        \begin{theorem}[Conditioning]\label{Thm:ConditioningOfPoissonProcess}
+        \begin{theorem}[Conditioning]\label{thm:ConditioningOfPoissonProcess}
             If we condition on $N(t)=n$, then the distribution of $T_1, \dots, T_n$ is the same as the distribution of $V_1, \dots, V_n$.
         \end{theorem}
         \begin{sketchproof}~{}
@@ -358,7 +358,7 @@
 
 
 \section{Poisson Approximation}
-    \subsection{Motivating Example: Max Load}\label{subsec:m-balls-in-n-bins}
+    \subsection{Motivating Example: Max Load}\label{subs:m-balls-in-n-bins}
         Consider a m-ball-into-n-bin problem. Suppose we throw balls randomly into several bins, and we want to know how many balls there are in the bin with the most balls.
 
         If we consider the number of balls in each bin, the number follows a Bernoulli distribution. However, since the number of balls in different bins are not independent, analyzing the problem in this way can be complicated.
@@ -373,7 +373,7 @@
         \end{itemize}
 
     \subsection{Poisson Approximation}
-        \begin{theorem}[Poisson Approximation]\label{Thm:PoissonApproximation}
+        \begin{theorem}[Poisson Approximation]\label{thm:PoissonApproximation}
             Let $(X_1,\dots,X_n)$ be a sequence of random variables where each $X_i$ has a Bernoulli distribution, then its distribution is the same as $(Y_1, \dots, Y_n)$ conditioned on $\sum_i Y_i = m$, where $Y_i \sim Poisson(\lambda)$ are \emph{independent} Poisson variables with rate $\lambda$.
         \end{theorem}
         \begin{proof}
@@ -396,7 +396,7 @@
         \end{proof}
 
     \subsection{m-balls-in-n-bins: MaxLoad Revisited}
-        With Theorem \ref{Thm:PoissonApproximation}, we can solve the motivating example in Section \ref{subsec:m-balls-in-n-bins}.
+        With Theorem \ref{thm:PoissonApproximation}, we can solve the motivating example in Section \ref{subs:m-balls-in-n-bins}.
         \begin{theorem}
             Let $m=n$. Let $X = \max_i X_i$. Then there exist constants $c_1$, $c_2$ such that
             \[ \mathbb{P}\left[\frac{c_1\log n}{\log\log n} < X < \frac{c_2\log n}{\log\log n}\right] = 1 - O\left(\frac{1}{n}\right) \]
@@ -421,9 +421,9 @@
             \end{align*}
             So we can choose $c_2 = 6$.
             
-            The proof of \emph{lower bound} requires Theorem \ref{Thm:BadEventBound}. Let $X < \frac{c_1\log n}{\log\log n}$ be a ``bad event''. This is equivalent to
+            The proof of \emph{lower bound} requires Theorem \ref{thm:BadEventBound}. Let $X < \frac{c_1\log n}{\log\log n}$ be a ``bad event''. This is equivalent to
             \[ \forall i, \quad X_i < \frac{c_1\log n}{\log\log n} \]
-            Denote this bad event by $\mathcal{B}$, let $f = \mathbb{I}[\mathcal{B}|X_1,\dots,X_n]$ be an indicator of the bad event. By Theorem \ref{Thm:BadEventBound},
+            Denote this bad event by $\mathcal{B}$, let $f = \mathbb{I}[\mathcal{B}|X_1,\dots,X_n]$ be an indicator of the bad event. By Theorem \ref{thm:BadEventBound},
             \begin{align*}
                 \mathbb{E}[f] &= \mathbb{P}[\mathcal{B}]\\
                 &\le e\sqrt{n} \mathbb{E}[\mathbb{I}[\mathcal{B}|(Y_1,\dots,Y_n)]]\\
@@ -435,7 +435,7 @@
                 &\le e\sqrt{n} e^{-\frac{n}{ek!}} < \frac{1}{n} \quad \text{(Mafs)}
             \end{align*}
         \end{proof}
-        \begin{theorem}\label{Thm:BadEventBound}
+        \begin{theorem}\label{thm:BadEventBound}
             Let $X_i$ be Bernoulli random variables, and let $Y_i$ be independent Poisson random variables with rate $\lambda = m/n$. For any function $f$ from $\mathbb{N}^n$ to $\mathbb{N}$,
             \[ \mathbb{E}[f(X_1, \dots, X_n)] \le e\sqrt{m}\cdot\mathbb{E}[f(Y_1,\dots,Y_m)] \]
         \end{theorem}
@@ -443,7 +443,7 @@
             \begin{align*}
                 \mathbb{E}[f(Y_1,\dots,Y_n)] &= \sum_{k=0}^{\infty}\mathbb{E}[f(Y_1,\dots,Y_n) | \sum_i Y_i = k] \cdot \mathbb{P}[\sum_i Y_i = k] \quad \text{(Total Probability)}\\
                 &\ge \mathbb{E}[f(Y_1,\dots,Y_n)|\sum Y_i = m]\cdot \mathbb{P}[\sum Y_i = m]\\
-                &= \mathbb{E}[f(X_1,\dots,X_m)]\cdot\mathbb{P}[\sum Y_i = m] \quad \text{(Thm \ref{Thm:PoissonApproximation})}
+                &= \mathbb{E}[f(X_1,\dots,X_m)]\cdot\mathbb{P}[\sum Y_i = m] \quad \text{(thm \ref{thm:PoissonApproximation})}
             \end{align*}
             If we let each $Y_i$ has a Poisson distribution of rate $m/n$, by additivity of Poisson variables we have $\sum Y_i \sim Poisson(m)$, and then
             \begin{align*}

@@ -3,11 +3,11 @@
 \newpage
 
 
-\section{Definition of Continuous Time Markov Chains}
+\section{definition of Continuous Time Markov Chains}
     \subsection{Continuous Time Markov Chain}
         In the case of continuous time, it is technically difficult to specify the ``conditional probability given all of $X_r$ for all $r<s$''. Therefore instead, the Continuous Time Markov Chain is defined by
 
-        \begin{definition}[Continuous Time Markov Chain]\label{Def:ContinuousTimeMarkovChain}
+        \begin{definition}[Continuous Time Markov Chain]\label{def:ContinuousTimeMarkovChain}
             A stochastic process $X(t)$ is a \textbf{Continuous Time Markov Chain} if $\forall s,t \ge 0$, $\forall 0 \le s_0 < \cdots < s_n < s$
             \[ \mathbb{P}[X_{s+t} = j | X_s = i, X_{s_n} = i_n,\dots,X_{s_0}=i_0] = \mathbb{P}[X_t=j | X_0 = i] \]
         \end{definition}
@@ -18,9 +18,9 @@
         In continuous case, the matrix-multiplication version of multistep transition probability cannot be applied directly. Instead we define a transition probability for each $t>0$.
         \[ p_t(i,j) = \mathbb{P}[X_t=j|X(0)=i] \]
 
-        Recall the Chapman-Kolmogorov Equality \ref{Thm:ChapmanKolmogorovEquality}, it still holds in the continuous case.
+        Recall the Chapman-Kolmogorov Equality \ref{thm:ChapmanKolmogorovEquality}, it still holds in the continuous case.
 
-        \begin{theorem}[Chapman-Kolmogorov Equality, Continuous Case]\label{Thm:ContinuousChapmanKolmogorovEquality}
+        \begin{theorem}[Chapman-Kolmogorov Equality, Continuous Case]\label{thm:ContinuousChapmanKolmogorovEquality}
             \[ \sum_{k}p_s(i,k)p_t(k,j) = p_{s+t}(i,j) \]
         \end{theorem}
         \begin{remark}
@@ -28,13 +28,13 @@
         \end{remark}
 
         This further suggests that $p_t$ can be determined by its derivative at $t=0$.
-        \begin{definition}[Jump Rate]\label{Def:JumpRate}
+        \begin{definition}[Jump Rate]\label{def:JumpRate}
             If the limit exists (assume it always does),
             \[ q(i,j) = \lim_{h \to 0}\frac{p_h(i,j)}{h} \quad \text{for $j \neq i$} \]
             then $q(i,j)$ is defined as the \textbf{jump rate} from $i$ to $j$.
         \end{definition}
 
-    \subsection{A VERY Important Example}\label{Sub:CTMCCoreExample}
+    \subsection{A VERY Important Example}\label{sub:CTMCCoreExample}
         Let\footnote{“因为这个例子太重要了所以我给它起了个名字叫Example Star”--Chihao}
         \begin{itemize}
             \item $Y_n$ is a Markov Chain with transition matrix $u(i,j)$.
@@ -69,7 +69,7 @@
         Since the customers come in rate $\lambda$, we have
         \[ q(n, n+1) = \lambda \]
 
-        Since the customers leave in rate $\mu$, we can use an exponential race in \ref{Subs:ExponentialRace} to model the process, and therefore
+        Since the customers leave in rate $\mu$, we can use an exponential race in \ref{subs:ExponentialRace} to model the process, and therefore
         \[ q(n, n-1) = \begin{cases}
             \mu n & \quad n < s\\
             \mu s & \quad n \ge s
@@ -98,7 +98,7 @@
 \section{Computing the Transition Probability}
     Given the jump rate $q(i,j)$, the transition probability can be calculated By
     \begin{align*}
-        p_{t+h}(i,j) - p_t(i,j) &= \sum_k p_h(i,k)p_t(k,j) - p_t(i,j) \quad \text{(CK Equation \ref{Thm:ContinuousChapmanKolmogorovEquality})}\\
+        p_{t+h}(i,j) - p_t(i,j) &= \sum_k p_h(i,k)p_t(k,j) - p_t(i,j) \quad \text{(CK Equation \ref{thm:ContinuousChapmanKolmogorovEquality})}\\
         &= \sum_{k \neq i} p_h(i,k)p_t(k,j) + (p_h(i,i)-1)p_t(i,j)\\
         &\triangleq A + B
     \end{align*}
@@ -117,21 +117,21 @@
     \end{align*}
 
     And therefore
-    \begin{equation}\label{Eq:TransitionProbabilityKeyEq}
+    \begin{equation}\label{eq:TransitionProbabilityKeyEq}
          \lim_{h \to 0}\frac{1}{h}\left(p_{t+h}(i,j) - p_t(i,j)\right) = \sum_{k \neq i}q_(i,k)p_t(k,j) - \lambda_i p_t(i,j) 
     \end{equation}
 
-    Notice that the LHS of equation (\ref{Eq:TransitionProbabilityKeyEq}) is the derivative of $p_t(i,j)$, and therefore
+    Notice that the LHS of equation (\ref{eq:TransitionProbabilityKeyEq}) is the derivative of $p_t(i,j)$, and therefore
     \[ p'_t(i,j) = \sum_{k \neq i}q_(i,k)p_t(k,j) - \lambda_i p_t(i,j) \]
 
-    Further notice that  hte first term $\sum_{k \neq i}q_(i,k)p_t(k,j)$ in RHS of (\ref{Eq:TransitionProbabilityKeyEq}) can be re-written in a matrix multiplication. Let
+    Further notice that  hte first term $\sum_{k \neq i}q_(i,k)p_t(k,j)$ in RHS of (\ref{eq:TransitionProbabilityKeyEq}) can be re-written in a matrix multiplication. Let
     \[ Q(i,j) = \begin{cases}
         q(i,j) &\quad i \neq j\\
         -\lambda_i &\quad i = j
     \end{cases} \]
 
     And therefore
-    \begin{equation}\label{Eq:KolmogorovBackwardEquation}
+    \begin{equation}\label{eq:KolmogorovBackwardEquation}
         P'_t = QP_t
     \end{equation}
     This equation is also known as the \textbf{Kolmogorov Backward Equation}.
@@ -142,7 +142,7 @@
     \[ e^Q = \sum_{n=0}^{\infty} \frac{Q^n}{n!} \]
 
     Furthermore, if we write $\sum_{k}p_t(i,k)p_h(k,j)$ instead of $\sum_{k}p_h(i,k)p_t(k,j)$ in the first step of derivation, we will end up with the \textbf{Kolmogorov Forward Equation}.
-    \begin{equation}\label{Eq:KolmogorovForwardEquation}
+    \begin{equation}\label{eq:KolmogorovForwardEquation}
         P'_t = P_tQ
     \end{equation}
 
@@ -152,7 +152,7 @@
         Let $X(t)$ be the number of arrivals of a Poisson process up to time $t$. $p_t(i,j)$ is the probability that the number rises from $i$ to $j$ in time interval $t$. By definition of the Poisson process, the arrival between $0$ and $t$ has a Poisson distribution of rate $\lambda t$, and $p_t(i,j)$ is simply the probability that the number of arrivals between $0$ and $t$ is $j-i$.
         \[ p_t(i,j) = e^{-\lambda t}\frac{(\lambda t)^{j-i}}{(j-i)!} \]
 
-        We can use the result to verify the forward and backward equation \ref{Eq:KolmogorovForwardEquation} and \ref{Eq:KolmogorovBackwardEquation}.
+        We can use the result to verify the forward and backward equation \ref{eq:KolmogorovForwardEquation} and \ref{eq:KolmogorovBackwardEquation}.
 
     \subsection{Example: Two State Markov Chain}
         Suppose there are only two states $\Omega = \{1,2\}$. The two-state continuous-time Markov chain can be specified by
@@ -163,7 +163,7 @@
             \mu & -\mu
         \end{bmatrix} \]
 
-        By Kolmogorov backward equation \ref{Eq:KolmogorovBackwardEquation},
+        By Kolmogorov backward equation \ref{eq:KolmogorovBackwardEquation},
         \[
         \begin{bmatrix}
             p'_t(1,1) & p'_t(1,2)\\
@@ -204,13 +204,13 @@
             \[ q(k_{m-1},k_m) > 0 \quad \forall 1 \le m \le n \]
         \end{definition}
 
-        \begin{lemma}\label{Lem:NecessaryConditionOfIrreducibility}
+        \begin{lemma}\label{lem:NecessaryConditionOfIrreducibility}
             If $X(t)$ is irreducible and $t>0$, then
             \[ p_t(i,j) > 0 \quad \forall i,j \]
         \end{lemma}
 
     \subsection{Stationary Distribution}
-        \begin{lemma}[Stationary Distribution, Continuous Case]\label{Lem:ContinuousTimeStationaryDistribution}
+        \begin{lemma}[Stationary Distribution, Continuous Case]\label{lem:ContinuousTimeStationaryDistribution}
             A distribution $\pi$ is a stationary distribution if and only if
             \[ \pi^T Q = 0 \]
         \end{lemma}
@@ -221,13 +221,13 @@
         \end{remark}
 
     \subsection{Convergence}
-        \begin{theorem}[Convergence of CT Markov Chain]\label{Thm:ConvergenceOfCTMarkovChain}
+        \begin{theorem}[Convergence of CT Markov Chain]\label{thm:ConvergenceOfCTMarkovChain}
             If a continuous time Markov chain is irreducible and has a stationary distribution $\pi$, then
             \[ \lim_{t\to\infty}p_t(i,j) = \pi(j) \]
         \end{theorem}
 
     \subsection{Detailed Balance Condition, Continuous Case}
-        \begin{theorem}[Detailed Balance Condition]\label{Thm:DetailedBalanceConditionOfCTMarkovChain}
+        \begin{theorem}[Detailed Balance Condition]\label{thm:DetailedBalanceConditionOfCTMarkovChain}
             If
             \[ \forall i \neq j \quad \pi(i)q(i,j) = \pi(j)q(j,i) \]
             then $\pi$ is a stationary distribution.
