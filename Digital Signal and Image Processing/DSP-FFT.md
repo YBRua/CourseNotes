@@ -17,9 +17,9 @@ Recall the definition of DFT
 $$ X[k] = \sum_{n=0}^{N-1} x[n] W_N^{kn} $$
 
 Assume $N$ is a power of 2
-$$ X[k] = \sum_{r=0}^{N/2-1} x[2r] W*N^{2rk} + W_N^k \sum_{r=0}^{N/2-1} x[2r+1]W*N^{2rk} $$
+$$ X[k] = \sum_{r=0}^{N/2-1} x[2r] W_N^{2rk} + W_N^k \sum_{r=0}^{N/2-1} x[2r+1]W_N^{2rk} $$
 
-Notice that $W_N^{2rk} = W*{N/2}^{rk}$.
+Notice that $W_N^{2rk} = W_{N/2}^{rk}$.
 $$X[k]= \sum_{r=0}^{N/2-1} x[2r] W^{rk}_{N/2} + W_N^k \sum_{r=0}^{N/2-1} x[2r+1] W_{N/2}^{rk}$$
 
 Therefore
