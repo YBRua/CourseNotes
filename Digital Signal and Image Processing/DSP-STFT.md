@@ -23,7 +23,11 @@ $$ x[n] = \cos(\pi n/3.3) + \cos(\pi n/5.4) $$
 Let $x[n]$ denote the infinitely long sampled signal, let $w[n]$ be a rectangular window, then
 $$\bar{x}[n] = w[n]x[n]$$
 is the actual input we get, and if we perform DTFT on $\bar{x}[n]$,
-$$\bar{X}(e^{j\omega}) =  $$
+$$\bar{X}(e^{j\omega}) = \frac{1}{2\pi}\int_{-\pi}^{\pi}W(e^{j\omega})X(e^{j(\omega - \theta)})\mathrm{d}\theta $$
+
+where
+
+$$ W(e^{j\omega}) = \frac{\sin(\omega L/2)}{\sin(\omega /2)}e^{-j\omega(L-1)/2} $$
 
 ### Rectangular Windowing
 
@@ -49,7 +53,7 @@ Rectangular window causes discontinuity on edges.
 
 The Short-Time Fourier Transform is a basic tool for spectral analysis of time-varying signals.
 
-- It is hard to globally evaluate the frequenncy domain behavior ofa signal
+- It is hard to globally evaluate the frequenncy domain behavior of a signal
 - We use a moving window to select different blocks of the signal
 - Then compute the DTFT at the given time.
 
@@ -65,9 +69,11 @@ $$ \bar{X}[n,\lambda) = \sum_{m=-\infty}^{\infty}x[n+m]w[m]e^{-j\lambda m} $$
 
 In reality, we approximate the STFT using discrete time sampling in the frequency domain.
 
-$$ \bar{X}[n,\lambda] = \sum_{m=0}^{L-1} x[n+m]w[m]\exp\left\{ -j\frac{2\pi k m}{N} \right\} $$
+$$ \bar{X}[n,\lambda) = \sum_{m=0}^{L-1} x[n+m]w[m]\exp\left\{ -j\frac{2\pi k m}{N} \right\} $$
 
-$$ \bar{X}[n, k] = \sum_{m=0}^{N-1} x[n+m]w[m]W_N^{km} $$
+$$ \bar{X}[n, k] = \sum_{m=0}^{N-1} x[n+m]w[m]W_N^{km} = \mathrm{DFT}_N[x[n+\cdot]w[\cdot]][k] $$
+
+The discrete STFT is the continuous STFT sampled at $\lambda=\frac{2\pi k}{N}$
 
 - $L$ is the length of a window, and we assume $N > L$.
 
@@ -143,10 +149,15 @@ IDFT gives
 $$ \hat{x}_r[m] = x[rR+m]w[m] $$
 
 We can shift back by $rR$ and add them up
-$$ \hat{x}_{OLA} = \sum_r $$
-`NotImplementedError: Too Fast.`
+$$ \hat{x}_{OLA}[n] = \sum_r \hat{x}_r[n-rR] = \sum_r x[n]w[n-rR] = x[n]\sum_r w[n-rR] $$
 
-Windows used in OLA method
+It is invertible if and only if
+
+$$ \sum_r w[n-rR] $$
+
+is a constant.
+
+Windows satisfying this constraint:
 
 - Bartlett (triangle) window
 - Hann window

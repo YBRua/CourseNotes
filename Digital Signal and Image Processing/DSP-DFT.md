@@ -1,5 +1,36 @@
 # DFT
 
+- [DFT](#dft)
+  - [Discrete Fourier Series](#discrete-fourier-series)
+    - [From DTFT to DFS](#from-dtft-to-dfs)
+    - [Kernel: Root of Unity](#kernel-root-of-unity)
+      - [Properties of $W_N$](#properties-of-w_n)
+    - [Definition of DFS](#definition-of-dfs)
+    - [Properties of DFS](#properties-of-dfs)
+      - [Linearity](#linearity)
+      - [Shift of a Sequence](#shift-of-a-sequence)
+      - [Duality](#duality)
+    - [Remarks on DFS](#remarks-on-dfs)
+  - [Discrete Fourier Transform](#discrete-fourier-transform)
+    - [Definition of DFT](#definition-of-dft)
+      - [Implicit Periodicity](#implicit-periodicity)
+    - [Matrix Interpretation of DFT](#matrix-interpretation-of-dft)
+      - [A Deeper Functional Insight](#a-deeper-functional-insight)
+    - [Properties of DFT](#properties-of-dft)
+      - [Linearity](#linearity-1)
+      - [Circular Time Shift](#circular-time-shift)
+      - [Circular Frequency Shift](#circular-frequency-shift)
+      - [Complex Conjugate](#complex-conjugate)
+      - [Conjugate Symmetry of Real signals](#conjugate-symmetry-of-real-signals)
+        - [even-length](#even-length)
+        - [odd-length](#odd-length)
+      - [DFT and IDFT](#dft-and-idft)
+    - [Circular Convolution](#circular-convolution)
+      - [Recap: Linear Convolution](#recap-linear-convolution)
+      - [Definition of Circular Convolution](#definition-of-circular-convolution)
+      - [Linear Convolution with DFT](#linear-convolution-with-dft)
+      - [Block Convolution: Overlap-Add Method](#block-convolution-overlap-add-method)
+
 ## Discrete Fourier Series
 
 ### From DTFT to DFS

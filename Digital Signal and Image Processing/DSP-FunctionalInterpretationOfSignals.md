@@ -49,6 +49,12 @@ Based on the inner product, we can define
 - Orthonormal bases.
 - Projection.
 
+#### Projection
+
+Projection of $x$ onto $y$
+
+$$z = \frac{\langle x, y \rangle}{\|y\|^2}y$$
+
 ### Kindergarten Equation
 
 Take $\mathbb{R}^2$ for example. Consider the orthonormal bases

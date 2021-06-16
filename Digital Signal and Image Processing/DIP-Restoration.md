@@ -109,13 +109,13 @@ $$ 2(-(1-W^*H^*)F^*HF+W^*N^*N)=0 $$
 #### Example: Motion Blur
 
 The motion blurring can be modeled as a shift-and-add process
-$$ g = \frac{1}{T}\int\_{-T/2}^{T/2}f(x-x_0(t),y)\mathrm{d}t $$
+$$ g = \frac{1}{T}\int_{-T/2}^{T/2}f(x-x_0(t),y)\mathrm{d}t $$
 
 To apply Wiener filtering, we need to derive $H$. By definition and properties of Fourier transform
-$$ G = \frac{1}{T} \int\_{-T/2}^{T/2}Fe^{-j2\pi{}ux_0(t)}\mathrm{d}t $$
+$$ G = \frac{1}{T} \int_{-T/2}^{T/2}Fe^{-j2\pi{}ux_0(t)}\mathrm{d}t $$
 
 Therefore
-$$ H = \frac{1}{T}\int\_{-T/2}^{T/2}e^{-j2\pi{}ux_0(t)}$$
+$$ H = \frac{1}{T}\int_{-T/2}^{T/2}e^{-j2\pi{}ux_0(t)}$$
 
 Suppose $x_0(t)=st$,
 $$ H = \textrm{sinc}(\pi{}ud) $$
