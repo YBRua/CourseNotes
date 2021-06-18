@@ -34,7 +34,7 @@
         where $\Sigma = XX^T$.
 
         We maximize the normalized second term
-        \[ \max_w \quad J \triangleq \frac{w^TXX^Tw}{w^TW} \]
+        \[ \max_w \quad J \triangleq \frac{w^TXX^Tw}{w^Tw} \]
 
         Or it can also be formulated as a equality constrained maximization and solved by Lagrangian.
 
@@ -43,23 +43,7 @@
 
         So the problem becomes finding the eigenvalues of $XX^T$, to maximize $J$, we find the largest eigenvalue of $XX^T$.
 
-    \subsection{General Case}
-        By the matrix cookbook,
-        \[ \mathbb{E}[x^TW^TWx] = \mathrm{Tr}[W \Sigma W^T] + \mu^TW^TW\mu \]
-
-        Therefore
-        \[ \mathbb{E}[\epsilon^T\epsilon] = \mathbb{E}[x^Tx] - \mathrm{Tr}[W^T \Sigma W] \]
-
-        Minimizing $\mathbb{E}[\epsilon^T\epsilon]$ is equivalent to maximizing $\mathbb{Tr}[W \Sigma W^T]$.
-
-        Since $\Sigma = XX^T$, the objective function is
-        \begin{align*}
-            \max_W &\quad \mathrm{Tr}[W^TXX^TW]\\
-            \text{s.t.} &\quad W^TW = I
-        \end{align*}
-
-    \subsection{Solution}
-        
+        Other dimensions turn out to be the remaining eigenvectors.
 
     \subsection{Geometric Interpretation}
         \begin{itemize}
