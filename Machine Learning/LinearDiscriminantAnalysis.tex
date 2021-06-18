@@ -1,0 +1,93 @@
+\chapter{Linear Discriminant Analysis}
+\newpage
+
+\section{Binary LDA}
+    Linear Discriminant Analysis aims at projecting data samples onto a hyperplane, such that samples of the same class get as close to each other as possible, while samples of different classes get as far from each other as possible.
+
+    \subsection{Within- and Between- class Distances}
+        Let $\mu_1$ and $\mu_2$ be the mean value of two classes.
+        \[ \mu_1 = \frac{1}{N_1}\sum_{i\in C_1}x^{(i)} \qquad \mu_2 = \frac{1}{N_2}\sum_{i\in C_2}x^{(i)} \]
+
+        \subsubsection{Between-class Distance}
+        Let $w$ be the linear mapping,
+        \[ d_{between} = |w^Tu_1 - w^Tu_2| \]
+        We want to maximize $d_{between}$, which is equivalent to maximizing
+        \[ \|d_{between}\|^2 = w^T(\mu_1-\mu_2)(\mu_1-\mu_2)^Tw\]
+
+        \subsubsection{Within-class Distance}
+        We also want to minimize
+        \[ d_{within}^{(i)} = \sum_{i\in C}|w^Tx^{(i)} -w^Tx^{(i)}| \]
+        for all $i$, which is equivalent to minimizing
+        \[ \|d_{within}^{(i)}\|^2 = \sum_{i\in C}w^T(x^{(i)}-\mu_i)(x^{(i)}-\mu_i)^Tw = w^T\Sigma_iw \]
+        where $\Sigma_i$ is the covariance matrix of the $i$-th class.
+
+        Therefore
+        \[ d_{within} = \sum_i d_{within}^{(i)} \]
+
+    \subsection{Opimization Formulation}
+        Notice that we have two objective functions, the key is to combine the two objective into one single objective funtion.
+
+        This can be done by simply setting the objective function to be
+        \[ \max J = \frac{d_{between}}{d_{within}} = \frac{w^T(\mu_1-\mu_2)(\mu_1-\mu_2)^Tw}{w^T(\Sigma_1 + \Sigma_2)w} \]
+
+        We define the \textbf{within-class scatter matrix} and \textbf{between-class scatter matrix} by
+        \[ S_w = \Sigma_1 + \Sigma_2 \]
+        \[ S_b = (\mu_1 - \mu_2)(\mu_1-\mu_2)^T \]
+
+        Therefore
+        \[ J = \frac{w^TS_bw}{w^TS_ww} \]
+        this is also known as the \textbf{generalized Rayleight quotient}.
+
+    \subsection{Solution}
+        \[ J = \frac{w^TS_bw}{w^TS_ww} \]
+        Notice that both the numerator and denominator are quadratic, so the norm of $w$ does not matter.
+
+        \subsubsection{By Lagrangian}
+        Since the norm of $w$ does not matter, the problem is equivalent to
+        \begin{align*}
+            \min &\quad -w^TS_bw\\
+            \text{s.t.} &\quad w^TS_ww=1
+        \end{align*}
+        By Lagrangian multipliers
+        \[ S_bw = \lambda S_ww \]
+
+        Notice that $(\mu_1-\mu_2)^Tw$ is a scalar, and therefore $S_bw$ is parallel with $\mu_1-\mu_2$. WLOG let
+        \[ S_bw = \lambda(\mu_1-\mu_2) \]
+
+        And therefore
+        \[ w = S_w^{-1}(\mu_0-\mu_1) \]
+
+        \begin{remark}
+            For numerical stability we usually compute the inverse by SVD.
+        \end{remark}
+
+        \subsubsection{By Gradient}
+        We can directly take gradient w.r.t. $w$.
+        \[ \nabla J = \frac{2(w^TS_ww)S_bw-2(w^TS_bw)S_ww}{(w^TS_ww)^2} \]
+        which yields
+        \[ S_bw=JS_ww \Longrightarrow S_w^{-1}S_bw = Jw \]
+        and it becomes a eigenvalue decomposition problem.
+
+        To solve this, we perform eigenvalue decomposition on $S_w^{-1}S_b$, and choose the eigenvector with the largest eigenvalue.
+
+        Or alternatively, we can take more than one eigenvectors.
+
+
+\section{Multi-class LDA}
+    We introduce the \textbf{total scatter matrix} $S_T$
+    \[ S_T = \sum_{i=1}^N(x^{(i)}-\mu)(x^{(i)}-\mu)^T \]
+    where $\mu$ is the mean vector of all samples.
+
+    \begin{align*}
+        S_T &= \sum_{j=1}^{K}\sum_{i\in C_j}(x^{(i)}-\mu_j+\mu_j-\mu)(x^{(i)}-\mu_j+\mu_j=\mu)^T\\
+        &= \sum_j\sum_{i\in C_j}(x^{(i)}-\mu_j)(x^{(i)}-\mu_j)^T\\
+        &\quad + \sum_j\sum_i(\mu_j-\mu)(\mu_j-\mu)^T + 2 \sum_j\sum_i(x^{(i)}-\mu_j)(x^{(i)}-\mu_j)^T\\
+        &= S_w + S_b
+    \end{align*}
+    Notice that the last term is zero.
+
+    The solution is the same as the binary case.
+
+    However, notice that
+    \[ S_b = \sum_{j=1}^k N_j(\mu_j-\mu)(\mu_j-\mu)^T \]
+    has at most $k-1$ positive eigenvalues, and therefore we can at most reduce the dimension to $k-1$, but not $k$.

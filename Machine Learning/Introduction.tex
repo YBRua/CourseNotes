@@ -7,6 +7,8 @@ The basic assumption of machine learning is that \textbf{data samples are i.i.d.
 
 The goal of training a model is to \textbf{minimize the generalization error of the model}. Since we only have limited amount of data, what we can actually do is to minimize the emprical error.
 
+However, we do not always want the emprical error to be as small as possible due to the risk of overfitting.
+
 \section{Overfitting and Underfitting}
 \paragraph{Overfitting.} High variance. The model performs well on training sets but performs poorly on new unseen samples. Using a high-order model to fit low-order distribution of data usually leads to overfitting.
 \paragraph{Underfitting.} High bias. The model has not fully captured the underlying structure of the data. Conduct more training or change a more complicated model.
@@ -80,8 +82,8 @@ Another more common measure is the $F1$ rate
 \end{remark}
 
 \section{Error Analysis}
-\paragraph{Bias.} The \textbf{bias} is the difference between model prediction and ground truth.
-\paragraph{Variance.} The \textbf{variance} is the variance of outputs of the same model fitted different times.
+\paragraph{Bias.} The \textbf{bias} is the difference between model prediction and ground truth. This is usually because the model is not well-trained, or because the model is not complex enough to fit the data distribution.
+\paragraph{Variance.} The \textbf{variance} is the variance of outputs of the same model fitted different times. This is usually because the model is too complex and mistakenly fits the noise or specific features in the dataset.
 \paragraph{Noise.} Noise.
 
 High variance $\to$ Overfitting.

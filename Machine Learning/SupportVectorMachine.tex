@@ -32,7 +32,7 @@ Super Vegetable Me
             \item $h(x_p) = w_o^Tx_p + b_o = 0$
             \item $w_o^Tx_p = -b_o$
             \item $h(x) = w_o^Tx + b_o = w_o^T\left(x_p + r\left(\frac{w_o}{\|w_o\|}\right)\right) + b_o = w_o^Tx_p + r\left(\frac{w_o^Tw_o}{\|w_o\|}\right) + b_o = r\|w_o\|$
-            \item For a support vector $x^{(s)}$, $|r| = g(x^{(s)})/\|w_o\| = 1/\|w_o\|$
+            \item For a support vector $x^{(s)}$, $|r| = h(x^{(s)})/\|w_o\| = 1/\|w_o\|$
             \item So the margin of separation is $2r = 2/\|w_o\|$
             \item Maximizing $1/\|w\|$ is equivalent to minimizing $\|w\|^2 = w^Tw$
         \end{enumerate}
@@ -51,18 +51,18 @@ Super Vegetable Me
              \text{s.t.} \quad & y^{(i)}(w^Tx^{(i)}+b) \ge 1
         \end{align*}
         Let $\alpha_i$ be the Lagrangian Multipliers, then the Lagrangian is
-        \[ \mathcal{L}(w,b,\alpha) = \frac{1}{2}w^Tw - \sum_{i=1}^N \alpha_i y^{(i)}(w^Tx^{(i)} + b - 1) \]
+        \[ \mathcal{L}(w,b,\alpha) = \frac{1}{2}w^Tw - \sum_{i=1}^N \alpha_i (y^{(i)}(w^Tx^{(i)} + b) - 1) \]
         The KKT Conditions are
         \[
         \begin{cases}
             \nabla_w \mathcal{L} = w - \sum_{i=1}^N \alpha_i y^{(i)}x^{(i)} = 0\\
             \nabla_b \mathcal{L} = \sum_{i=1}^N \alpha_i y^{(i)} = 0\\
-            d_i(w^Tx^{(i)} + b) \ge 1\\
+            y^{(i)}(w^Tx^{(i)} + b) \ge 1\\
             \alpha_i \ge 0\\
             \alpha_i(y^{(i)}(w^Tx^{(i)} + b) - 1) =0
         \end{cases}    
         \]
-        \begin{remark}
+        \begin{remark}~{}
             \begin{itemize}
                 \item If $\alpha_i > 0$, $x^{(i)}$ lies on the decision margin and corresponds to a support vector.
                 \item If $\alpha_i = 0$, $x^{(i)}$ does not lie on the decision margin.
@@ -140,7 +140,7 @@ Super Vegetable Me
 
     After some algebra
     \begin{align*}
-        \phi(\alpha, \beta) &= \inf\mathcal{L} = \frac{1}{2}w^Tw - \sum_i alpha_i(y^{(i)}(w^Tx^{(i)})-1)
+        \phi(\alpha, \beta) &= \inf\mathcal{L} = \frac{1}{2}w^Tw - \sum_i \alpha_i(y^{(i)}(w^Tx^{(i)})-1)
     \end{align*}
 
     Notice that $\alpha_i + \beta_i = C$ can be replaced by $\alpha_i \le C$, therefore
@@ -152,7 +152,7 @@ Super Vegetable Me
 
 
 \section{Kernel Tricks}
-    If the data is not linear separable, we can transform data into higher dimension for separation.
+    If the data is not linear separable, we can transform data into higher dimension for separation. As long as the mapping is non-linear and the target dimension is high enough, we can always make the data linear separable.
 
     Suppose we want to find a function $\varphi(x)$ that maps $x$ into a higher dimension. So the decision hyperplane becomes
     \[ y = w^T\varphi(x) + b \]
@@ -163,11 +163,17 @@ Super Vegetable Me
 
     While it is sometimes hard to determin $\varphi(\cdot)$, it is usually easier to define ``result'' of the inner product $\varphi^T(x)\varphi(x)$, denoted by $K(x_i, x_j)$ For example
     \[ K(x_i, x_j) = \varphi^T(x)\varphi(x) = \exp\left\{ -\frac{\|x_i-x_j\|^2}{\sigma^2} \right\} \]
+
     Notice that in the dual problem, all terms related with $x$ comes in pairs $(x_i,x_j)$, so we can always replace the pair with $K(x_i,x_j)$
+
     \begin{remark}
         Although
         \[ w = \sum_i \alpha_i y^{(i)}\varphi(x^{(i)}) \]
         notice that $w$ is used to compute $w^T \varphi(x)$, and therefore
         \[ y = w^T\varphi(x) + b = \sum_i \alpha_i y^{(i)}\varphi^T(x^{(i)})\varphi(x) = \sum_i \alpha_i y^{(i)} K(x^{(i)}, x) + b \]
         However this operation increases complexity. \textbf{EXPENSIVE!}
+    \end{remark}
+
+    \begin{remark}
+        Not all functions can be used as kernels, a kernel matrix $K$ must satisfy the \textbf{Mercer's Condition}: $K$ is positive semi-definite.
     \end{remark}

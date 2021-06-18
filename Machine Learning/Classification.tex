@@ -1,4 +1,4 @@
-\chapter{Classification}
+\chapter{Basic Classification Models}
 \newpage
 
 
@@ -30,7 +30,7 @@
     \subsection{kNN Algorithm}
         Given a dataset $\mathcal{D}$ and an input $x$, the kNN algorithm
         \begin{enumerate}
-            \item Computes some kind of distance between $x$ and each $y$ in $\mathcal{D}$.
+            \item Computes the distance between $x$ and each $y$ in $\mathcal{D}$.
             \item Finds the nearest $k$ neighbours of $x$ in $\mathcal{D}$.
             \item Determines the class of $x$ by the label of neighbours.
         \end{enumerate}
@@ -39,7 +39,7 @@
         \begin{itemize}
             \item For a binary classification task, $k$ should be an odd number.
             \item $k$ should not be too large or too small.
-            \item Choosing a proper $k$ is a matter of parameter tuning.
+            \item Parameter tuning techniques can be used to choose a proper $k$.
         \end{itemize}
 
     \subsection{More on kNN}
@@ -65,7 +65,7 @@
             \item $p(x)$ is called the \textbf{evidence}.
         \end{itemize}
         \[ Posterior = (Likelihood \cdot Prior) / Evidence \]
-        Since optimizing w.r.t. $w$ has nothing to do with $p(x)$,
+        Optimizing w.r.t. $w$ is independent of $p(x)$,
         \[ Posterior \sim (Likelihood \cdot Prior) \]
 
     \subsection{Bayesian Decision Theory}
@@ -92,7 +92,7 @@
         \]
         Then
         \[ R(c|x) = 1 - p(c|x) \]
-        and
+        minimizing this risk is equivalent to maximizing $p(c|x)$ and
         \[ h^*(x) = \arg \max_{c_i} p(c_i|x) = \arg \max_{c_i} \frac{p(x|c_i)p(c_i)}{p(x)} = \arg\max_{c_i} p(x|c_i)p(c_i)\]
         So we choose the $x$ that \emph{maximizes posterior}.
 
@@ -153,7 +153,7 @@
                 \item $c_i$'s: classes.
             \end{itemize}
         The naives Bayes classifier makes the attribute conditinoal independence assumption, aka. the naive Bayes assumption: \emph{all features of x are independent}.
-        \[ p(x_1), x_2,\dots,x_d | y) = \prod_{i=1}^d p(x_i|y) \]
+        \[ p(x_1, x_2,\dots,x_d | y) = \prod_{i=1}^d p(x_i|y) \]
         Then we can compute the optimal classifier by
         \[ h_{nb}(x) = \arg\max_{c}p(c)\prod_{j=1}^d p(x_j|c) \]
         Therefore a naive Bayes classifier estimates $p(c)$ and $p(x_j|c)$.
@@ -172,16 +172,16 @@
         where $k$ is the number of classes.
 
 
-\section{Decision Trees}
+\section{Decision Trees and Ensembling}
     A decision tree is a tree-based classifier. It has a root, several leaf nodes and several internal nodes. Each leaf is a decision and in each internal node we perform a test on one or more attributes of input.
 
-    \subsection{Entropy}
+    \subsection{Entropy and Information Gain}
     \begin{definition}[Entropy]
-        Given a dataset $D$ with $k$ classes, suppose the proportion of the $k$-th class in $D$ is $p_k$. The entropy is defined by
-        \[ H(D) = -\sum_{i=1}^k p_k \log_2 p_k \]
+        Given a dataset $D$ with $k$ classes, suppose the proportion of the $i$-th class in $D$ is $p_i$. The entropy is defined by
+        \[ H(D) = -\sum_{i=1}^k p_i \log_2 p_i \]
     \end{definition}
-    \begin{remark}~{}
-            The smaller $H(D)$ is, the higher ``purity'' $D$ has.
+    \begin{remark}
+            The larger $H(D)$ is, the more information $D$ contains.
     \end{remark}
 
     \begin{definition}[Conditional Entropy]
@@ -195,6 +195,66 @@
     \end{remark}
 
     \begin{definition}[Information Gain]
-        Given a dataset $D$ and an attribute $a$, the information gain is defined by
+        Given a dataset $D$ and an attribute $a$, the information gain of splitting $D$ by $a$ is defined by
         \[ IG(D,a) = H(D) - \sum_{v=1}^V\frac{|D_v|}{|D|}H(D_v) \]
     \end{definition}
+    \begin{remark}
+        Larger information gain usually means splitting $D$ by $a$ results in more ``pure'' subsets. So choosing $a_* = \arg\max IG(D,a)$ is a common way of choosing attributes when training decision trees.
+    \end{remark}
+
+    \begin{definition}[Gain Ratio]
+        The \textbf{gain ratio} is defined by
+        \[ GainRatio(D,a) = \frac{Gain(D,a)}{IV(a)} \]
+        where $IV(a)$ is the \textbf{intrinstic value} of attribute $a$,
+        \[ IV(a) = -\sum_{v=1}^V \frac{|D^v|}{|D|}\log_2\frac{|D^v|}{|D|} \]
+    \end{definition}
+    \begin{remark}
+        Information gain prefers attributes with more values, and gain ratio is proposed to mitigate the negative effects. Gain ratio is used in the famous C4.5 algorithm.
+
+        However, gain ratio prefers attributes with fewer possible values, and the C4.5 algorithm actually uses a heuristic approach: choose those attributes whose information gains are above the average, and then choose the one with the highest gain ratio.
+    \end{remark}
+
+    \subsection{Gini Index}
+        \begin{definition}[Gini]
+            \[ Gini(D) = \sum_{i=1}^{k}\sum_{i' \neq i} p_ip_{i'} = 1 - \sum_{i=1}^k p_i^2 \]
+        \end{definition}
+
+        \begin{definition}[Gini Index]
+            The \textbf{Gini index} is defined by
+            \[ GiniIndex(D, a) = \sum_{v=1}^V\frac{|D^v|}{|D|}Gini(D) \]
+        \end{definition}
+
+    \subsection{Generating a Decision Tree}
+        A decision tree is generated recursively, and there are three return conditions
+        \begin{enumerate}
+            \item All samples in current data set belongs to the same class.
+            \item No available attributes exist for splitting (the attribute set is empty, or all samples take the same value on all atrributes)
+            \item No samples exist in current data set.
+        \end{enumerate}
+
+    \subsection{Ensemble Learning}
+        Ensemble learning constructs multiple weak individual classifiers and combines their prediction outputs.
+
+        Suppose the final prediction is determined by voting (the output will be $1$ if more than half classifiers output $1$), when there are $T$ base classifiers,
+        \[ H(x) = \mathrm{sign}\left( \sum_{i=1}^T h_i(x) \right) \]
+
+        Suppose the error rates of individual classifiers are independent, by Heoffding Inequality,
+        \[ P(H(x) \neq f(x)) = \sum_{k=0}^{T/2}C_T^k(1-\epsilon)^k\epsilon^{T-k} \le \exp\left( -\frac{1}{2}T(1-2\epsilon)^2 \right) \]
+
+        Therefore as we increase the number of base classifiers, the error rate drops exponentially. However, notice that this conclusion is based on the assumption that all classifiers are independent, which in practice is barely possible.
+
+        \subsubsection{Bagging}
+        While it is practically difficult to make each individual classifier independent of each other, it is still possbile to maximize their variances.
+        \begin{enumerate}
+            \item Construct $T$ datasets, each containing $m$ samples, with bootstrapping.
+            \item Train $T$ models with the datasets.
+            \item Ensemble by voting or taking means.
+        \end{enumerate}
+        \begin{remark}
+            From the perspective of bias-variance decomposition, bagging reduces the variance term in the error.
+        \end{remark}
+
+        \subsubsection{Random Forests}
+        Random forests uses decision trees in bagging. Furthermore, it adds randomness in attribute selection.
+
+        For each node, instead of choosing the best attribute from all attributes, RF first sample a subset of $k$ attributes, and then choose the best attribute from this subset. This further increases the diversity of base classifiers.

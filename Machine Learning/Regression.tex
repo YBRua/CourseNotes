@@ -15,7 +15,7 @@ Almost all of them have closed-form solutions.
 \end{itemize}
 %%%%%%%% Model
 \subsection{Model}
-\[ f(X;w) = w^T X \]
+\[ f(X;w) = Xw \]
 \begin{remark}
     If $X$ is invertible, then we are done.
     \[ w = X^{-1}y \]
@@ -47,7 +47,7 @@ Let $\nabla J(w) = 0$.
     \[ A^{\dagger} = V\Sigma^{-1}U^T \in \mathbb{R}^{n\times m} \]
 \end{definition}
 \begin{remark}
-    Pseudo-Inverse does not necessarily give a good solution.
+    Pseudo-Inverse does not necessarily give a good solution for lack of numerical stability.
 \end{remark}
 %%%%%%%%
 \subsection{Comparision}
@@ -92,6 +92,8 @@ where $\epsilon$ is a small positive value, and the closed form solution can be 
 Adding $\epsilon$ sometimes makes the inverse of matrix more stable.
 \begin{remark}
     Adds a contraint that the norm of $w$ cannot be too large. But regularization still does not guarantee a good solution when the matrix is not invertible.
+
+    Regularization is also a general way of preventing overfitting.
 \end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,7 +121,7 @@ So
 \subsection{Regularization Revisited}
 $\lambda$ is a regularization hyperparameter.
 \begin{itemize}
-    \item When $\lambda = 0$, the penalty term has no effect and Ridge regression is equivalent to ordinary least squares.
+    \item When $\lambda = 0$, the penalty term has no effect and Ridge regression reduces to ordinary least squares.
     \item When $\lambda \to \infty$, $w\to 0 $.
     \item A proper $\lambda$ can be chosen via cross-validation.
 \end{itemize}
