@@ -31,7 +31,7 @@
     \subsection{Simple Case}
         If $K=1$, $w$ is a vector and $y$ is a scalar.
         \[\mathbb{E}[\epsilon^T\epsilon] = \mathbb{E}[x^Tx]-w^T\mathbb{E}[xx^T]w = \mathbb{E}[x^Tx] - w^T \Sigma w\]
-        where $\Sigma = XX^T$.
+        where $\Sigma = XX^T$ (recall that $X$ is assumed to have zero mean).
 
         We maximize the normalized second term
         \[ \max_w \quad J \triangleq \frac{w^TXX^Tw}{w^Tw} \]
@@ -58,24 +58,25 @@
 
     In this section we also assume the data samples have $\mu=0$.
 
-    \[ \min \left(\sum_{i<j}\|\hat{x}_i-\hat{x}_j-d_{ij}\|\right)^{1/2} \]
+    \[ \min_{\hat{x}} \left(\sum_{i<j}\left( \|\hat{x}_i-\hat{x}_j\| - d_{ij} \right)^2\right)^{1/2} \]
     where $\hat{x}$ are mapped (instead of reconstructed) samples.
 
-    Let $T=XX^T$ and $t_{ij}=\hat{x}_i^T\hat{x}_j$.
+    Let $X$ be the unknown \emph{dimension-reduced} samples. Let $T=XX^T$ and $t_{ij}=\hat{x}_i^T\hat{x}_j$.
 
     The distance between $\hat{x}_i$ and $\hat{x}_j$ is given by
     \[d_{ij}^2 = (\hat{x}_i-\hat{x}_j)^T(\hat{x}_i-\hat{x}_j)\]
 
-    Therefore
-    \[ t_{ij} = -\frac{1}{2}(d_{ij}^-\hat{x}_i^2-\hat{x}_j^2) \]
+    Solving for $t_{ij}$ yields
+    \[ t_{ij} = -\frac{1}{2}(d_{ij}^2\hat{x}_i^2-\hat{x}_j^2) \]
 
     We also have
-    \[\sum_j d_{ij}^2 = n\hat{x}_i^2 + \sum_j\hat{x}_j^2 - 2x_i\sum_j\hat{x}_j = n\hat{x}_i^2 + \sum_j\hat{x}_j^2\]
-    \[\sum_i d_{ij}^2 = n\hat{x}_j^2 + \sum_i\hat{x}_i^2 - 2x_i\sum_i\hat{x}_i = n\hat{x}_j^2 + \sum_i\hat{x}_i^2\]
-    \[\sum_{ij}d_{ij}^2=n\sum_i\hat{x}_i^2 + n\sum_j\hat{x}_j^2 \]
+    \[\sum_j d_{ij}^2 = n\hat{x}_i^2 + \sum_j\hat{x}_j^2 - 2\hat{x}_i\sum_j\hat{x}_j = n\hat{x}_i^2 + \sum_j\hat{x}_j^2\]
+    \[\sum_i d_{ij}^2 = n\hat{x}_j^2 + \sum_i\hat{x}_i^2 - 2\hat{x}_j\sum_i\hat{x}_i = n\hat{x}_j^2 + \sum_i\hat{x}_i^2\]
+    \[\sum_{i}\sum_{j}d_{ij}^2=n\sum_i\hat{x}_i^2 + n\sum_j\hat{x}_j^2 \]
+    Again recall that the data are assumed to have zero mean so the sum over all data samples yields zero.
 
     So we can solve for $t_{ij}$
-    \[ t_{ij} = -\frac{1}{2}\left(d_{ij}^2-\frac{1}{n}\sum_kd_{ik}^2-\frac{1}{n}\sum_kd_{kj}^2-\frac{1}{n}\sum_{kl}d_{kl}^2\right) \]
+    \[ t_{ij} = -\frac{1}{2}\left(d_{ij}^2-\frac{1}{n}\sum_kd_{ik}^2-\frac{1}{n}\sum_kd_{kj}^2-\frac{1}{n}\sum_{k}\sum_{l}d_{kl}^2\right) \]
     where $d_{ij}$ can be computed from the original dataset.
 
     Since $T=XX^T$, we can solve for $X$ by decomposing $T$.
@@ -86,24 +87,25 @@
 
 \section{Non-Linear Dimension Reduction}
     \subsection{ISOmetric feature MAPping}
-        Uses the geodesic distance (shortest distance on a plane) instead of Euclidean distance.
+        Uses the geodesic distance (shortest distance on a plane) instead of Euclidean distance. The remaining work is similar to MDS and is pigeoned in this note.
 
     \subsection{Locally Linear Embedding}
-        Assumes that a data sample can be represented by some linear combination of its local neighbors, and that this relationship does not change after dimension reduction.
+        Assumes that a data sample can be represented by some linear combination of its local neighbors\footnote{This assumption is reasonable because the distribution can be somehow ``linearized'' in a sufficiently small area, just like derivatives.}, and that this relationship does not change after dimension reduction.
 
-        In the original space
+        LLE can basically be divided into two steps. We first solve for the locally linear combination relationship\footnote{Actually we will first have to find the local nearest neighbours for each data sample $x_i$.} in the original space (solve for a coefficient matrix $W$), and then reconstruct the relationship in a mapped space (solve for mapped data $Y$).
 
-        Leet $x_j$ be some neighbors of $x_i$. Let $W \in \mathbb{R}^{N \times N}$.
+        \subsubsection{Solving Linear Combination}
+        In the original space, let $x_j$ be some neighbors of $x_i$. Let $W \in \mathbb{R}^{N \times N}$.
         \[ \epsilon(W) = \sum_i \left|x_i - \sum_jW_{ij}x_j\right|^2 \]
         \begin{align*}
             \min_W &\quad \epsilon(W)\\
-            \text{s.t.} &\quad W_{ij} = 0\\
+            \text{s.t.} &\quad W_{ij} = 0 \quad x_j \notin \mathcal{N}(x_i)\\
             &\quad \sum_j W_{ij}=1
         \end{align*}
 
-        The solutions are
-        \[ w_j = \frac{\sum_k c^{-1}_{jk}}{\sum_l\sum_m c_{lm}} \]
+        Can be solved by Lagrangian multipliers.
 
+        \subsubsection{Solving Mapping}
         In the mapped space
         \[ \phi(y) = \sum_i\left| y_i - \sum_j W_{ij}y_j \right|^2 \]
         \begin{align*}
@@ -113,8 +115,8 @@
         \end{align*}
         where $Y$'s columns are $y_i$.
 
-        Define an error matrix
-        \[ \delta = Y-YW = \triangleq [\Delta y_1,\Delta y_2,\cdots,\Delta y_N]\]
+        To make the problem easier, we convert it into a quadratic form. Define an error matrix
+        \[ \delta = Y-YW \triangleq [\Delta y_1,\Delta y_2,\cdots,\Delta y_N]\]
 
         The total error is given by
         \[ \sum_{i=1}^N \Delta y_i^T \Delta y_i \]
@@ -128,4 +130,9 @@
         \end{bmatrix} \]
 
         So the error can be expressed as
-        \[ Tr[\delta^T\delta] = Tr[(Y(I-W))^T(Y(I-W))] = Tr[(I-W)^TY^TY(I-W)] \]
+        \[ Tr[\delta^T\delta] = Tr[(Y(I-W))^T(Y(I-W))] = Tr[(I-W)^TY^TY(I-W)] = Tr[Y^T(I-W)^T(I-W)Y] \]
+
+        Let $M = (I-W)^T(I-W)$, the objective function becomes
+        \[ \min Tr(Y^TMY) \]
+
+        So we can solve for $Y$ by Lagrangian multipliers.

@@ -247,8 +247,8 @@ For convenience, we will use $\mathbb{P}_i[A]$ to denote $\mathbb{P}[A | X_0 = i
 \section{Strong Law of Large Numbers of Markov Chains}
 % SLLN of Markov Chains
 \begin{theorem}[SLLN of Markov Chains]\label{SLLN}
-    Let $X_0, X_1, \dots$ be a Markov Chain starting in the state $X_0=i$. Suppose state $i$ communicates with state $j$. The limiting fraction of time that the chain spends in $j$ is $\frac{1}{\mathbb{E_j}[T_j]}$.
-    \[ \mathbb{P}_i[\lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^n\mathbb{I}\{X_t=j\} = \frac{1}{\mathbb{E_j}[T_j]}] = 1 \]
+    Let $X_0, X_1, \dots$ be a Markov Chain starting in the state $X_0=i$. Suppose state $i$ communicates with state $j$. The limiting fraction of time that the chain spends in $j$ is $\frac{1}{\mathbb{E}_j[T_j]}$.
+    \[ \mathbb{P}_i[\lim_{n\to\infty}\frac{1}{n}\sum_{t=1}^n\mathbb{I}\{X_t=j\} = \frac{1}{\mathbb{E}_j[T_j]}] = 1 \]
 \end{theorem}
 \begin{sketchproof}
     Read the book. I'm not going to write this because I am lazy.
@@ -365,7 +365,7 @@ aka. Foundamental Theorem of Markov Chains
     \paragraph*{Notations.}
     \begin{itemize}
         \item $G_t$ denotes the number of males in generation $t$.
-        \item $X_{tk}$ denotes the number of sons fathered by the $k$-th father in the $t$-th generation. Assume $X_i$'s are \emph{iid} with probability mass function $p(\cdot)$.
+        \item $X_{tk}$ denotes the number of sons fathered by the $k$-th father in the $t$-th generation. Assume $X_{tk}$ are \emph{iid} with $\mathbb{P}[X_{tk}=i]=p(i)$.
         \item $\rho = \mathbb{P}[extinction] = \mathbb{P}[\cup_{k\ge 1}\{ G_k=0 \}]$ denotes the probability that the family name eventually goes extinct.
         \item $q_t = \mathbb{P}[G_t = 0]$ denotes the probability that the family name goes extinct at the $t$-th generation.
     \end{itemize}
@@ -376,9 +376,14 @@ aka. Foundamental Theorem of Markov Chains
     \begin{align}
     \rho &= \sum_{k=0}^{\infty}\mathbb{P}[extinction \wedge  G_1 = k] \notag \\
     &= \sum_{k=0}^{\infty}\mathbb{P}[extinction | G_1 = k]\cdot\mathbb{P}[G_1 = k | G_0 = 1] \quad \text{(by 全概率公式)} \notag \\
-    &= \sum_{k=0}^{\infty}f(k)\rho^k \triangleq \psi(\rho) \notag
+    &= \sum_{k=0}^{\infty}p(k)\rho^k \triangleq \psi(\rho) \notag
     \end{align}
     The last step used the fact that all males have sons independently. $\psi(\rho)$ is called the \textbf{Probability Generating Function} of $p(\cdot)$.
+
+    \begin{definition}[Probability Generating Function]
+        The probability generating function of $X$ is given by
+        \[ G_X(z) \triangleq \mathbb{E}[z^X] = \sum_{k=0}^{\infty}\mathbb{P}[X=k]z^k \]
+    \end{definition}
 
     The probability of eventual extinction satisfies $\psi(\rho) = \rho$.
     \[ \psi'(z) = \sum_{k=1}^{\infty}kp(k)z^{k-1} > 0\]
@@ -389,12 +394,12 @@ aka. Foundamental Theorem of Markov Chains
         \item $\psi'(1) = \sum_{k=1}^{\infty}kp(k) = \mathbb{E}[X] \triangleq \mu$
     \end{itemize}
     \begin{enumerate}[(i)]
-        \item If $\mu \le 1$, $\rho = 1$ is the only solution. Therefore the family name will go extinct.
+        \item If $\mu \le 1$, $\rho = 1$ is the only solution. Therefore the family name will go extinct.\footnote{This can be better understood by plotting a sketch of $\psi$.}
         \item If $\mu > 1$, there exists another solution $r<1$.
         
-        Observe that $\{ G_t = 0 \} \subseteq \{ G_{t+1} = 0 \}$ and $q_t \le t_{t+1}$. Since $q_t$ has a upper bound $\rho$, it will always converge.
+        Observe that $\{ G_t = 0 \} \subseteq \{ G_{t+1} = 0 \}$ and $q_t \le q_{t+1}$. Since $q_t$ has a upper bound $\rho$, it will always converge.
         \[ q_t \uparrow \rho \]
-        So we only need to prove $q_t < r \quad \forall t$. By induction,
+        So we only need to prove $\forall t \quad q_t < r$. By induction,
         \begin{itemize}
             \item[base.] $q_0 = 0 < r$.
             \item[hypo.] $q_t < r$.
@@ -405,7 +410,7 @@ aka. Foundamental Theorem of Markov Chains
 
     %%%%%%%% Gambler's Ruin
     \subsection{Gambler's Ruin}\label{GamblerRuin}
-    \paragraph*{Problem.} Consider a gambler in a casino, who has probability $p$ to win \$$1$ and $1-p$ to lose \$$1$. The process stops when the gambler gets \$$N$ or goes to $0$. Assume the gambler starts the game with \$$i$.
+    \paragraph*{Problem.} Consider a gambler in a casino, who has probability $p$ to win \$$1$ and $1-p$ to lose \$$1$. The process stops when the gambler gets \$$N$ or loses all his money. Assume the gambler starts the game with \$$i$.
     \paragraph*{Notations.}
     \begin{itemize}
         \item $P_i$ denotes the probability of the gambler gets \$$N$ and wins, starting with \$$i$.
@@ -474,11 +479,11 @@ aka. Foundamental Theorem of Markov Chains
     %%%%%%%% Another random walk on N
     \subsection{Another Random Walk}\label{AnotherRandWalk}
     \paragraph*{Problem.} Consider a random walk on $\mathbb{N}$ where
-    \[ P(0,1) = 1 \quad P(N,N-1) = 1 \]
+    \[ P(0,1) = 1 \quad P(N,N) = 1 \]
     We want to compute how many steps we need to reach $N$ starting from $i$.
     \paragraph*{Notations.}
     \begin{itemize}
-        \item $h_i$ denotes the number of steps to reach $N$ starting from $X_0=i$.
+        \item $h_i$ denotes the expectation of steps to reach $N$ starting from $X_0=i$.
         \item $Y_i$ denotes the number of steps from $i$ to $i+1$ for the first time.
         \item $g_j \triangleq \mathbb{E}[Y_j]$.
     \end{itemize}
@@ -526,6 +531,8 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         \[ \varphi = (x_1 \vee y_1) \wedge (x_2 \vee y_2) \cdots \]
         The problem is RP and can be solved using the following algorithm.
 
+        \verb|Expected Algorithm, but not found.| It's here: Algorithm \ref{algo:2SATAlgo}.
+
         \begin{algorithm}
             \caption{2-SAT Solver}
             \KwIn{CNF with $n$ terms}
@@ -543,7 +550,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
                 }
             }
             \KwRet{Not satisfiable}
-            \label{2SATAlgo}
+            \label{algo:2SATAlgo}
         \end{algorithm}
 
         To prove its correctness, we only need to consider the cases where the CNF is indeed satisfiable with solution $\sigma$. We denote the sequence of attempts produced by the algorithm by
@@ -551,6 +558,8 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         Let $X_i$ denotes the number of terms in $\sigma$ and $\sigma_i$ that are exactly the same.
 
         You should convince yourself that $X_0, X_1, \dots$ is not a Markov Chain. \sout{So we get stuck}. However we can still informally show the correctness.
+
+        Notice that if the CNF is not satisfiable, the algorithm will always give the correct answer. So we only consider the case where the CNF is indeed satisfiable, but the algorithm fails to find the solution.
 
         We first introduce some basic concepts.
 
@@ -573,7 +582,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
     %%%%%%%% Coupling
     \subsection{Coupling}
         \begin{definition}[Coupling]
-            $(X',Y')$ is the coupling of random variables $(X,Y)$ if $X'$ has the same distribution of $X$ and $Y'$ has the same of $Y$. i.e. A coupling $C$ of $X$ and $Y$ is a joint distribution of $X$ and $Y$.
+            $(X',Y')$ is the coupling of random variables $(X,Y)$ if $X'$ has the same distribution of $X$ and $Y'$ has the same distribution as that of $Y$. i.e. A coupling $C$ of $X$ and $Y$ is a joint distribution of $X$ and $Y$.
         \end{definition}
         \begin{remark}~{}
             \begin{itemize}
@@ -608,6 +617,59 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             Similarly
             \[ \mathbb{P}[G^{-1}(U) \le x] = G(x) \]
             Since $F(x) \le G(x)$, we have $F^{-1}(x) \ge G^{-1}(x)$ and therefore we obtained a coupling $C = (X' = F^{-1}(U), Y' = G^{-1}(U))$ for which $X' \ge Y'$.
+
+            \paragraph{Alternative proof.} $\Leftarrow$. As is mentioned in class, let us think of constructing a coupling of $\mu$ and $\nu$ as the process of filling out a joint distribution table of $\mu$ and $\nu$. In order for the coupling to be a monotone coupling, all positive values in the table should only be in the bottom left part. Following the hint in the lecture note, we will show that we can always construct such a table in a ``greedy'' manner, as long as $\mu$ stochastically dominates $\nu$.
+    
+            Suppose we are going to fill a $N$ by $N$ table $C$ whose rows are $\mu(i)$ and columns are $\nu(i)$.
+            For the $i$-th row, our goal is to fill out the row, in a way that the values in this row sum up to $\mu(i)$, and that all the values in and after the $(i+1)$-th column are $0$, i.e.
+            \begin{equation}\label{Eq:constr1}
+                \forall i \quad \sum_{j=1}^N C(i, j) = \mu(i)
+            \end{equation}
+            \begin{equation}\label{Eq:constr2}
+                \forall i \forall j > i \quad C(i, j) = 0
+            \end{equation}
+            Meanwhile, we are also subjected to the constraint that the $j$-th column sums up to $\nu(j)$.
+            \begin{equation}\label{Eq:constr3}
+                \forall j \quad \sum_{i=1}^N C(i,j) = \nu(j)
+            \end{equation}
+            
+            Let $F$ and $G$ denote the cumulative distribution function of $\mu$ and $\nu$.
+            \[ F(x) = \sum_{i=1}^x\mu(i) \quad G(x) = \sum_{i=1}^x\nu(i) \]
+            Notice that since $\mu$ stochastically dominates $\nu$, we have
+            \[ \forall x \quad F(x) \le G(x) \]
+        
+            \textbf{We first briefly explains the main idea.}
+        
+            When $i=1$, constrained by (\ref{Eq:constr2}), we can only put positive values in the first column, i.e. only $C(1,1)$ in the first row can be positive. Therefore, $\nu(1)$ cannot be smaller than $\mu(1)$, or otherwise we can only put at most $\nu(1)$ in $C(1,1)$, and we ``run out of budget'' for the positive remainder $\mu(1)-\nu(1)$. Fortunately, $\mu$ stochastically dominates $\nu$, so we have $\mu(1) = F(1) \le G(1) = \nu(1)$. Therefore we can set $C(1,1) = \mu(1)$, and set other elements in the first row to $0$.
+        
+            Similarly, when $i=2$, we have a total ``budget'' of $(\nu(1) - \mu(1)) + \nu(2)$. The first term comes from the extra ``budget'' that remains when filling the first row, and the second term comes from the new column $\nu(2)$. We have to ``divide and assign'' $\mu(2)$ into the first two columns. Again $\mu(2)$ cannot be larger than our ``budget'', or we will have a positive remainder $\mu(2) - \left(\nu(1) - \mu(1) + \nu(2)\right)$ that has no place to assign. Fortunately, since $\mu(1) + \mu(2) = F(2) \le G(2) = \nu(1) + \nu(2)$, we have
+            \[ \mu(2) \le \nu(1) + \nu(2) - \mu(1) \]
+            so we have enough ``budget'', and can assign $\mu(2)$ in the following way
+            \begin{enumerate}
+                \item $C(2,1) = \min\{\mu(2), \nu(1) - \mu(1)\}$
+                \item $C(2,2) = \mu(2) - C(2,1)$
+            \end{enumerate}
+        
+            \textbf{Based on this idea, we can then fill out the table $C$ inductively.}
+        
+            \textbf{Induction Base.} As is argued above, when $i=1$, we can always successfully fill out the first row, as long as $\mu$ stochastically dominates $\nu$.
+        
+            \textbf{Induction Hypothesis.} Now suppose we have successfully filled out the first $k$ rows of $C$.
+        
+            \textbf{Induction Step.} When filling out the $(k+1)$-th row, the ``total budget'' for this row will be
+            \[ \sum_{i=1}^{k}(\nu(i) - \mu(i)) + \nu(i+1) \]
+            again the former term is the remaining budget and the latter is from the new column $\nu(k+1)$. The budget is always enough because
+            \[ F(k+1) = \sum_{i=1}^{k+1}\mu(i) \le G(k+1) = \sum_{i=1}^{k=1} \nu(i) \]
+            so
+            \[ \mu(k+1) \le \sum_{i=1}^{k}(\nu(i) - \mu(i)) + \nu(i+1) \]
+            Therefore we can assign values on the $k+1$-th row in the following way
+            \begin{itemize}
+                \item $C(k+1, 1) = \min\{ \mu(k+1), \nu(1) - \sum_{i=1}^k C(i,1) \}$
+                \item $C(k+1, 2) = \min\{ \mu(k+1) - C(k+1,1), \nu(2)-\sum{i=1}^k C(i,2) \}$
+                \item \dots
+                \item $C(k+1, k+1) = \mu(k+1) - \sum_{i=1}^k C(k+1, i)$
+            \end{itemize}
+            In this way we can fill $C$ such that all the positive values only lie in the lower left part of $C$, and therefore the coupling $C$ is a monotone coupling.
         \end{proof}
 
     %%%%%%%% 2-SAT Revisited
@@ -616,7 +678,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             Let $X$ be a nonnegative random varialbe and let $a > 0$, then
             \[ \mathbb{P}[X \ge a] \le \frac{\mathbb{E}[X]}{a} \]
         \end{theorem}
-        We can now prove the correctness of Algorithm \ref{2SATAlgo}.
+        We can now prove the correctness of Algorithm \ref{algo:2SATAlgo}.
         \begin{sketchproof}
             Note that $X_{i+1}$ differs from $X_i$ in at most 1 operand, and that
             \[ \mathbb{P}[X_{i+1} = X_i + 1] \ge \frac{1}{2} \]
@@ -625,11 +687,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
 
             $X_i$ stochatically dominates $Y_i$. This is intuitive, and can be proved using Theorem \ref{MonoCouplingAndDominance} and constructing a monotone coupling:
 
-            We introduce a random variable $U$ that has a uniform distribution $U \sim U(0,1)$. Let $q$ be the probability of $X_{i+1} = X_i + 1$, from the arguments above we already have $p < q$. Then we construct a coupling of $X$ and $Y$ by
-            \[ X_i = \mathbb{I}[U_i < q] \quad Y_i = \mathbb{I}[U_i < p] \]
-            Since $p < q$, clearly $Y_i \le X_i$, and thus
-            \[ X_0 + X_1 + \dots + X_i \ge Y_0 + Y_1 + \dots + Y_i \]
-            So we have constructed a monotone coupling, and it follows that $X$ stocahstically dominates $Y$.
+            We introduce a random variable $U$ that has a uniform distribution $U \sim U(0,1)$. Let $q$ be the probability of $X_{i+1} = X_i + 1$, from the arguments above we already have $p < q$. Then we construct a coupling of $X$ and $Y$ by letting $X_{t+1} = X_t + 1$ if $U \ge q$ and $X_{t+1} = X_t - 1$ otherwise; and by letting $Y_{t+1} = Y_t + 1$ if $U \ge p$ and $Y_t - 1$ otherwise. Then it follows that $X_t \ge Y_t$, and therefore $X_t$ stochastically dominiates $Y_t$.
             
             Since $Y_i$ has an expectation of $n^2$ to get to state $n$, it follows intuitively that $X_i$ has a smaller expectation of steps to get to $n$.
 
@@ -655,25 +713,6 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             \[ \mathbb{P}[\hat{X} = \hat{Y}] = \sum_{z\in\Omega}m(z) \]
             where $m(z) = \min\{ \mu(z), \nu(z) \}$.
         \end{proposition}
-        \begin{proof}
-            Let $p = \sum_{z\in\Omega m(z)}$. Let $A = \{x| \mu(x) > \nu(x)\}$.
-            
-            Notice that
-            \[ m(x) = 
-                \begin{cases}
-                    \mu(x) \quad &(x \in A)\\
-                    \nu(x) \quad &(x \notin A)
-                \end{cases}
-            \]
-            
-            \begin{align*}
-                \mathbb{P}[X=Y] &= \mathbb{P}[X=Y\in A] + \mathbb{P}[X = Y \notin A]\\
-                &\le \mathbb{P}[Y \in A] + \mathbb{P}[X \notin A]\\
-                &= \sum_{z\in A}\nu(z) + \sum_{z\notin A}\mu(z)\\
-                &= \sum_{z\in A}m(z) + \sum_{z \notin A}m(z)\\
-                &= p
-            \end{align*}
-        \end{proof}
         \begin{remark}
             For continuous cases, the sum becomes integral.
         \end{remark}
@@ -699,19 +738,35 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
                 &= \sum_{z \in \Omega}\left( \mu(z) - \min\{\mu(z),\nu(z)\} \right)\\
                 &= \| \mu - \nu \|_{TV}
             \end{align*}
-            The previous part showed that $\mathbb{P}_{(X,Y)\sim C}[X \neq Y]$ is always lower bounded by $\|\mu - \nu\|_{TV}$, we further show that the equality is achieved by the maximum coupling. Let $A = \{x| \mu(x) > \nu(x)\}$
-            \begin{align*}
-                \|\mu - \nu\|_{TV} &= \mu(A) - \nu(A) = 1 - \mu(A^{c}) - \nu(A)\\
-                &= 1 - \sum_{z \notin A}\mu(z) - \sum_{z \in A}\nu(z)\\
-                &= 1 - \sum_{z \notin A}m(z) - \sum_{z \in A}m(z)\\
-                &= 1 - \mathbb{P}[X=Y]\\
-                &= \mathbb{P}[X \neq Y]
-            \end{align*}
+            The previous part showed that $\mathbb{P}_{(X,Y)\sim C}[X \neq Y]$ is always lower bounded by $\|\mu - \nu\|_{TV}$.
+
+            We then complete the proof by showing that there exists a coupling $\mathcal{C}^*$ that achieves the equality.
+
+            Intuitively, if a coupling achieves the upper bound $\mathbb{P}[X = Y = z] = \min\{ \mu(z), \nu(z) \}$, it will also achieve the equality in the Coupling Lemma.
+
+            Let $U$ be a random variable with uniform distribution $U \sim Uniform(0,1)$.
+
+            Let $m(z) = \min\{\mu(z), \nu(z)\}$, and $p = \sum_{z\in\Omega}m(z)$.
+
+            Let $V_1$, $V_2$, $V_3$ be three random variables with distributions
+            \begin{enumerate}
+                \item $V_1$: $f_{V_1}(x) = \frac{m(z)}{p}$
+                \item $V_2$: $f_{V_2}(x) = \frac{\mu(x) - m(x)}{1-p}$
+                \item $V_3$: $f_{v_3}(X) = \frac{\nu(x) - m(x)}{1-p}$
+            \end{enumerate}
+            Then we can construct the coupling as follows
+            \begin{itemize}
+                \item $X=Y=V_1$ if $U \le p$
+                \item $X=V_2 \quad Y=V_3$ if $U > p$
+            \end{itemize}
+            Since $\mathbb{P}[V_2 = V_3] = 0$, we have that $\mathbb{P}[X = Y] = p = \sum_{z\in\Omega}\min\{\mu(z), \nu(z)\}$. Now we only need to show that the distribution we created is a coupling of $X$ and $Y$.
+            \[ p_X(x) = pf_{V_1}(x) + (1-p)f_{V_2}(x) = m(z) + \mu(z) - m(z) = \mu(z) \]
+            \[ p_Y(x) = pf_{V_1}(x) + (1-p)f_{V_3}(x) = m(z) + \nu(z) - m(z) = \nu(z) \]
+            Therefore it is indeed a coupling of $X$ and $Y$, and it achieves the upper bound of $\mathbb{P}[X=Y] = \sum_z\min\{\mu(z),\nu(z)\}$, therefore it also achieves the equality in the Coupling Lemma.
         \end{proof}
         \begin{remark}
             The $C^*$ here is the maximal coupling.
         \end{remark}
-
 
 
 \section{Proof of the Foundamental Theorem}
@@ -720,7 +775,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         \emph{An irreducible, aperiodic, positive recurrent Markov Chain has a unique stationary distribution, and it converges to the distribution.}
 
     \begin{proof}
-        We only consider the finite case. The proof of Theorem \ref{theorem:FTMC-Countable} has already shown that an Irreducible Positive Recurrent Markov chain has a Unique Stationary Distribution, so we only prove the convergence part here. Suppose there are two Markov Chains $X$ and $Y$
+        We only consider the finite case. The proof of Theorem \ref{theorem:FTMC-Countable} (which does not exist in this note) has already shown that an Irreducible Positive Recurrent Markov chain has a Unique Stationary Distribution, so we only prove the convergence part here. Suppose there are two Markov Chains $X$ and $Y$
         \[ X_0 \to X_1 \to \dots \to X_t \to \dots \]
         \[ Y_0 \to Y_1 \to \dots \to Y_t \to \dots \]
         Let the initial distribution of $Y$ be the stationary distribution $\pi$, so each $Y_i$ has distribution $\pi$. Let the initial distribution of $X$ be $\mu_0$, and $X_i$ has the distribution given by $\mu_{i} = P^T\mu_{i-1}$.
@@ -731,23 +786,23 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
 
         Irreducibility guarantees that 
         \[ \forall i,j \quad \exists n \quad P^n(i,j) > 0 \]
-        And Aperiodicity further guarantees that
+        And we first claim a fact: Aperiodicity further guarantees that
         \begin{equation}\label{FTMCEq1}
             \exists n \quad \forall i,j \quad P^n(i,j) > 0
         \end{equation}
         To prove (\ref{FTMCEq1}), we are going to show that
         \begin{equation}\label{FTMCEq2}
-            \forall i,j \quad \exists t_{ij} \quad \forall t>t_{i,j} \quad P^t(i,j) > 0
+            \forall i,j \quad \exists t_{ij} \quad \forall t>t_{ij} \quad P^t(i,j) > 0
         \end{equation}
         Then (\ref{FTMCEq1}) can be proved by setting $n = \max_{i,j}\{t_{ij}\}$. Note that this result only holds in finite case.
 
-        We visualize the Markov Chain from $i$ to $j$ as many cycles starting from and ending at $i$, of length $c_1,c_2,\dots$. Since the chain is Aperiodic,
+        We visualize the Markov Chain from $i$ to $j$ as many cycles starting from and ending at $i$, of length $c_1,c_2,\dots$, plus a path from $i$ to $j$ (this path must exist, guaranteed by irreducibility). Since the chain is Aperiodic,
         \[ \gcd(c_1, c_2,\dots,c_s) = 1 \]
         And by Lemma \ref{theorem:Bezout}, there exist integers $x_1,x_2,\dots,x_s$ such that
         \[ c_1x_1 + c_2x_2 + \dots + c_sx_s = 1 \]
         And it follows immediately that there exist $y_1,y_2,\dots,y_s$ such that
         \[ c_1y_1 + c_2y_2 + \dots + c_sy_x = b \]
-        for all sufficiently large $b$.
+        for all sufficiently large $b$. Additionally we also need to add the finite length of path from $i$ to $j$.
 
         \begin{lemma}[B$\mathrm{\acute{e}}$zout's Theorem]\label{theorem:Bezout}
             Let $a,b$ be two integers, then there exist integer $\mu, \nu$ such that
@@ -763,7 +818,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         \[ \mathbb{P}[X_{2n} \neq Y_{2n}] = \mathbb{P}[X_{2n} \neq Y_{2n} \wedge X_n \neq Y_n] + \mathbb{P}[X_{2n} \neq Y_{2n} \wedge X_n = Y_n] \]
         The latter is $0$ because it is impossible by our construction of coupling.
         
-        By conditional probability
+        By conditional probability and the Markov Property
         \[ \mathbb{P}[X_{2n} \neq Y_{2n} \wedge X_n \neq Y_n] \le \mathbb{P}[X_{2n} \neq Y_{2n} | X_n \neq Y_n](1-\alpha) \le (1-\alpha)^2 \]
 
         It follows immediately that $\mathbb{P}[X_t \neq Y_t] \to 0$ as $t \to \infty$. So $\lim_{t\to\infty}\|\mu_t - \pi\|_{TV} = 0$, and we are done.
@@ -833,6 +888,22 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
             If we run the algorithm sufficiently long, the sequence we get will have a distribution that is approximately the same as $\mu$. What's more, in this algorithm, we only need to know $\frac{\mu(j)}{\mu(i)}$, instead of knowing $\mu$. And this is useful in practice.
         \end{remark}
 
+        In Chang's note, if we assume the desired distribution is proportional to
+        \[ \pi(i) \propto d(i)f(i) \]
+        where $f(i)$ is some additional weight on the degree of node $i$, then we can define the matrix by
+        \begin{equation}\notag
+            P(i, j) = 
+            \begin{cases}
+                0 \quad & j \notin \mathcal{N}(i)\\
+                \frac{1}{d(i)}\min\{1, \frac{f(j)}{f(i)}\} \quad &j \in \mathcal{N}(i)\\
+                1 - \sum_{k\in\mathcal{N}(i)} P(i,k) \quad & i = j
+            \end{cases}
+        \end{equation}
+
+        \begin{remark}
+            The Metropolis method simulates a random walk on a \emph{graph}, whose nodes are different states. However, the choice of edges depends on us, and different choices of edges will lead to different choices of $P$.
+        \end{remark}
+
     \subsection{Simulated Annealing}
         \par Simulated Annealing is a stochastic optimization algorithm. Given a set $\mathcal{S}$, and a function $w(x)$. We want to minimize (or maximize) $w(x)$.
         \paragraph{Notations.}
@@ -860,7 +931,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         That is, as long as $T$ decreases slowly enough, we only need to run each temperature $T_i$ \emph{for one step with the Metropolis algorithm}.
 
 
-\section{Convergence Analysis of Markov Chains}
+\section{Mixing Times}
     By designing a proper coupling $C$, we can upper bound the convergence speed of a Markov Chain.
 
     \subsection{Mixing Time}
@@ -906,7 +977,7 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
         \subsubsection{Coupon Collection}
             Given a set of $n$ coupons, we pick $X$ times. And we want to know the total time we need to collect all $n$ coupons.
 
-            Let $X_i$ denotes the number of gachas needed to get the $i$-th coupon.
+            Let $X_i$ denotes the number of gachas needed to get an $i$-th new coupon.
             \[ \mathbb{E}[X] = \mathbb{E}[\sum_{i=1}^n X_i] = \sum_{i=i}^n \mathbb{E}[X_i] \]
             Notice that $X_i$ has a geometric distribution with parameter $\frac{n-i+1}{n}$. Therefore
             \[ \mathbb{E}[X] = \sum_{i=1}^n \frac{n}{n-i+1} = n\sum_{i=1}^n \frac{1}{i} \approx n(\log n + \gamma) \]
