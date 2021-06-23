@@ -41,7 +41,7 @@
 
 \section{Exponential Distributions}
 
-    \subsection{definition of Exponential Distributions}
+    \subsection{Definition of Exponential Distributions}
     \begin{definition}[Exponential Distribution]
         A random variable $X$ is said to have an \textbf{exponential distribution} with rate $\lambda$, $X \sim Exp(\lambda)$ if
         \[ \forall t \ge 0 \quad \mathbb{P}[X \le t] = 1 - e^{-\lambda t} \]
@@ -85,7 +85,7 @@
 
 \section{Poisson Processes}
 
-    \subsection{definition of Poisson Processes}
+    \subsection{Definition of Poisson Processes}
     \begin{definition}[Poisson Process]\label{def:PoissonProcess}
         $\{N(s)|s \ge 0\}$ is a \textbf{Poisson Process}, if
         \begin{enumerate}
@@ -111,7 +111,7 @@
     To prove Proposition \ref{prop:AltdefOfPoissonProcess}, we first introduce a theorem.
 
     \begin{theorem}\label{thm:SumOfExpHasGammaDistribution}
-        Let $\tau_1, \tau_2, \dots, \tau_n$ be independent random variables with Exponential distribution $Exp(\lambda)$. Let $T_n = \sum_{i=1}^n\tau_n$, then $T_n$ has a \emph{Gamma distribution} $\Gamma(n, \lambda n)$
+        Let $\tau_1, \tau_2, \dots, \tau_n$ be independent random variables with Exponential distribution $Exp(\lambda)$. Let $T_n = \sum_{i=1}^n\tau_n$, then $T_n$ has a \emph{Gamma distribution} $\Gamma(n, \lambda)$
         \[ f_{T_n}(t) = \lambda e^{-\lambda t}\frac{(\lambda t)^{n-1}}{(n-1)!} \quad \forall t \ge 0 \]
     \end{theorem}
     \begin{proof}
@@ -142,7 +142,7 @@
                 \item We begin proving (2) of definition \ref{def:PoissonProcess} from the case $s=0$. Notice that $N(t)=n \Leftrightarrow T_n \le t \wedge T_{n+1} > t$, i.e. the $n$-th customer has arrived, but the $(n+1)$-th has not. So we only need to prove the latter has Poisson distribution.
                 \begin{align*}
                     \mathbb{P}[N(t)=n] &= \mathbb{P}[T_n \le t, T_{n+1} > t]\\
-                    &= \int_0^tf_{T_n}(s)\cdot\mathbb{P}[\tau_{n+1} > t-s]\mathrm{d}s \quad \text{(Enumerate all possible values of $t$)}\\
+                    &= \int_0^t\mathbb{P}[T_n = s]\cdot\mathbb{P}[\tau_{n+1} > t-s]\mathrm{d}s \quad \text{(Enumerate all possible values of $t$)}\\
                     &= \int_0^t\lambda e^{-\lambda s}\frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda(t-s)}\mathrm{d}s \quad \text{(Theorem \ref{thm:SumOfExpHasGammaDistribution})}\\
                     &= \frac{\lambda^n}{(n-1)!}e^{-\lambda t}\int_0^t s^{n-1}\mathrm{d}s \quad \text{(Move out the constants)}\\
                     &= \frac{(t\lambda)^n}{n!}\cdot e^{-\lambda t}
@@ -245,7 +245,7 @@
         Now consider another case. Suppose $P_i$ now depends on the arrival time $s$.
         \begin{theorem}[Nonhomogeneous Thinning]
             \label{thm:NonhomogeneousThinning}
-            $N_i(t)$'s have \emph{independent} Poisson distribution with mean $\lambda\int_0^t P_i(s)\mathrm{d}s$.
+            Let $Y_1,\dots,Y_k$ be random variables, and let $p_1,\dots,p_k$ be nonnegative functions of time $s$ such that for all $s$, $\sum_{j=1}^k p_j(s)=1$. Assume $\mathbb{P}[Y_i=j]=p_j(s)$ at $s$. Then $N_i(t)$'s have \emph{independent} Poisson distribution with mean $\lambda\int_0^t P_i(s)\mathrm{d}s$.
         \end{theorem}
         \begin{proof}
             Suppose there are $k$ categories. Suppose until time $t$, each type $i$ have total number $n_i$.
@@ -284,6 +284,12 @@
             \item $Y(t)$: the number of customers being served at time $t$.
         \end{itemize}
 
+        Consider the customers arriving before $t$, there are two types
+        \begin{itemize}
+            \item Those who have completed their services before $t$. The number is $X(t)$.
+            \item Those who are being served at $t$. The number is $Y(t)$.
+        \end{itemize}
+
         Notice that
         \[ p_1(s) = G(t-s) \quad p_2(s) = 1 - G(t-s) = \bar{G}(t-s) \]
         Therefore
@@ -295,7 +301,7 @@
 
         We want to choose an initial speed $x$ to minimize the time we 超车 or 被超车。
 
-        Let $t_0 = l/x$. If we enter the tunnel at time $s$, then we must exit the tunnel at time $s + t_0$. For an NPC car with speed $X$, the time interval that the NPC car stays in the tunnel is $T=l/X$.
+        Let $t_0 = l/x$. If we enter the tunnel at time $s$, then we must exit the tunnel at time $s + t_0$. For an NPC car with speed $X$, the time interval that the NPC car stays in the tunnel is $T=l/X$. Let $F$ be the distribution of $T$.
 
         \[ F(t) = \mathbb{P}[T < t] = \mathbb{P}[l/X < t] = \mathbb{P}[X > l/t] = \bar{G}[l/t] \]
 
@@ -305,7 +311,7 @@
             \item 被超车。$t < s$ and $t + T > s + t_0$
             \item No thing happens. Omitted.
         \end{enumerate}
-        At any given time $t$, we have
+        At any given time $t$, let $p$ be the probability of overtaking or being overtaken, we have
         \[
             p(t) =
             \begin{cases}
@@ -321,7 +327,7 @@
         \end{align*}
         To maximize the expectation, we take the derivative w.r.t. $t_0$.
         \[ \frac{\mathrm{d}}{\mathrm{d}t_0} = \lambda \left( \bar{F}(s+t_0) - \bar{F}(t_0) + F(t_0) \right) = 0 \]
-        If the system has been running for a long time, $\bar{F}(s+t_0) \approx 0$, so
+        If the system has been running for a long time, i.e. $s$ is sufficiently large, $\bar{F}(s+t_0) \approx 0$, so
         \[ F(t_0) = \bar{F}(t_0) = \frac{1}{2} \]
         and
         \[ G\left(\frac{l}{t_0}\right) = \frac{1}{2} \]
@@ -331,7 +337,7 @@
         \subsubsection{HIV Patients}
         We want to estimate the number of HIV patients, suppose a patient may or may not show symptoms. Assume the number of patients with HIV virus has a Poisson distribution with an unknown rate $\lambda$. Suppose we know a distribution $G$ representing ``how long a patient with HIV virus shows symptoms''.
 
-        We divide people into 2 types by whether they show symptoms or not.
+        We divide people into 2 types by whether they show symptoms or not. Suppose the patient is infected at time $s$ and we observe if they have shown symptoms at time $t$.
         \begin{equation}\label{eq:NumOfPatientsWithSymptoms} \mathbb{E}[N_1(t)] = \lambda \int_0^t G(t-s)\mathrm{d}s = \lambda\int_0^t G(s)\mathrm{d}s \end{equation}
         \[ \mathbb{E}[N_2(t)] = \lambda \int_0^t \hat{G}(t-s)\mathrm{d}s = \lambda\int_0^t \hat{G}(s)\mathrm{d}s \]
         where $\lambda$ is unknown.
@@ -379,7 +385,7 @@
         \begin{proof}
             Let $a_1, \dots, a_n \ge 0$ be $n$ positive integers s.t. $\sum_i a_i = m$. We calculate $\mathbb{P}[X_1 = a_1, \dots, X_n = a_n]$ and $\mathbb{P}[Y_1 = a_1, \dots, Y_n = a_n|\sum_i Y_i=m]$ to show that they are equal to each other.
 
-            We can think of $a_1,\dots,a_n$ as several bins on an axis, and we throw balls into these bins. There are $n^m$ different kind of throws and $m!$ different permutations of different balls. However, the order of balls in the same bin does not matter, so we shoud divide $m!$ by $a_1!\cdot \cdots \cdot a_n!$.
+            Consider throwing $m$ balls into these $n$ bins. There are $n^m$ different kind of throws and $m!$ different permutations of different balls. However, the order of balls in the same bin does not matter, so we shoud divide $m!$ by $a_1!\cdot \cdots \cdot a_n!$.
             \begin{align*}
                 \mathbb{P}[X_1 = a_1, \dots, X_n = a_n]
                 &= \frac{1}{n^m} \cdot \frac{m!}{a_1! \dots a_n!}

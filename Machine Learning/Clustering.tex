@@ -60,7 +60,7 @@ Let $r_{ik} \in \{0,1\}$ denote that the $i$-th sample is classified into the $k
 
 \subsubsection{Convergence Analysis}
 In E-Step, the loss always goes down because each sample finds the nearest centroid.
-\[ J_c^{(old)} = \sum_i\sum_kr_{ik}^{(old)}\|x_i-m)k\| \ge \sum_i\sum_k\|x_i-m_k\| = J_c^{(new)} \]
+\[ J_c^{(old)} = \sum_i\sum_kr_{ik}^{(old)}\|x_i-m_k\| \ge \sum_i\sum_k\|x_i-m_k\|r_{ik}^{(new)} = J_c^{(new)} \]
 
 In M-Step,
 \begin{align*}
@@ -177,7 +177,7 @@ The first term is $J_c^k(new)$, the second term is non-negative and the third te
     \subsection{Optimizing Graph Cuts}
         \subsubsection{More Notations}
             \begin{itemize}
-                \item Degree matrix $D_{ij} = \text{$\sum_j w_{ij}$ if $i=j$ else $0$}$
+                \item Degree matrix $D_{ij} = \text{$d_i$ if $i=j$ else $0$}$
                 \item $L=D-W$
                 \item Define an indicator vector $x$. $x_i = 1$ if $i \in A$ and $x_i=0$ if $i \notin A$, i.e. $i \in B = V-A$. $x$ is unknown and we want to find $x$.
             \end{itemize}

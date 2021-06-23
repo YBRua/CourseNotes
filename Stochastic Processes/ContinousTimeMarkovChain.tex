@@ -3,7 +3,7 @@
 \newpage
 
 
-\section{definition of Continuous Time Markov Chains}
+\section{Definition of Continuous Time Markov Chains}
     \subsection{Continuous Time Markov Chain}
         In the case of continuous time, it is technically difficult to specify the ``conditional probability given all of $X_r$ for all $r<s$''. Therefore instead, the Continuous Time Markov Chain is defined by
 
@@ -77,18 +77,20 @@
 
 
 \section{Constructing a CT Markov Chain}
-    Given a jump rate $q(i,j)$, let
-    \[ \lambda_i = \sum_{j \neq i}q(i,j) \]
-    $\lambda_i$ is the rate that the chain leaves $i$.
-    \begin{itemize}
-        \item If $\lambda_i = \infty$, then the chain leaves $i$ immediately.
-        \item If $\lambda_i = 0$, then the chain will never leave $i$.
-    \end{itemize}
-    If $\lambda_i > 0$, let
-    \[ u(i,j) = \frac{q(i,j)}{\lambda_i} \]
-    be the probability that the chain goes to $j$ when it leaves $i$.
-
     \subsection{Informal Construction}
+        Given a jump rate $q(i,j)$, the construction of a CTMC contains two steps, according to the formulation of \ref{sub:CTMCCoreExample}: 1) Choose $s\sim Exp(\lambda)$ to determine the next jump time, and 2) Choose $X(t+s) \sim u(i,\cdot)$ to determine the next state. Following this intuition, we define
+        \[ \lambda_i = \sum_{j \neq i}q(i,j) \]
+        $\lambda_i$ is the rate that the chain leaves $i$.
+        \begin{itemize}
+            \item If $\lambda_i = \infty$, then the chain leaves $i$ immediately.
+            \item If $\lambda_i = 0$, then the chain will never leave $i$.
+        \end{itemize}
+        Since if the next state is chosen to be $i$, it is equivalent to state not moved, so we may choose different $\lambda_i$ so that in each jump we move into a different state. If we want identical $\Lambda$, we may choose $\Lambda = \sup \lambda_i$ and let $u(i,i)>0$.
+        
+        If $\lambda_i > 0$, let
+        \[ u(i,j) = \frac{q(i,j)}{\lambda_i} \]
+        be the probability that the chain goes to $j$ when it leaves $i$.
+
         \begin{itemize}
             \item If $X_t$ is in a state $i$ with $\lambda_i=0$, then the chain never leaves and we are done.
             \item If $X_t$ is in a state $i$ with $\lambda_i > 0$, then we first let the chain stay at $i$ according to an Exponential distribution with rate $\lambda_i$, then choose a destination according to $u(i,j)$.
@@ -96,7 +98,7 @@
 
 
 \section{Computing the Transition Probability}
-    Given the jump rate $q(i,j)$, the transition probability can be calculated By
+    Given the jump rate $q(i,j)$, in the previous section we constructed a CTMC. In this section we move on to compute the transition probability.
     \begin{align*}
         p_{t+h}(i,j) - p_t(i,j) &= \sum_k p_h(i,k)p_t(k,j) - p_t(i,j) \quad \text{(CK Equation \ref{thm:ContinuousChapmanKolmogorovEquality})}\\
         &= \sum_{k \neq i} p_h(i,k)p_t(k,j) + (p_h(i,i)-1)p_t(i,j)\\
@@ -213,6 +215,9 @@
         \begin{lemma}[Stationary Distribution, Continuous Case]\label{lem:ContinuousTimeStationaryDistribution}
             A distribution $\pi$ is a stationary distribution if and only if
             \[ \pi^T Q = 0 \]
+            or equivalently, iff
+            \[ \pi^T P_t = \pi^T \quad \forall t \]
+            but this one is difficult to verify.
         \end{lemma}
         \begin{remark}
             Using the definition of $Q$ we can prove that
@@ -225,6 +230,9 @@
             If a continuous time Markov chain is irreducible and has a stationary distribution $\pi$, then
             \[ \lim_{t\to\infty}p_t(i,j) = \pi(j) \]
         \end{theorem}
+        \begin{remark}
+            Notice that we are not considering ``aperiodicity'' in CTMC, because a CTMC always has self-loops.
+        \end{remark}
 
     \subsection{Detailed Balance Condition, Continuous Case}
         \begin{theorem}[Detailed Balance Condition]\label{thm:DetailedBalanceConditionOfCTMarkovChain}
