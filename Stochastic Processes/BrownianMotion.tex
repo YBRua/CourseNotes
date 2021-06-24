@@ -6,7 +6,7 @@
 \newcommand{\var}{\mathrm{Var}}
 
 
-\section{definition of Brownian Motions}
+\section{Definition of Brownian Motions}
     \subsection{Introduction}
         We start from a random walk on real axis, but this time we move every $\Delta t$ time. So in time interval $t$ we take $t/\Delta t$ steps. Let $\delta$ be the step size, then
         \[ X(t) = \delta(X_1 + X_2 + \cdots + X_{t/\Delta t}) \]
@@ -37,14 +37,14 @@
             This is very similar to the property of a Poisson Process.
         \end{remark}
 
-    \subsection{Formal definition}
+    \subsection{Formal Definition}
         \begin{definition}[Standard Brownian Motion]\label{def:BrownianMotionStd}
             $\{W(t):t>0\}$ is a \textbf{Standard Brownian Motion} Process if
             \begin{enumerate}
                 \item $W(0) = 0$.
                 \item (Independent Increment) $\forall t_1 < t_2 < \cdots < t_n$, $W(t_n)-W(t_{n-1}), \dots, W(t_2)-W(t_1)$, $W(t_1)$ are independent.
-                \item (Stationary) $\forall t,s \ge 0$, $W(t+s) - W(t)$ only depends on $s$.
-                \item (Continuous Path) $W(t) \sim \mathcal{N}(0, t)$
+                \item (Stationary) $\forall t,s \ge 0$, $W(t+s) - W(t)$ only depends on $s$, and has a normal distribution $\mathcal{N}(0, s)$
+                \item Continuous Path
             \end{enumerate}
         \end{definition}
 
@@ -63,11 +63,11 @@
 
         \begin{definition}[Gaussian Process]\label{def:GaussianProcess}
             A stochastic process $\{W(t)\}_{t \ge 0}$ is a \textbf{Gaussian Process} if
-            \[ \forall n, \forall t_1 \le t_2 \le \cdots \le t_n, (W(t_1), W(t_2), \dots, W(t_n))\]
+            \[ \forall n, \forall t_1 \le t_2 \le \cdots \le t_n, \qquad (W(t_1), W(t_2), \dots, W(t_n))\]
             has a Guassian Distribution.
         \end{definition}
 
-        \begin{definition}[Alternative definition of SBM]\label{def:BrownianMotionStdAlt}
+        \begin{definition}[Definition of SBM via Gaussian Process]\label{def:BrownianMotionStdAlt}
             A stochastic process $\{W(t)\}$ is a Standard Brownian Motion if
             \begin{enumerate}
                 \item $W(t)$ is a Guassian Process.
@@ -75,7 +75,15 @@
                 \item $\forall s \le t$, $Cov(W(s), W(t)) = s$. ($Cov(W(s), W(t))$ equals to $s$ if $s < t$ else $t$)
             \end{enumerate}
         \end{definition}
+        \begin{remark}
+            This alternative definition is more often used to justify that a process is a Brownian motion. The only difficulty is to compute the covariance.
+
+            As a reminder, the covariance is given by
+            \[ Cov(X,Y) = \mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])] \]
+        \end{remark}
         \begin{proof}
+            We now verify that Definition \ref{def:BrownianMotionStdAlt} is equivalent to \ref{def:BrownianMotionStd}.
+            
             $\Rightarrow$: A SBM satisfies definition \ref{def:BrownianMotionStdAlt}. To see this, we show that any linear combination of $W(s)$ and $W(t)$ is a Gaussian. $\forall a,b$,
             \begin{align*}
                 aW(s) + bW(t) &= aW(s) + b(W(t) - W(s) + W(s))\\
@@ -202,7 +210,7 @@
         \begin{definition}[Standard Brownian Bridge]\label{def:BrownianBridgeStd}
             A Gaussian Process is called a \textbf{Standard Brownian Bridge} if
             \begin{enumerate}
-                \item $X(0) = X(1) = 1$
+                \item $X(0) = X(1) = 0$
                 \item $\cov[X(s), X(t)] = s(1-t)$
             \end{enumerate}
         \end{definition}
@@ -243,7 +251,7 @@
         \end{align*}
 
         The result is
-        \[ \exp\left\{ \frac{-2b(b-x)}{t} \right\} \]
+        \[ \mathbb{P}[\tau_b < u | W(u) = x] = \exp\left\{ \frac{-2b(b-x)}{u} \right\} \]
 
     \subsection{Application to Test for Uniformity}
         Suppose we have a series of i.i.d. random variables $U_1, \dots, U_n$ having some distribution $F$ on $[0,1]$. We want to test if $F(t)=\mathbb{P}[U < t]=t$, i.e. whether $F$ is a uniform distribution.
@@ -252,9 +260,28 @@
         \[ F_n(t) = \frac{1}{n} \sum_{i=1}^n \mathbb{I}[U_i < t] \]
 
         \subsubsection{The Kolmogorov-Smirnov Test}
-            For some large enough $n$, reject if
-            \[ F_n(t) - t \ge b \]
-            for some $t$.
+        For some large enough $n$, reject if
+        \[ F_n(t) - t \ge b \]
+        for some $t \in [0,1]$ and accept otherwise.
 
         \subsubsection{Choice of Parameters}
-            We want to choose a proper $b$ so that the probability that we mistakenly reject a uniform distribution is small enough.
+        We want to choose a proper $b$ so that the probability that we mistakenly reject a uniform distribution is small enough.
+
+        Assume $F(t)=t$, we hope the algorithm outputs accept. By Central Limit Theorem, $F_n(t)$ has a normal distribution. For a fixed $t$, we have
+        \[ \var[\mathbb{I}[U_i < t]] = t(1-t) \]
+
+        Let
+        \[ X_n(t) = \sqrt{n}(F_n(t)-t) \]
+
+        Then by Central Limit Theorem,
+        \[ X_n(t) \longrightarrow \mathcal{N}(0, t(1-t)) \]
+
+        Using a Multivariate CLT, we actually have
+        \[ (X_n(t_1), X_n(t_2)) \longrightarrow \mathcal{N}(0,t_1(1-t_2)) \]
+        where $t_1(1-t_2)$ is a covariance matrix.
+
+        Therefore
+        \[ \cov[\mathbb{I}[U < t_1], \mathbb{I}[U < t_2]] = t_1(1-t_2) \]
+
+        Which implies that $(X_n(t_1), X_n(t_2), \dots, X_n(t_k))$ converges (in distribution) to a standard Brownian Bridge. Using the conclusion in previous section, we can conclude that
+        \[ \mathbb{P}[F_n(t)-t \ge b] = e^{-2b^2} \]

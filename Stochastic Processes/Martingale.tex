@@ -1,10 +1,10 @@
 \chapter{(Discrete) Martingale}
-\emph{这个词中文叫做“鞅”。}
+\emph{Life is a super-martingale. You should take your money and run.}
 \newpage
 
 
-\section{definition of a Martingale}
-    \subsection{definition}
+\section{Definition of a Martingale}
+    \subsection{Definition}
         \begin{definition}[Martingale]\label{def:Martingale}
             A stochastic process is a \textbf{Martingale} if
             \[ \forall t \ge 0 \quad \mathbb{E}[X_{t+1}|X_0,\dots,X_t] = X_t \]
@@ -22,12 +22,12 @@
             definition \ref{def:Martingale} is a special case of \ref{def:GeneralizedMartingale} where $Z_t = X_t$.
         \end{remark}
 
-    \subsection{Fancier definitions}
+    \subsection{Fancier Definitions}
         Recall measure theory stuff in the first lecture.
         Let $\mathcal{F}_n = (X_0,\dots,X_n)$ be the smallest $\mathcal{F}$-measurable $\sigma$-algebra.
         \begin{definition}[Filteration]
             $\{\mathcal{F}_n\}$ is called a \textbf{filteration} if
-            \[ \mathcal{F}_0 \subseteq \mathcal{F}_1 \subseteq \cdots \subseteq \mathcal{F}_n \]
+            \[ \mathcal{F}_0 \subseteq \mathcal{F}_1 \subseteq \cdots \subseteq \mathcal{F}_n \] 
         \end{definition}
 
         \begin{definition}[Martingale (Fancy)]\label{def:FancyMartingale}
@@ -137,6 +137,9 @@
                 \item $\mathbb{E}[\tau] < \infty$ and $\exists c$ s.t. $\mathbb{E}[|X_{t+1} - X_{t}||\mathcal{F}_t] \le c$. (Expectation of $\tau$ is bounded and the changing rate of $X_t$ can be bounded)
             \end{enumerate}
         \end{theorem}
+        \begin{remark}
+            For super-martingale or sub-martingale, similar conclusions hold as well, $\mathbb{E}[X_{\tau}] < \mathbb{E}[X_0]$ or $\mathbb{E}[X_{\tau}] > \mathbb{E}[X_0]$.
+        \end{remark}
 
     \subsection{Examples}
         \subsubsection{Birth Rate of Boys and Girls}
@@ -252,7 +255,7 @@
     Intuitively, when we are playing a super-martingale starting with money $a$, and we will stop whenever we reach $b$ (if it ever happens), then the larger $b$ is, the less likely we are to reach $b$ within finite steps (because we are expected to lose money in a super-martingale).
 
     \begin{proof}
-        Let $T_b \wedge t =\triangleq \min\{T_b, t\}$. Since $T_b$ is not necessarily bounded, we cannot apply OST on $T_b$. However, for a fixed $t$, $T_b \wedge t$ is bounded.
+        Let $T_b \wedge t \triangleq \min\{T_b, t\}$. Since $T_b$ is not necessarily bounded, we cannot apply OST on $T_b$. However, for a fixed $t$, $T_b \wedge t$ is bounded.
 
         By OST \ref{thm:OptionalStoppingTheorem}, for each non-negative $t$,
         \[ \mathbb{E}[X_{T_b \wedge t}] < \mathbb{E}[X_0] \le a \]
@@ -325,7 +328,7 @@
 
     $f(x)$ is sealed in a black box with noise, given an input query $x$, what we get is $\tilde{f}(x) + \eta$, where $\eta$ is some kind of random noise. Here we assume the noise has a Gaussian distribution with mean $0$ and variance $1$.
 
-    So we hope to find a sequence of input $\{X_n\}$ such that $X_n \to x^*$ as $n \to \infty$.
+    So we hope to find a sequence of input $\{X_n\}$ such that $X_n \to x^*$ as $n \to \infty$. In the following we assume $f(x)<0$ for $x < x^*$ and $f(x)>0$ for $x>x^*$.
 
     This problem can be solved using an iterative method. Let $X_n$ denote our $n$-th input, let $Y_n = f(X_n) + \eta_n$ be the output we get. In each iteration we update the input by
     \[ X_{n+1} = X_n - a_nY_n \]

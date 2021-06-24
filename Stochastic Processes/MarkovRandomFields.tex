@@ -149,7 +149,7 @@
             \end{align*}
         \end{proof}
 
-    \subsection{Applying EM to HMM}
+    \subsection{M-Step of HMM}
         \[ p_{\theta}(x,y) = \xi(x_0) \cdot \prod_{t=0}^{n-1}A(x_t,x_{t+1}) \cdot \prod_{t=0}^n B(x_t, y_t) \]
         Taking logarithm and expectation,
         \[ \mathbb{E}_{\theta_0}\left[ \log p_{\theta}(X,y)|y \right] = \mathbb{E}_{\theta_0}[\log\xi(x_0)|y] + \sum_{t=0}^{n-1}\mathbb{E}_{\theta_0}[\log A(x_t,x_{t+1})|y] + \sum_{t=0}^n\mathbb{E}_{\theta_0}[\log B(x_t,y_t)|y] \]
@@ -174,3 +174,108 @@
         \end{align*}
         By Mafs, $B(i,j)$ is maximized when
         \[ B(i,j) = \frac{\sum_{t:y_t=j}\mathbb{P}_{\theta_0}[x_t=i|j]}{\sum_j\sum_{t:y_t=j}\mathbb{P}_{\theta_0}[x_t=i|j]} \]
+
+    \subsection{E-Step of HMM}
+        All the values required in M-step can be efficiently computed by dynamic programming algorithms. This method is generally known as the \emph{forward-backward algorithm}. For details, please refer to AI2651 Notes.
+
+        We first clarify some notations.
+        \begin{itemize}
+            \item Let $Y=y$ be a sequence of observation, where $y_t$ denotes the observation at time $t$.
+            \item Let $X=x$ be a sequence of hidden states, where $X_t=x_t$ denotes the hidden random variable and its value at time $t$.
+            \item We use $y_1^t$ to denote the sequence $(y_1,\dots,y_t)$, and similarly use $y_i^j$ to denote $(y_i, y_{i+1},\dots, y_j)$.
+            \item Suppose there are $N$ hidden states.
+            \item Suppose the time ranges from $0$ to $T$.
+        \end{itemize}
+    
+        All the probabilities computed below should be conditioned on (or parametrized by) $\theta_0$, but for brevity, the parameter is intentionally omitted in the following part. 
+        
+        Let
+        \[ \gamma_{(i,j)}(t) \triangleq \mathbb{P}[X_t=i, X_{t+1}=j | Y=y] \]
+        be the probability that, given an observation $y$, the $t$-th and $(t+1)$-th hidden state are $i$ and $j$ repectively.
+    
+        Let
+        \[ \gamma_i(t) \triangleq \mathbb{P}[X_t=i|Y=y] \]
+        be the probability that, given an observation $y$, the $t$-th hidden state is $i$.
+    
+        By the Law of Total Probability,
+        \[ \gamma_i(t) = \sum_{j=1}^N \gamma_{(i,j)}(t) \]
+    
+        Then the parameters of the HMM is updated by
+        \begin{itemize}
+            \item $\xi(i) = \mathbb{P}[X_0=i|Y=y]$.
+            \item $A(i,j) = \frac{\sum_{t=1}^T \gamma_{(i,j)}(t)}{\sum_{j'=1}^N\sum_{t=1}^T\gamma_{(i,j')}(t)}$
+            \item $B(i,j) = \frac{\sum_{t:y_t=j}\gamma_i(t)}{\sum_{t=1}^T\gamma_i(t)}$
+        \end{itemize}
+    
+        So the problem is reduced to computing $\gamma_{(i,j)}(t)$ and $\gamma_i(t)$.
+    
+        By definition of conditional probability,
+        \[ \gamma_i(t) = \mathbb{P}[X_t=i|Y=y] = \frac{\mathbb{P}[X_t=i, Y=y]}{\mathbb{P}[Y=y]} \]
+    
+        \[ \gamma_{(i,j)}(t) = \mathbb{P}[X_t=i, X_{t+1}=j|Y=y] = \frac{\mathbb{P}[X_t=i, X_{t+1}=j, Y=y]}{\mathbb{P}[Y=y]} \]
+    
+        And the problem becomes computing $\mathbb{P}[X_t=i, Y=y]$, $\mathbb{P}[X_t=i,X_{t+1}=j, Y=y]$ and $\mathbb{P}[Y=y]$.
+    
+        Define
+        \[ \alpha_i(t) \triangleq \mathbb{P}[X_t=i, Y_0^t=y_0^t] \]
+        which is the probability that the hidden state at $t$ is $i$ when we observe $y_0^t$ in time interval $0:t$, where we recall that $y_1^t$ is the sequence $(y_0,y_2,\dots,y_t)$.
+    
+        Define
+        \[\beta_i(t) \triangleq \mathbb{P}[Y_{t+1}^T=y_{t+1}^T|X_t=i] \]
+        which is the probability that we observe $y_{t+1}^T$, given the hidden state at $t$ is $i$.
+    
+        \begin{align*}
+            \alpha_i(t) &= \mathbb{P}[y_0^t, X_t=i]\\
+            &= \sum_{j=1}^{N}\mathbb{P}[y_0^t,X_t=i,X_{t-1}=j] \quad \text{(Law of Total Probability)}\\
+            &= \sum_{j=1}^{N}\mathbb{P}[y_0^{t-1},y_t,X_t=i,X_{t-1}=j] \quad (\text{Extract $y_t$ from $y_0^t$})\\
+            &= \sum_{j=1}^{N}\mathbb{P}[y_t|y_0^{t-1},X_t=i,X_{t-1}=j]\\
+            &\quad \cdot \mathbb{P}[X_t=i|y_0^{t-1},X_{t-1}=j]\\
+            &\quad \cdot \mathbb{P}[y_0^{t-1},X_{t-1}=j] \quad \text{(Expand terms using conditional expectation)}\\
+            &= \sum_{j=1}^{N}\mathbb{P}[y_t|X_t=i] \cdot \mathbb{P}[X_t=i|X_{t-1}=j] \cdot \mathbb{P}[y_0^{t-1},X_{t-1}=j]\quad\text{(Assumption of HMM/MRF)}\\
+            &= B(i,y_t)\sum_{j=1}^{N}A(j,i)\alpha_j(t-1) \quad \text{(Definitions)}
+        \end{align*}
+        This result gives a recursive relation between $\alpha_i(t)$ and all $\alpha_j(t-1)$, so $\alpha_i(t)$ can be computed by memoized search over $t=0:T$.
+    
+        Similarly,
+        \begin{align*}
+            \beta_i(t) &= \mathbb{P}[y_{t+1}^T|X_t=i]\\
+            &= \sum_{j=1}^{N}\mathbb{P}[y_{t+1},y_{t+2}^T,X_{t+1}=j|X_t=i]\\
+            &= \sum_{j=1}^{N}\mathbb{P}[y_{t+1}|X_{t+1}=j]\mathbb{P}[X_{t+1}=j|X_t=i]p(y_{t+2}^T|_{t+1}=j)\\
+            &= \sum_{j=1}^{N}B(j, y_{t+1})A(i,j)\beta_{j}(t+1)
+        \end{align*}
+        Again this result is a recursive relation between $\beta_i(t)$ and $\beta_j(t+1)$, so $\beta_i(t)$ can be computed by memoized search over $t=T:0$.
+    
+        Notice that the $A(i,j)$ and $B(i,j)$ here are the results computed in the previous iteration.
+    
+        Once all $\alpha_i(t)$ and $\beta_i(t)$ are computed, using the law of total probability and enumerate all hidden state at some time $t$, we have
+        \[ \mathbb{P}[Y=y] = \sum_{i=1}^N\mathbb{P}[y_0^t, y_{t+1}^T, X_t=i] = \sum_{i=1}^N \mathbb{P}[y_0^t, X_t=i]\mathbb{P}[y_{t+1}^T|X_t=i] = \sum_{i=1}^N \alpha_i(t)\beta_i(t) \quad \forall t \]
+        Therefore we should be able to compute $\mathbb{P}[Y=y]$.
+    
+        Furthermore,
+        \begin{align*}
+            \mathbb{P}[X_t=i,X_{t+1}=j, y_0^T] &= \mathbb{P}[y_{t+2}^T, y_{t+1}, y_1^t, X_t=i, X_{t+1}=j] \quad \text{(Split $y_1^T$)}\\
+            &= \mathbb{P}[y_{t+2}^T|X_{t+1}=j]\\
+            &\quad \cdot \mathbb{P}[y_{t+1}|X_{t+1}=j]\\
+            &\quad \cdot \mathbb{P}[X_{t+1}=j|X_t=i]\\
+            &\quad \cdot \mathbb{P}[X_t=i, y_0^t] \quad \text{(Conditional Probability and HMM assumptions)}\\
+            &= \beta_j(t+1)B(j,y_{t+1})A(i,j)\alpha_i(t)
+        \end{align*}
+    
+        And similarly
+        \begin{align*}
+            \mathbb{P}[X_t=i, y_0^T] &= \mathbb{P}[y_0^{t}, y_{t+1}^T, X_t=i]\\
+            &= \mathbb{P}[y_{t+1}^T|X_t=i]\mathbb{P}[y_0^t, X_t=i]\\
+            &= \beta_i(t)\alpha_i(t)
+        \end{align*}
+    
+        Therefore, once we have $\alpha_i(t)$ and $\beta_i(t)$, and $A(i,j)$ and $B(i,j)$ in the previous iteration, we will also be able to compute $\mathbb{P}[X_t=i, X_{t+1}=j, y_0^T]$ and $\mathbb{P}[X_t=i,y_0^T]$. Then it follows that we will be able to compute $\gamma_{(i,j)}(t)$ and $\gamma_i(t)$.
+    
+        \[ \gamma_i(t) = \frac{\beta_i(t)\alpha_i(t)}{\sum_{i=1}^N \alpha_i(t)\beta_i(t)} \]
+    
+        \[ \gamma_{(i,j)}(t) = \frac{\beta_j(t+1)B(j,y_{t+1})A(i,j)\alpha_i(t)}{\sum_{i=1}^N \alpha_i(t)\beta_i(t)} \]
+        where $A(i,j)$ and $B(i,j)$ are the parameters in the previous iteration, and $\alpha_i(t)$ and $\beta_i(t)$ can be computed efficiently by DP, using the recursive relationship mentioned above.
+    
+        And eventually, we will be able to update the parameters.
+        \[ A(i,j) = \frac{\sum_{t=1}^T \gamma_{(i,j)}(t)}{\sum_{j'=1}^N\sum_{t=1}^T\gamma_{(i,j')}(t)} \]
+        \[ B(i,j) = \frac{\sum_{t:y_t=j}\gamma_i(t)}{\sum_{t=1}^T\gamma_i(t)} \]
+        \[ \xi(i) = \gamma_i(0) \]

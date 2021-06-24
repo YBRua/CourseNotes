@@ -520,6 +520,127 @@ aka. Foundamental Theorem of Markov Chains
         As the converse of the conclusion, if we take $N$ steps, the farthest distance we can go is $\sqrt{N}$.
     \end{remark}
 
+    \subsection{Yet Another Random Walk}
+    Consider a random walk on $\mathbb{N}$ with
+    \begin{align*}
+        p(i,i+1) &= p\\
+        p(i,i-1) &= 1-p\\
+        p(0,0) = 1-p
+    \end{align*}
+    We are going to prove that if $p > 1/2$, the chain is transient, and if $p \le 1/2$, the chain is recurrent.
+    Let $V_i = \min\{ n\le0 | X_n = i \}$ denote the time of the first visit to state $i$. 
+    Let $h(x) = \mathbb{P}_x(V_N<V_0) (N > 0)$ denote the probability of a Markov chain starting from the state $x$ to \emph{reach state $N$ before it reaches state $0$}.
+
+    By definition of the random walk, for all $1 \le x \le N-1$:
+    \begin{equation}
+        \notag
+        h(x) = ph(x+1) + (1-p)h(x-1)
+    \end{equation}
+    and
+    \[ h(0) = 0 \quad h(N) = 1 \]
+
+    Rearranging gives us:
+    \begin{equation}
+        \label{eq3.1}
+        p[h(x+1) - h(x)] = (1-p)[h(x) - h(x-1)]
+    \end{equation}
+    \[ h(x+1) - h(x) = \frac{1-p}{p}[h(x) - h(x-1)] \]
+
+    So $a(x) = h(x) - h(x-1)$ is a geometric series with $a(1) = h(1) - h(0) = h(1)$.
+    \[ a(x) = h(x+1) - h(x) = a(1) \cdot (\frac{1-p}{p})^{x-1} \]
+
+    Summing over $x = 1$ to $N$ yields: 
+    \[ h(N) - h(0) = a(1) \cdot \sum_{i = 1}^{N}(\frac{1-p}{p})^i \]
+
+    Notice that $h(N) - h(0) = 1$, we can solve for $a(1)$:
+    \[ a(1) = \frac{1-\theta}{1-\theta^N} \]
+    where $\theta = \frac{1-p}{p}$.
+
+    Therefore:
+    \begin{equation}
+        \notag
+        h(x) = a(1)\sum_{i=1}^{x}(\theta^i) = \frac{1-\theta}{1-\theta^N} \cdot \frac{1-\theta^x}{1-\theta} = \frac{1-\theta^x}{1-\theta^N}
+    \end{equation}
+
+    To briefly sum up:
+    \begin{equation}
+        \label{eq3.2}
+        \mathbb{P}_x[V_N < V_0] = \frac{1-\theta^x}{1-\theta^N}
+    \end{equation}
+    where $\theta = \frac{1-p}{p}$.
+
+    We now consider different cases of $p$.
+    \begin{enumerate}
+        \item $p > \frac{1}{2}$.\\
+        The case where $p=1$ is trivial because the chain simply keeps going right and never returns, so any state in the chain is transient.
+
+        When $\frac{1}{2} < p < 1$, the chain is irreducible. If we can prove that one state in the chain is transient, then all states in the chain must also be transient. WLOG, we will prove that the state $0$ is transient.
+
+        Suppose the chain starts from $0$, it cannot stay in state $0$ forever, because $(1-p)^n \to 0$ as $n\to\infty$, so it will leave $0$ and visit $1$. We are going to prove that once the chain reaches $1$ from $0$, there is a probability that it will never return to $0$ again, and $0$ is therefore transient.
+
+        Plug in $x=1$ into (\ref{eq3.2}) and let $N \to \infty$. Since $p > \frac{1}{2}$, $\theta < 1$, $\theta^N \to 0$.
+        \[ \mathbb{P}_1[V_0 = \infty] = 1-\theta \]
+        That is, there is a probability of $1-\theta$ that the chain reaches infinity before it returns to $0$, i.e. the chain is never returning to $0$ again. Therefore it is transient.
+
+        \item $p \le \frac{1}{2}$.\\
+        We first consider the case where $p < \frac{1}{2}$.
+
+        Similarly, we only need to prove that $0$ is recurrent, since the chain is irreducible. Again, the chain cannot stay in $0$ forever, and once it reaches $1$ from $0$, we can compute $\mathbb{P}_1[V_0 = \infty]$ by letting $N$ go to infinity. This time, since $p < \frac{1}{2}$, $\theta > 1$ and $\theta^N \to \infty$, therefore,
+        \[ \mathbb{P}_1[V_0 = \infty] = 0 \]
+        That is, the chain will return to $0$ with probability $1$, and it is therefore recurrent.
+
+        When $p = \frac{1}{2}$, $\theta = 1$, (\ref{eq3.2}) has a division by zero and cannot be used. We now consider (\ref{eq3.1}). Since $p=\frac{1}{2}$, $p = (1-p)$, they cancelled each other,
+        \[ h(x+1) - h(x) = h(x) - h(x-1) \]
+        So $h(x)$ is an arithmetic progression. Since $h(0)=0$ and $h(N)=1$, it must has the form of
+        \[ h(x) = \frac{x}{N} \]
+        
+        Again plugging in $x=1$ and letting $N \to \infty$,
+        \[ \mathbb{P}_1[\infty < V_0] = 0 \]
+        Therefore it is still recurrent when $p = \frac{1}{2}$.
+
+        \item $p = \frac{1}{2}$.\\
+        Let $\tau$ be the \emph{exit time} defined as $\tau = \min\{ n | X_n \notin (0,N) \}$, i.e. the minimum time for the chain to be either in state $0$ or state $N$. EOSP claimed that
+        \begin{equation}
+            \label{claim}
+            \mathbb{E}_x[\tau] = x(N-x)
+        \end{equation}
+
+        Let $g(x) = \mathbb{E}_x[\tau]$, since $p = \frac{1}{2}$:
+        \begin{equation}
+            \label{gx}
+            g(x) = 1 + \frac{1}{2}g(x+1) + \frac{1}{2}g(x-1)
+        \end{equation}
+        
+        We can verify (\ref{claim}) by plugging $g(x) = x(N-x)$ into (\ref{gx}).
+        \begin{align}
+            RHS &= 1 + 0.5(x+1)(N-x-1) + 0.5(x-1)(N-x+1) \notag \\
+            &= 1 + Nx - x^2 -1 \notag \\
+            &= Nx - x^2 = LHS \notag
+        \end{align}
+
+        Therefore $\mathbb{E}_x[\tau] = x(N-x)$. Then we can again follow our previous proofs: plug in $x=1$ and let $N\to\infty$, which yields
+        \[ \mathbb{E}_1[\tau] \to \infty \quad n \to \infty \]
+        That is, $\mathbb{E}_1[V_0] = \infty$.
+
+        Then we can calculate $\mathbb{E}_0[T_0]$:
+        \[ \mathbb{E}_0[T_0] = \frac{1}{2}\times 1 + \frac{1}{2}\mathbb{E}_1[V_0] = \infty \]
+        Therefore the chain is null recurrent when $p=\frac{1}{2}$.
+
+        \item $p<\frac{1}{2}$.\\
+        EOSP claimed that
+        \[ \mathbb{E}_x[\tau] = \frac{x}{1-2p}-\frac{N}{1-2p}\cdot\frac{1-\theta^x}{1-\theta^N} \]
+        This claim can be verified by plugging it into and checking that the two sides of the equation are equal.
+        \[ g(x) = 1 + pg(x+1) + (1-p)g(x-1) \]
+
+        Plug in $x=1$ and let $N\to\infty$.
+        \[ \frac{N}{1-\theta^N} \to 0\]
+        \[ \mathbb{E}_1[\tau] \to \frac{1}{1-2p} \quad n \to \infty \]
+
+        Similarly,
+        \[ \mathbb{E}_0[T_0] = (1-p) \times 1 + p \cdot \frac{1}{1-2p} < \infty \]
+        $\mathbb{E}_0[T_0] < \infty$. Therefore the chain is positive recurrent when $p < \frac{1}{2}$.
+    \end{enumerate}
+
 
 
 \section{Coupling and Stochastical Dominance}
