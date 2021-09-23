@@ -1,0 +1,186 @@
+\chapter{Preliminaries}
+\emph{Salute to Discrete Mathematics.}
+
+\section{Sets}
+\label{sec:Sets}
+(Informally,) A set is a collection of elements.
+
+\section{Relations and Functions}
+\label{sec:RelationsAndFunctions}
+
+\subsection{Relations}
+\label{sub:Relation}
+Given $n$ sets $A_1,\dots,A_n$, a relation $R$ over them is a subset of $A_1 \times \cdots \times A_n$.
+
+\begin{definition}[Binary Relation]
+    \label{def:BinaryRelation}
+    A \textbf{binary relation} $R$ is a relation over $A \times B$ given some $A$ and $B$.
+    \begin{itemize}
+        \item The \textbf{domain} of $R$, denoted by $\textrm{dom}(R)$, is $\{ x | \exists y: \langle x,y \rangle \in R \}$
+        \item The \textbf{range} of $R$, denoted by $\textrm{rng}(R)$, is $\{ y | \exists x: \langle x,y \rangle \in R \}$
+    \end{itemize}
+\end{definition}
+
+A binary relation is
+\begin{itemize}
+    \item \textbf{Reflexive} iff $\langle x, x \rangle \in R$ for each $x \in A$.
+    \item \textbf{Symmetric} iff $\langle x,y \rangle \in R \longrightarrow \langle y,x \rangle \in R$.
+    \item \textbf{Transitive} iff $\langle x,y \rangle \in R \land \langle y,z \rangle \in R \longrightarrow \langle x,z \rangle \in R$.
+\end{itemize}
+
+A relation is an \textbf{equivalence relation} if it is reflexive, symmetric and transitive.
+
+\subsection{Functions}
+\label{sub:Function}
+\begin{definition}[Functions]
+    \label{def:Function}
+    A \textbf{function} $f: A \rightarrow B$ is a binary relation over $A \times B$ satisfying:
+    \begin{itemize}
+        \item Its domain is $A$.
+        \item For each $x \in A$, there is a unique $y \in B$ such that $\langle x, y \rangle \in f$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[One-to-One (injective)]
+    \label{def:Injective}
+    A function $f: A \rightarrow B$ is \textbf{one-to-one (injective)} if for each $x, y \in A$,
+    \[ f(x) = f(y) \Longrightarrow x = y. \]
+\end{definition}
+
+\begin{definition}[Onto (surjective)]
+    \label{def:Surjective}
+    A function is \textbf{onto (surjective)} if for each $y \in B$, there is some $x \in A$ such that $f(x) = y$.
+\end{definition}
+
+\begin{definition}[One-to-One Correspondence (bijective)]
+    \label{def:Bijective}
+    A function is a \textbf{one-to-one correspondence (bijective)} between $A$ and $B$ if $f$ is both one-to-one and onto.
+\end{definition}
+
+\subsection{Finite Sets}
+\label{sub:FiniteSets}
+\begin{definition}[Finite sets]
+    \label{def:FiniteSets}
+    The set $X$ is \textbf{finite} if there is a natural number $n$ and a one-to-one correspondence between $X$ and $\{0, 1, \dots, n\}$。
+
+    The set $X$ is \textbf{infinite} if it is not finite.
+\end{definition}
+
+We use the notion of one-to-one correspondence between infinite sets to talk about the ``sizes'' of these infinite sets.
+
+\begin{definition}[Enumerable Sets]
+    \label{def:EnumerableSets}
+    The set $X$ is \textbf{enumerable} if there is a one-to-one correspondence between $X$ and $\mathbb{N}$.
+\end{definition}
+
+\begin{definition}[Listing of Sets]
+    \label{def:ListingOfSets}
+    Let $A$ be a set. The sequence $a_0, a_1, \dots, a_n, \dots$ is a \textbf{listing} of $A$ if
+    \begin{enumerate}
+        \item $a_i \in A$ for each $a_i$.
+        \item Every member of $A$ is equal to $a_n$ for some $n \in \mathbb{N}$.
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    \label{thm:ListingAndEnumerableSets}
+    The set $A$ is enumerable iff there is some listing without repetitions of $A$.
+\end{theorem}
+\begin{proof}
+    $\Rightarrow$.
+
+    $\exists f: A \mapsto \mathbb{N}$, and $f$ is a one-to-one correspondence. Therefore there exists an inverse function $f^{-1}: \mathbb{N} \mapsto A$.
+
+    Therefore we can construct a listing
+    $$ f^{-1}(0), f^{-1}(1), f^{-1}(2), \cdots $$
+
+    $\Leftarrow$.
+
+    Let $g(i) = a_i$. $g$ is one-to-one because the listing has no identical elements. $g$ is onto because every member in $A$ is equal to some $a_n$ in the listing.
+
+    $f = g^{-1}$.
+\end{proof}
+
+\begin{definition}[Countable Sets]
+    \label{def:CountableSets}
+    A set is \textbf{countable} if it is finite or enumerable. A set is \textbf{uncountable} if it is not countable.
+\end{definition}
+
+\begin{theorem}
+    \label{thm:CountableSets}
+    A set $X$ is countable iff there is a one-to-one mapping $f: X \mapsto \mathbb{N}$.
+
+    A set $X$ is countably infinite iff it is enumerable.
+\end{theorem}
+\begin{sketchproof}
+    $\Rightarrow$: Straightforward. Follows immediately from the definition of finite \ref{sub:FiniteSets} and enumerable \ref{def:EnumerableSets} sets.
+    
+    $\Leftarrow$: Let $B = \textrm{rng}(f)$. Notice that $f$ is a one-to-one correspondence between $X$ and $B$.
+    \begin{itemize}
+        \item If $B$ is finite, then there exists some function $h: B \mapsto \{1,2,\dots,n\}$ s.t. $h$ is a one-to-one correspondence. Let $g = h \circ f$, then $g$ is a one-to-one correspondence from $X$ to $\{1,2,\dots,n\}$. Therefore by definition \ref{def:FiniteSets}, $X$ is finite and is thus countable.
+        
+        \item If $B$ is infinite, since $B \subseteq \mathbb{N}$, we can sort elements of $B$ in ascending order:
+        \[ b_0 < b_1 < b_2 < \cdots < b_n < \cdots \]
+        
+        We have constructed a listing of $B$, and therefore $B$ is enumerable. Therefore by definition \ref{def:EnumerableSets}, there exists a one-to-one correspondence $h:B \mapsto \mathbb{N}$. Construct $g = h \circ f$, then $g$ must also be a one-to-one correspondence between $X$ and $\mathbb{N}$. Therefore by definition \ref{def:EnumerableSets}, the set $X$ is enumerable and thus countable.
+    \end{itemize}
+\end{sketchproof}
+
+\begin{theorem}
+    \label{thm:ListingAndCountableSets}
+    The set $A$ is countable and nonempty iff there is some listing with possible repetitions of $A$.
+\end{theorem}
+\begin{sketchproof}
+    $\Rightarrow$. If $A$ is enumerable, we are done by Theorem \ref{thm:ListingAndEnumerableSets}. If $A$ is finite, we can construct a listing $a_0, a_1, \cdots, a_n, a_n, \cdots$.
+
+    $\Leftarrow$. Let $a_0, a_1, \cdots, a_n, \cdots$ be the listing. Define $f:A \mapsto \mathbb{N}$ by $f(a_i) = \min_j\left\{ j: a_j=a_i \right\}$. $f$ is one-to-one and by Theorem \ref{thm:CountableSets} we can conclude that $A$ is countable.
+\end{sketchproof}
+
+\begin{proposition}
+    \label{prop:SubsetOfEnumerableSetsIsCountable}
+    If $A$ is enumerable and $B \subseteq A$, then $B$ is countable.
+\end{proposition}
+
+\begin{theorem}
+    \label{thm:LotsOfCountableSets}
+    ~{}
+    \begin{itemize}
+        \item If $A$ and $B$ are countable, then $A \cup B$, $A \cap B$, and $A \times B$ are all countable.
+        \item If each of $A_0, \dots, A_n, \dots$ is countable, then the union of these sets is also countable.
+        \item If $A$ is countable and nonempty, then the set of all finite sequences of members of $A$ is countable.
+    \end{itemize}
+\end{theorem}
+
+\subsection{Constructing Infinite Sets}
+\label{sub:ConstructingInfiniteSets}
+
+\begin{definition}[Characteristic Functions]
+    \label{def:CharacteristicFunctions}
+\end{definition}
+
+\begin{definition}[Power Sets]
+    \label{def:PowerSets}
+    Let $A$ be a set, the power set of $A$ is
+    \[ \mathcal{P}(A) = \{ X|X \subseteq A \} \]
+\end{definition}
+
+\begin{theorem}[Cantor's Theorem]
+    \label{thm:CantorsTheorem}
+    $\mathcal{P}(\mathbb{N})$ is uncountable.
+\end{theorem}
+\begin{proof}
+    Proof by contradiction. Suppose $\mathcal{P}(\mathbb{N})$ is countable. Obviously $\mathcal{P}(\mathbb{N})$ is not finite, so it must be enumerable.
+
+    By Theorem \ref{thm:ListingAndEnumerableSets}, we can construct a listing with no repetitions.
+
+    We can list all subsets of $A$ using characteristic functions.
+    \[\begin{bmatrix}
+        \emptyset & \begin{bmatrix} 0 & 0 & \cdots & 0 \end{bmatrix}\\
+        \{0\} & \begin{bmatrix} 1 & 0 & \cdots & 0 \end{bmatrix}\\
+        \{1\} & \begin{bmatrix} 0 & 1 & \cdots & 0 \end{bmatrix}\\
+        \{0, 1\} & \begin{bmatrix} 1 & 1 & \cdots & 0 \end{bmatrix}\\
+        \cdots & \cdots\\
+    \end{bmatrix}\]
+
+    We can then select all the bits along the diagonal and flip these bits to form a new bit sequence. This sequence can also be interpreted as a listing of some subset of $\mathcal{P}(\mathbb{N})$. However, this listing cannot exist in the listed listings, because it has at least one bit that is different from any existing listings. This listing fails to enumerate all subsets of $\mathcal{P}(\mathbb{N})$, and therefore the set $\mathcal{P}(\mathbb{N})$ is uncountable.
+\end{proof}
