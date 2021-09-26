@@ -165,3 +165,15 @@ $$ b = D\left|\frac{f(o-o')}{o'(o-f)}\right| $$
 - Large f-number
   - Small aperture
   - Wide DoF
+
+#### Vignetting
+
+- Consider a compund lens with 3 lenses
+
+```mermaid
+graph LR
+  L3 --- L2
+  L2 --- L1
+```
+
+- More light passes throught L3.
