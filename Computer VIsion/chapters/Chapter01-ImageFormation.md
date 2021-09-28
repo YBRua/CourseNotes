@@ -96,7 +96,7 @@ $$x_{vp} = f\cdot\frac{l_x}{l_z} \quad y_{vp} = f\cdot\frac{l_y}{l_z} $$
 
 > “你给你女朋友拍张照要12秒，这可以接受吗？”
 
-### Lenses
+### Lens
 
 - Same projection as pinhole, but gathers more light.
 
@@ -166,9 +166,11 @@ $$ b = D\left|\frac{f(o-o')}{o'(o-f)}\right| $$
   - Small aperture
   - Wide DoF
 
-#### Vignetting
+#### Drawbacks of Lens
 
-- Consider a compund lens with 3 lenses
+##### Vignetting
+
+- Consider a compund lens with 3 lenses with different aparture sizes.
 
 ```mermaid
 graph LR
@@ -176,4 +178,62 @@ graph LR
   L2 --- L1
 ```
 
-- More light passes throught L3.
+- More light passes through L3 to points on the optical axis than other points.
+- Causing a smooth fall-off in brightness from the center to corners.
+
+##### Chromatic Aberration
+
+- Refractive index (and hence focal length) of lens is different for rays of different wavelengths.
+
+##### Geometric Distortion
+
+- Due to imperfections of lens
+- Radial distortion
+- Tangential distortion
+
+### Digital Camera
+
+#### Common sensors
+
+> 光电效应
+
+##### Charge-Coupled Device, CCD
+
+- Photon to electron
+- Electron to voltage
+- Analog to digital
+- Low noise
+- Moderate power cost
+
+##### Complementary Metal Oxide Semiconductor, CMOS
+
+- Direct conversion from photon to voltage within each pixel
+- Moderate noise
+- Low power cost
+
+#### Colors
+
+- Color: Biological response to different wavelengths
+- Human sensation of nearly all colors can be produced with three wavelengths.
+
+##### Sensing Colors
+
+- RGB filters
+
+$$\begin{matrix}
+  R & G & R & G & R\\
+  G & B & G & B & G\\
+  R & G & R & G & R\\
+  G & B & G & B & G\\
+  R & G & R & G & R\\
+\end{matrix}$$
+
+- Interpolation
+
+#### High Dynamic Range
+
+- Assume camera response $f$ is linear
+- Let $M_1, M_2, M_3, M_4$ be four images with different exposures.
+- Aggregate images
+
+$$ M_{HDR} = M_1 + M_2 + M_3 + M_4 $$
