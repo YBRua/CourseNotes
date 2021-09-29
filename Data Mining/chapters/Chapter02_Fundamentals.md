@@ -199,6 +199,47 @@ $$ \frac{\sigma}{\bar{x}} \times 100\% $$
 - Data matrix $x_{ij}$
 - Dissimilarity matrix $d_{ij} = d(i,j)$ where $d(i,j)$ is a measurement of distance between $x_i$ and $x_j$.
 
-### Proximity Measures for Nominal Data
+### Nominal Data
 
 - $d(i,j) = (p-m) / p$ where $m$ is the number of matched values, and $p$ is the total number of attributes
+
+#### Binary Dissimilarity
+
+|         |   1   |   0   |  sum  |
+| :-----: | :---: | :---: | :---: |
+|  **1**  |  $q$  |  $r$  | $q+r$ |
+|  **0**  |  $s$  |  $t$  | $s+t$ |
+| **sum** | $q+s$ | $r+t$ |  $p$  |
+
+- Symmetric: $d(i,j) = (r+s)/(q+r+s+t)$
+- Asymmetric: $d(i,j) = (r+s)/(q+r+s)$
+
+### Numeric Data
+
+#### $L_p$-norm
+
+$$ d(i,j) = \left( \sum_{k=1}^K |x_{ik}-x_{jk}|^p \right)^{1/p} $$
+
+### Ordinal Data
+
+- Attribute $f$ for object $i$ has $M_f$ ordered states $1,\dots,M_f$.
+- Ranking $r_{if} \in \{1,\dots,m_f\}$
+- Map the ranking into $[0,1]$ by
+
+$$ z_{if} = \frac{r_{if}-1}{M_f-1} $$
+
+- Dissimilarity can then be computed by $L_p$ norm.
+
+### Mixed-Typed Data
+
+$$ d(i,j) = \frac{\sum_{f=1}^p\delta_{ij}}{} $$
+
+### Formal Definition of Metric
+
+Metric
+: A measure with the following properties.
+
+    - Non-negativity $d(i,j) \ge 0$
+    - Identity of Indiscernible $d(i,i)=0$
+    - Symmetry $d(i,j)=d(j,i)$
+    - Triangle Inequality $d(i,j) \le d(i,k) + d(k,j)$
