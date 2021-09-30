@@ -1,4 +1,4 @@
-\chapter{Preliminaries}
+\chapter{Set Theory}
 \emph{Salute to Discrete Mathematics.}
 
 \section{Sets}
@@ -156,10 +156,15 @@ We use the notion of one-to-one correspondence between infinite sets to talk abo
 
 \begin{definition}[Characteristic Functions]
     \label{def:CharacteristicFunctions}
+    Let $X$ be a set and let $A \subseteq X$. FOr any $a \in A$, let
+    $$ C_A(a) = \begin{cases}
+        1, &\quad a \in A\\
+        0, &\quad a \notin A
+    \end{cases} $$
+    $C_A(a)$ is called the characteristic function of $A$.
 \end{definition}
 
-\begin{definition}[Power Sets]
-    \label{def:PowerSets}
+\begin{definition}[Power Sets]    \label{def:PowerSets}
     Let $A$ be a set, the power set of $A$ is
     \[ \mathcal{P}(A) = \{ X|X \subseteq A \} \]
 \end{definition}
@@ -184,3 +189,93 @@ We use the notion of one-to-one correspondence between infinite sets to talk abo
 
     We can then select all the bits along the diagonal and flip these bits to form a new bit sequence. This sequence can also be interpreted as a listing of some subset of $\mathcal{P}(\mathbb{N})$. However, this listing cannot exist in the listed listings, because it has at least one bit that is different from any existing listings. This listing fails to enumerate all subsets of $\mathcal{P}(\mathbb{N})$, and therefore the set $\mathcal{P}(\mathbb{N})$ is uncountable.
 \end{proof}
+
+\begin{corollary}
+    $\mathbb{R}$ is uncountable.
+\end{corollary}
+
+\subsection{Domination of Sets}
+
+\begin{definition}[Domination of Sets]
+    \label{def:SetDomination}
+    ~{}
+    \begin{itemize}
+        \item $A \preceq B$ if there is a one-to-one function $f: A \mapsto B$.
+        \item $ A \prec B$ if $A \preceq B$ but $B \npreceq A$.
+        \item $A \equiv B$ if $A \preceq B$ and $B \preceq A$.
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}[Cantor-Schr\"oder-Bernstein]
+    \label{thm:CSB}
+    $A \equiv B$ iff there is a one-to-one correspondence between $A$ and $B$.
+\end{theorem}
+\begin{proof}
+    Refer to supplementary material on Canvas.
+\end{proof}
+
+\begin{theorem}[Cantor's Theorem]
+    \label{thm:Cantor}
+    For every set $A$,
+    \[ A \prec \mathcal{P}(A) \]
+\end{theorem}
+\begin{proof}
+    We need to prove 1) $A \preceq \mathcal{P}(A)$ and 2) $\mathcal{P}(A) \npreceq A$. 1) is easy because $\forall a \in A$, $\{a\} \subseteq A$ and therefore $\{a\} \in \mathcal{P}(A)$.
+
+    To prove 2), assume $\mathcal{P}(A) \preceq A$, by theorem \ref{thm:CSB} we have $\mathcal{P}(A) \equiv A$, and therefore there should exist a one-to-one correspondence $f: A \mapsto \mathcal{P}(A)$.
+
+    Let
+    \[ B = \{x \in A|x \notin f(x)\} \]
+
+    Then $B \subseteq A$, and $B \in \mathcal{P}(A)$. Since $f$ is onto, there must exist some $b \in A$ s.t. $f(b) = B$.
+
+    \begin{enumerate}
+        \item If $b \in f(b) = B$. Then $b \in f(b) \Rightarrow b \notin f(b)$. Boom.
+        \item If $b \notin f(b)$. Then $b \in B = f(b)$. Boom.
+    \end{enumerate}
+
+    Therefore $\mathcal{P}(A) \npreceq A$.
+\end{proof}
+\begin{corollary}
+    For every $A$ there exists a $B$ s.t. $A \prec B$.
+\end{corollary}
+\begin{corollary}
+    $\mathcal{P}(\mathbb{N})$ is uncountable.
+\end{corollary}
+\begin{proof}
+    $\mathcal{P}(\mathbb{N}) \npreceq \mathbb{N}$.
+\end{proof}
+
+\subsection{Sets of Functions}
+
+\begin{definition}[Set of Functions]
+    \label{def:SetOfFunction}
+    $~^{A} B$ is the set of all functions that map $A$ into $B$.
+\end{definition}
+\begin{remark}
+    The set $~^A\{0,1\}$ is the set of all characteristic functions (\ref{def:CharacteristicFunctions}).
+\end{remark}
+
+\begin{theorem}
+    There is a one-to-one correspondence between $~^{\mathbb{N}}\{0,1\}$ and $\mathcal{P}(\mathbb{N})$.
+\end{theorem}
+\begin{remark}
+    A generalized version: there is a one-to-one correspondence between $~^{\mathbb{A}}\{0,1\}$ and $\mathcal{P}(\mathbb{A})$
+\end{remark}
+\begin{corollary}
+    \label{cor:RealIsUncountable}
+    $\mathbb{R}$ is uncountable.
+\end{corollary}
+\begin{theorem}
+    \label{thm:NNisUncountable}
+    $~^\mathbb{N}\mathbb{N}$ is uncountable.
+\end{theorem}
+\begin{proof}
+    Assume $~^\mathbb{N}\mathbb{N}$ is countable. Since $~^\mathbb{N}\{0,1\} \subseteq ~^\mathbb{N}\mathbb{N}$. $~^\mathbb{N}\{0,1\}$ must be countable. Boom.
+\end{proof}
+
+\subsection{Generalized Continuum Hypothesis}
+
+\begin{center}
+    \textbf{Is there a set $A$ s.t. $\mathbb{N} \prec A \prec \mathbb{R} \equiv \mathcal{P}(\mathbb{N})$?}
+\end{center}

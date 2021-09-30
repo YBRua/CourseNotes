@@ -1,0 +1,41 @@
+\chapter{The Informal Notions of Algorithms}
+
+\emph{“形式语言与自动机课程速成。”}
+
+\section{Algorithms}
+
+\begin{definition}[Algorithms (Informal)]
+    \label{def:Algorithm}
+    An algorithm is a \textbf{finite ordered list} of instructions.
+\end{definition}
+
+Possible outcomes of running an algorithm
+\begin{itemize}
+    \item The algorithm does not halt
+    \item The algorithm halts
+    \begin{itemize}
+        \item In an erroneous state (fails)
+        \item Gives valid outputs
+    \end{itemize}
+\end{itemize}
+Cases other than the algorithm giving valid outputs are collectively identified as ``no output''.
+
+\begin{definition}
+    An algorithm for \emph{determining membership} in a set $A \subseteq \mathbb{N}$ has an input, and two possible outputs ``yes'' and ``no''. If the algorithm is run on input $n$, it will halt in finite steps with output ``yes'' if $n \in A$ and ``no'' if $n \notin A$.
+\end{definition}
+
+\begin{definition}[Effectively Decidable Sets]
+    \label{def:EffectivelyDecidableSet}
+    Let $A$ be a subset of $\mathbb{N}$. $A$ is \textbf{effectively decidable} if there is an algorithm for determining membership of $A$.
+\end{definition}
+\begin{theorem}
+    If $A$ and $B$ are effectively decidable subsets of $\mathbb{N}$, then $\mathbb{N}\backslash A$, $A \cap B$ and $A \cup B$ are all effectively decidable.
+\end{theorem}
+
+Algorithms can have different kinds of outputs and inputs.
+
+\begin{definition}[Diophantine Equations]
+    Consider polynomials with integer coefficients (and any number of variables), a \textbf{diophantine equation} is an equation of the form $p=0$, where $p$ is sunch a polynomial. (e.g., $3x^2 + 5xy - 2z^4 +3 = 0$)
+\end{definition}
+
+\textbf{Hilbert's 10th Problem.} Is there an algorithm for determining whether or not diophantine equations have integer solutions?
