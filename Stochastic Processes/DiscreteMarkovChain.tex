@@ -525,7 +525,7 @@ aka. Foundamental Theorem of Markov Chains
     \begin{align*}
         p(i,i+1) &= p\\
         p(i,i-1) &= 1-p\\
-        p(0,0) = 1-p
+        p(0,0) &= 1-p
     \end{align*}
     We are going to prove that if $p > 1/2$, the chain is transient, and if $p \le 1/2$, the chain is recurrent.
     Let $V_i = \min\{ n\le0 | X_n = i \}$ denote the time of the first visit to state $i$. 
@@ -810,7 +810,10 @@ In this section we assume the sample space $\Omega$ is at most countable, but th
 
             We introduce a random variable $U$ that has a uniform distribution $U \sim U(0,1)$. Let $q$ be the probability of $X_{i+1} = X_i + 1$, from the arguments above we already have $p < q$. Then we construct a coupling of $X$ and $Y$ by letting $X_{t+1} = X_t + 1$ if $U \ge q$ and $X_{t+1} = X_t - 1$ otherwise; and by letting $Y_{t+1} = Y_t + 1$ if $U \ge p$ and $Y_t - 1$ otherwise. Then it follows that $X_t \ge Y_t$, and therefore $X_t$ stochastically dominiates $Y_t$.
             
-            Since $Y_i$ has an expectation of $n^2$ to get to state $n$, it follows intuitively that $X_i$ has a smaller expectation of steps to get to $n$.
+            Since $Y_i$ has an expectation of $n^2$ to get to state $n$ (starting from $0$), it follows intuitively that $X_i$ has a smaller expectation of steps to get to $n$.
+
+            Actually,
+            \[ \mathbb{E}[\text{First Hitting Time of $n$}|Y_0] = n^2 - Y_0^2 \]
 
             We have chosen the max iteration to be $100n^2$, by Markov's Inequality \ref{MarkovIneq}, the probability that we take $100n^2$ iterations without finding a feasible solution is at most $1/100$.
         \end{sketchproof}
