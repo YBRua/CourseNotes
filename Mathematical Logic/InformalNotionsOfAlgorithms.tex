@@ -20,7 +20,11 @@ Possible outcomes of running an algorithm
 \end{itemize}
 Cases other than the algorithm giving valid outputs are collectively identified as ``no output''.
 
-\begin{definition}
+\subsection{Algorithms for Determining Membership}
+\label{sub:AlgoForDeterminingMembership}
+
+\begin{definition}[Algorithms for Determining Membership]
+    \label{def:AlgoForDeterminingMembership}
     An algorithm for \emph{determining membership} in a set $A \subseteq \mathbb{N}$ has an input, and two possible outputs ``yes'' and ``no''. If the algorithm is run on input $n$, it will halt in finite steps with output ``yes'' if $n \in A$ and ``no'' if $n \notin A$.
 \end{definition}
 
@@ -28,6 +32,12 @@ Cases other than the algorithm giving valid outputs are collectively identified 
     \label{def:EffectivelyDecidableSet}
     Let $A$ be a subset of $\mathbb{N}$. $A$ is \textbf{effectively decidable} if there is an algorithm for determining membership of $A$.
 \end{definition}
+
+\begin{itemize}
+    \item $\mathbb{N}$ is effectively decidable. (Always ``yes'')
+    \item $\emptyset$ is effectively decidable. (Always ``no'')
+\end{itemize}
+
 \begin{theorem}
     If $A$ and $B$ are effectively decidable subsets of $\mathbb{N}$, then $\mathbb{N}\backslash A$, $A \cap B$ and $A \cup B$ are all effectively decidable.
 \end{theorem}
@@ -38,4 +48,139 @@ Algorithms can have different kinds of outputs and inputs.
     Consider polynomials with integer coefficients (and any number of variables), a \textbf{diophantine equation} is an equation of the form $p=0$, where $p$ is sunch a polynomial. (e.g., $3x^2 + 5xy - 2z^4 +3 = 0$)
 \end{definition}
 
-\textbf{Hilbert's 10th Problem.} Is there an algorithm for determining whether or not diophantine equations have integer solutions?
+\paragraph{Hilbert's 10th Problem.} Is there an algorithm for determining whether or not diophantine equations have integer solutions?
+
+\subsection{Algorithm for Listing Members of Sets}
+\label{sub:AlgoForListingMembersOfSets}
+
+\begin{definition}[Algorithm for Listing Members of Sets]
+    \label{def:AlgoForListingMembersOfSets}
+    Let $A \subseteq \mathbb{N}$. An algorithm for \textbf{listing the members of $A$} prints (or enumerates) a list of numbers $a_0,a_1,\dots$ s.t.
+    \begin{itemize}
+        \item $a_n \in A$ for all $n \in \mathbb{N}$
+        \item If $a \in A$, then $a = a_n$ for some $n$
+    \end{itemize}
+\end{definition}
+\begin{remark} ~{}
+    \begin{itemize}
+        \item No input.
+        \item Repetitions in the listing are permitted.
+        \item If $A$ is finite, the algorithm may terminate or run forever (by iterating endlessly over the finite set).
+        \item If $A$ is infinite, the algorithm should run forever.
+    \end{itemize}
+\end{remark}
+
+\begin{definition}[Effectively Enumerable Sets]
+    \label{def:EffectivelyEnumerableSet}
+    A set $A \subseteq \mathbb{N}$ is \textbf{effectively enumerable} if there is an algorithm for listing its members.
+\end{definition}
+
+\subsection{Effectively Computable Functions}
+\label{sub:EffectivelyComputableFunction}
+
+\begin{definition}[Partial Functions]
+    \label{def:PartialFunction}
+    A function $f:\mathbb{N}\mapsto\mathbb{N}$ is a \textbf{partial number-theoretic function} if its domain is a subset of $\mathbb{N}$.
+\end{definition}
+\begin{definition}[Total Functions]
+    \label{def:TotalFunction}
+    A partial function whose domain is all of $\mathbb{N}$ is a total function.
+\end{definition}
+
+\begin{definition}[Notation for Definability]
+    For a partial function $f$
+    \begin{itemize}
+        \item $n \in \textrm{dom}(f)$, then $f(n)\downarrow$
+        \item $n \notin \textrm{dom}(f)$, then $f(n)\uparrow$
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Effectively Computable Functions]
+    \label{def:EffectivelyComputableFunction}
+    The partial function $f$ is \textbf{effectively computable} if there is an algorithm $\mathcal{A}$ s.t. on input $n$
+    \begin{itemize}
+        \item Prints output $f(n)$ if $f(n)\downarrow$
+        \item No output if $f(n)\uparrow$
+    \end{itemize}
+    $\mathcal{A}$ is called an algorithm for computing $f$.
+\end{definition}
+
+\begin{remark}
+    The definition of effectively decidable and enumerable sets, and effectively computable functions can be extended to $\mathbb{N}^k$.
+\end{remark}
+
+\subsection{Relations among Effectively Decidable Sets, Effectively Enumerable Sets and Effectively Computable Functions}
+
+\begin{proposition}
+    Let $A \subseteq \mathbb{N}$. If $A$ is effectively decidable then $A$ is effectively enumerable.
+\end{proposition}
+
+\begin{proposition}
+    Let $A \subseteq \mathbb{N}$. $A$ is effectively decidable iff the characteristic function (\ref{def:CharacteristicFunctions}) $C_A$ is effectively computable.
+\end{proposition}
+
+\begin{proposition}
+    Let $f:\mathbb{N}\mapsto\mathbb{N}$. If $f$ is an effectively computable function, then $\textrm{rng}(f)$ is an effectively enumerable set.
+\end{proposition}
+
+\begin{proposition}
+    Combining the above two propositions, we have: Let $A$ be a non-empty subsect of $\mathbb{N}$,
+\end{proposition}
+
+\begin{proposition}
+    If $A\neq\emptyset$ is an effectively enumerable subset of $\mathbb{N}$, then there is an effectively computable function $f$ with $\range(f)=A$.
+\end{proposition}
+
+\section{Enumerability of Algorithms}
+\label{sec:EnumerabilityOfAlgos}
+
+\begin{theorem}
+    There are only \emph{enumerably many} algorithms.
+\end{theorem}
+\begin{corollary}
+    There are only enumerably many partial effectively computable functoins. Since there are uncountably many total number-theoretic functions, there must exist total number-theoretic functions that are not effectively computable.
+\end{corollary}
+\begin{corollary}
+    There are only enumerably many effectively computable
+\end{corollary}
+
+\subsubsection{Listing of Effectively Computable Total Function}
+
+Suppose $f_0,\dots$ is a listing of all effectively computable total function (this listing is unknown, we only know a listing of all computable partial functions). Let $g$ be a function such that
+
+\[ g(m,n) = f_m(n) \]
+
+$g$ is not effectively computable.
+
+\begin{proof}
+    By diagonal argument. Let $h(n) = g(n,n) + 1$. If $g$ is effectively computable, then so is $h$. Then $h$ must be in the listing $\{f_n\}$. Suppose $f_k = h$. Then
+    \[ f_k(k) = h(k) = g(k,k)+1 = f_k(k) + 1 \]
+    噔噔咚。
+\end{proof}
+
+\section{The Halting Problem}
+
+Is there an algorithm for deciding whether any algorithm halts on given input or not?
+
+\begin{theorem}
+    \label{thm:HaltingProblem}
+    Let $\mathcal{A}_0,\dots,\mathcal{A}_n,\dots$ be a listing of algorithm with space for only one input. There does not exist an algorithm $\mathcal{H}$ with space for two number inputs s.t. on input $(m,n)$
+    \begin{itemize}
+        \item Halts with output ``yes'' if $\mathcal{A}_m$ halts on input $n$.
+        \item Halts with output ``no'' if $\mathcal{A}_m$ does not halt on input $n$
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    Construct $\mathcal{C}(n)$ by:
+    \begin{itemize}
+        \item Run $\mathcal{H}(n,n)$
+        \item If ``yes'' then loop forever
+        \item If ``no'' then print ``yes'' and return
+    \end{itemize}
+
+    Then $\mathcal{C}$ must be in the listing $\{\mathcal{A}_n\}$. Suppose $\mathcal{A}_k = \mathcal{C}$.
+    \begin{itemize}
+        \item $\mathcal{C}(k)$ halts $\Leftrightarrow$ $\mathcal{H}(k,k)$ prints ``no'' $\Leftrightarrow$ $\mathcal{A}_k(k) = \mathcal{C}(k)$ does not halt.
+    \end{itemize}
+    噔噔咚。
+\end{proof}

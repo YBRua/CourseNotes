@@ -88,11 +88,11 @@ $$ q = \left( N_i \times \frac{S}{I} \right)^{1/k} = \left( 6\times \frac{S}{I} 
 ```mermaid
 graph LR;
 
-User(User) --> BTS
+User --> BTS
 BTS --> BSC
 BSC --> MSC
-MSC --> Gateway(MSC Gateway)
-Gateway --> Tel(Telephone Network)
+MSC --> Gateway[MSC Gateway]
+Gateway --> Tel[Telephone Network]
 ```
 
 - 术语解释
@@ -107,14 +107,14 @@ Gateway --> Tel(Telephone Network)
 ```mermaid
 graph LR;
 
-User(User) --> BTS
+User --> BTS
 BTS --> BSC
 BSC --> MSC
 BSC --> SGSN
-SGSN --> GGSN(GGSN)
+SGSN --> GGSN
 GGSN --> Internet
-MSC --> Gateway(Gateway)
-Gateway --> Tel(Telephone Network)
+MSC --> Gateway
+Gateway --> Tel[Telephone Network]
 ```
 
 - 术语解释
@@ -127,3 +127,45 @@ Gateway --> Tel(Telephone Network)
 > 以中国使用的UMTS标准为例
 
 使用CDMA（码分多址）代替FDMA和TDMA
+
+#### CDMA
+
+### 4G: Long-Term Evolution
+
+#### OFDMA
+
+#### Packet Switching
+
+- IP Multimedia Subsystem, IMS
+
+### 5G
+
+- E-UTRAN: Evolved Universal Terrestrial Radio Access Network
+- EPC: Evolved Packet Core
+
+#### Centralized Radio Access Network, C-RAN
+
+- BBU 与 RRU 解耦合
+- BBU 集中维护管理
+  - 降低成本
+
+##### 优势
+
+- 便宜
+- Frequency reuse = 1，CoMP
+- 覆盖率提升
+
+#### 核心网络
+
+##### 4G EPC
+
+- MME: Mobility Management Entity
+- HSS: Home Subscriber Server
+- S-GW: Serving Gateway
+- P-GW: PDN Gateway
+  - PDN: Packet Data Network
+- PCRF: Policy and Charging Rules Function
+
+##### 5G Core
+
+- Pigeoned. Too many.
