@@ -76,3 +76,5 @@ state = np.array([0, 1, 2])
 observation = np.array([0, 0, 1, 1, 1, 2, 2, 0])
 
 ans = viterbi(pi, A, B, state, observation)
+
+print(ans)
