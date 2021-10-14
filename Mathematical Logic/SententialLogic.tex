@@ -1,0 +1,99 @@
+\chapter{Sentential Logic}
+
+\section{Grammar}
+\label{sec:Gramma}
+
+\subsection{Symbols}
+\label{sub:Symbols}
+\begin{itemize}
+    \item Logical Symbols
+    \begin{itemize}
+        \item Sentential Connectives
+        \begin{itemize}
+            \item $\neg$
+            \item $\wedge$
+            \item $\vee$
+            \item $\rightarrow$
+            \item $\leftrightarrow$
+        \end{itemize}
+        \item Parentheses
+    \end{itemize}
+    \item Non-logical Symbols: An enumerable set of elements
+\end{itemize}
+
+\subsection{Expressions}
+\label{sub:Expressions}
+
+\begin{definition}[Expression]
+    \label{def:Expression}
+    An expression is a finite sequence of symbols.
+\end{definition}
+\begin{remark}
+    The set of all expressions is enumerable.
+\end{remark}
+
+We often use Greek alphabets $\alpha,\beta,\dots$ to represent expressions.
+
+\subsection{Well-Formed Formulas}
+\label{sub:WellFormedFormulas}
+
+\begin{definition}[Well-Formed Formula]
+    \label{def:WFF}
+    A \textbf{well-formed formula} (or formula or wff) is an expression built up from sentence symbols by applying some finite times of \emph{formula building operations}
+\end{definition}
+
+\begin{definition}[Formula Building Operations]~{}
+    \begin{itemize}
+        \item $\xi_{\neg}(\alpha) = (\neg\alpha)$
+        \item $\xi_{\wedge}(\alpha,\beta) = (\alpha \wedge \beta)$
+        \item $\xi_{\vee}(\alpha,\beta) = (\alpha\vee\beta)$
+        \item $\xi_{\rightarrow}(\alpha,\beta) = (\alpha\rightarrow\beta)$
+        \item $\xi_{\leftrightarrow}(\alpha,\beta) = (\alpha\leftrightarrow\beta)$
+    \end{itemize}
+\end{definition}
+\begin{remark}
+    Do NOT omit the parentheses.
+\end{remark}
+
+\begin{definition}[Well-Formed Sequences of Expressions]
+    \label{def:WellFormedSeqOfExpr}
+    A \textbf{well-formed sequence of expressions} is a finite sequence $\alpha_1,\alpha_2,\dots,\alpha_n$ of expressions such that each $\alpha_i$ is either
+    \begin{itemize}
+        \item A sentence symbol
+        \item $(\neg\alpha_j)$ for some $j < i$
+        \item $(\alpha_j \wedge \beta_k)$ for some $j,k<i$
+        \item $(\alpha_j \vee \beta_k)$ for some $j,k<i$
+        \item $(\alpha_j \leftarrow \beta_k)$ for some $j,k<i$
+        \item $(\alpha_j \leftrightarrow \beta_k)$ for some $j,k<i$
+    \end{itemize}
+\end{definition}
+
+\begin{proposition}
+    An expression $\alpha$ is a well-formed formula iff there is a well-formed sequence $(\alpha_1,\dots,\alpha_n)$ s.t. $\alpha = \alpha_n$
+\end{proposition}
+
+\section{The Induction Principle}
+\label{sec:Induction}
+
+Well-formed formulas are a form of inductive definitions with
+\begin{itemize}
+    \item Basic building blocks
+    \item Closing operations
+\end{itemize}
+
+\begin{theorem}[The Induction Principle]
+    \label{thm:InductionPrinciple}
+    Let $S$ be a set of wffs ($S \subseteq W$), if
+    \begin{enumerate}
+        \item Every sentence symbol is in $S$
+        \item For each wff $\alpha$ and $\beta$, if $\alpha$ and $\beta$ are in $S$ then each of the following are in $S$
+        \begin{itemize}
+            \item $(\neg \alpha)$
+            \item $(\alpha \wedge \beta)$
+            \item $(\alpha \vee \beta)$
+            \item $(\alpha \rightarrow \beta)$
+            \item $(\alpha \leftrightarrow \beta)$
+        \end{itemize}
+    \end{enumerate}
+    Then $S$ is the set of \emph{all wffs} ($S = W$).
+\end{theorem}
