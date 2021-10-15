@@ -62,7 +62,7 @@ $$ Var(W_{ij}) = \frac{2}{m+n} $$
 
 ### VGG
 
-- Stack of 3 `3x3` filters have the same receptive field as a `7x7` filter, with fewer number of parameters and more non-linearity.
+- Stack of 3 `3x3` filters have the same reception field as a `7x7` filter, with fewer number of parameters and more non-linearity.
 
 ### GoogleNet (Inception)
 
@@ -78,3 +78,12 @@ graph LR
     input-->OUT
     OUT-->RELU
 ```
+
+$$x_{l+1} = h(x_l) + x_l$$
+
+### DenseNet
+
+- More residual connections
+- Use pooling to reduce computation complexity
+
+$$ x_{l+1} = h([x_0,\dots,x_l]) $$
