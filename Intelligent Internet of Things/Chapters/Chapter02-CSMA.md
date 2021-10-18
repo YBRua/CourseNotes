@@ -99,3 +99,72 @@ graph LR
    - SIFS: Short Inter-Frame Spacing
      - DIFS > SIFS: Give ACK higher priority to aviod re-sending originally successfully sent frames
    - Why ACK: To solve the hidden terminal problem
+
+## Modeling CSMA/CA with Markov Chain
+
+### Assumptions
+
+- Stable conditions
+  - fixed number of users
+  - only consider non-first time communication
+- Saturation condition
+  - exist backoff between sequential transmissions
+  - ignore DIFS
+  - In order to estimate the worst-case performance
+- Collision occurs with probability $p$
+
+### Backoff Stage
+
+- Let the **contention window** $W$ be the length of count down
+- $W_{min}$: Minimum contention window space
+- $s$: Number of collisions experienced
+- $W_s = 2^s W_{min}$: Max window size after $s$ collisions
+- $W_{max} = 2^m W_{min}$: Maximum upper threshold of window size, i.e., widow size after a maximum of $m$ collisions
+- Contention window size $W \in [0, W_s-1]$
+  - where $W_s = 2^sW_{min}$, $s\in[0,m]$
+- $i = s(t)$: Number of collisions encountered at $t$
+- $k = b(t)$: Backoff countdown timer at $t$
+
+### State Transition
+
+#### Timer Count-Down
+
+$$(i,0) \xleftarrow{1} (i,1) \xleftarrow{1} \cdots \xleftarrow{1} (i, W_i-1)$$
+
+#### Collision
+
+$$ (i,X) \xleftarrow{p/W_i} (i-1, 0) \quad X\sim Uniform(0, W_i-1) $$
+
+#### Collision at Stage $m$
+
+From $(m,0)$ to $(m,X)$ where $X\sim Uniform(0, W_s-1)$
+
+#### Successful Transmission
+
+From $(i,0)$ to $(0,X)$ with probability $(1-p)/W_0$
+
+#### Analysis
+
+Claim
+
+$$ \mathbb{P}[i-1,0] \cdot p = \mathbb{P}[i,0] $$
+
+$$ \mathbb{P}[m-1,0] \cdot p = \mathbb{P}[m,0] \cdot (1-p)$$
+
+Then we can write $\mathbb{P}[i,k]$ as
+
+$$ \mathbb{P}[i,k]= $$
+
+The summation over all $i$ and $k$ should equal to 1, solving it yields
+
+The probability that a node succeed in transmitting
+
+$$ \tau = \sum_{i=0}^m \mathbb{P}[i,0] = \frac{\mathbb{P}[0,0]}{1-p} $$
+
+Probability at least one station transmits
+
+$$ P_{tr} = 1 - (1-\tau)^n $$
+
+Probability that some station successfully transmits
+
+$$ P_s = \frac{n\tau(1-\tau)^{n-1}}{P_{tr}} $$
