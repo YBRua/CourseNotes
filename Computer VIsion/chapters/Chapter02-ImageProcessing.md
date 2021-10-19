@@ -186,3 +186,5 @@ $$ N_{tf}[i,j] = \frac{t \otimes f}{\|f\|_2\cdot\|t\|_2} $$
 ## 2D Fourier Transform
 
 > Any periodic function can be rewritten as a **weighted sum** of **infinite sinusoids** of different frequencies.
+
+`LazyError: Refer to AI2614 DSIP`
