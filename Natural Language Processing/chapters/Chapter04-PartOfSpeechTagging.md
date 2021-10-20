@@ -62,14 +62,34 @@ $$\mathbb{P}[v|h] = \prod_{j=1}^N\mathbb{P}[v_j|h_j] $$
 
 ### 初始分布
 
-$$ \hat{pi}_i = \mathbb{P}[h_1=i] = \frac{\#h_1=i}{\#Sentences} $$
+$$ \hat{\pi}_i = \mathbb{P}[h_1=i] = \frac{\#h_1=i}{\#Sentences} $$
 
 ### 状态转移
 
-$$ \hat{a}_{ij} = \mathbb{P}[h_{i+1}=j|h_i=i] = \frac{\#Tags=(i,j)}{\#Tags=i} $$
+$$ \hat{a}_{ij} = \mathbb{P}[h_{i+1}=j|h_i=i] = \frac{\#Tag=(i,j)}{\#Tag=i} $$
+
+- $Tag=i$ 只统计有后一个词的那些词
 
 ### 状态输出
 
-$$ \hat{b}_{ij} = \mathbb{P}[v_t=j|h_t=i] = \frac{\#Tags(word=i,tag=j)}{\#Tags(word=i)} $$
+$$ \hat{b}_{ij} = \mathbb{P}[v_t=j|h_t=i] = \frac{\#(Tag=i,Word=j)}{\#Tag=i} $$
 
 ## 无监督参数估计 Baum-Welch
+
+定义
+
+$$\xi_t(i,j) = \mathbb{P}[h_t=i, h_{t+1}=j|v_1,\dots,v_N] = \frac{\mathbb{P[h_t=i, h_{t+1}=j,v]}}{\mathbb{P}[v]}$$
+
+可以用 $\alpha$、$\beta$ 表示 $\xi$
+
+$$\xi_t(i,j) = \frac{\alpha_t(i)a_{ij}b_{j,v_{t+1}}\beta_{t+1}(j)}{\mathbb{P}[v]} $$
+
+$$\gamma_t(i) = \mathbb{P}[h_t=i|v] = \frac{\alpha_i(t)\beta_i(t)}{\mathbb{P}[v]}$$
+
+### 参数估计
+
+$$a_{ij} = \frac{\mathbb{E}[\mathbb{I}[h_{t-1}=i, h_t=j]]}{\mathbb{E}[\mathbb{I}[h_t=i]]} = \frac{\sum_{1}^N\xi_t(i,j)}{\sum_{t=1}^N \gamma_t(i)}$$
+
+$$b_{ij} = \frac{\mathbb{E}[\mathbb{I}[h_t=i,v_t=j]]}{\mathbb{I}[h_t=i]} = \frac{\sum_{v_t=j}\gamma_t(i)}{\sum_{t=1^N}\gamma_t(i)}$$
+
+$$\pi_j = \gamma_1(j)$$
