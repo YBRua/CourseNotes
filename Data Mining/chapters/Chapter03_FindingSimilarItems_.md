@@ -225,13 +225,109 @@ Represent fingureprints by sets of positions of minutiae (features of fingerprin
 - A hash function $h$ takes two elements $x$ and $y$ as input, and returns a decision whether $x$ and $y$ are candidates for comparision
 - Suppose we have a space $S$ of pionts with distance measure $d(\cdot,\cdot)$
 - A family of hash functions $H$ is said to be $(d_1,d_2,p_1,p_2)$-sensitive if
-  - If $d(x,y) \le d_1$, prob. that $h(x,y) \ge p_1$ for all $h \in H$
-  - If $d(x,y) \ge d_2$, prob. that $h(x,y) \le p_2$ for all $h \in H$
+  - If $d(x,y) \le d_1$, then the probability that $h(x,y) \ge p_1$ for all $h \in H$
+  - If $d(x,y) \ge d_2$, then the probability that $h(x,y) \le p_2$ for all $h \in H$
 - For Jaccard similarity, minhashing gives a $(d_1,d_2,(1-d_1),(1-d_2))$-sensitive functions
+- Want $d_1$ and $d_2$ to be as close as possible; $p_1\to 0 $ and $p_2\to 1$
 
 ### AND/OR of Hash Functions
 
 - AND
   - For $h = \{h_1,\dots,h_r\}$, $h(x)=h(y)$ iff $\forall i,h_i(x) = h_i(y)$
+  - $(d_1,d_2,p_1^r,p_2^r)$-sensitive
+  - Makes $p_1$ smaller, but $p_2$ is also made smaller
 - OR
-  - For $
+  - For $h = \{h_1,\dots,h_r\}$, $h(x)=h(y)$ iff $\exist i, h_i(x)=h_i(y)$
+  - $(d_1,d_2,(1-p_1)^r,(1-p_2)^r)$-sensitive
+  - Makes $p_2$ larger, but $p_1$ is also made larger
+
+### LSH Family for Cosine Distance
+
+- Each vector $v$ determines a hash function $h_v$ with two buckets
+  - $h_v(x) = 1$ if $v\cdot x > 0$ else $-1$
+- Therefore we can use random hyperplanes as a family of LSH functions
+- Signatures for cosine distance is a vector of $-1$ and $1$
+- $\mathbb{P}[h(x)=h(y)]= 1 - \langle x,y \rangle/180\degree$
+
+### LSH Faimily for Euclidean Distance
+
+- Randomly choose a line. Divide the line into bins
+- Project target onto the line
+- Hash each line into the line segment containing the projection of the line
+- $h(x)=h(y)$ iff endpoints of $x$ and $y$ are in the same bucket
+
+## Methods for High Degrees of Similarity
+
+> Filter out data samples that are definitely not similar with no false positives
+
+### Problem Setting
+
+- Represent sets by sets of strings (lists of symbols)
+- Sort the string set
+  - in lexical order
+  - or by frequency in ascending order
+
+### Length-Based Indexing
+
+#### Jaccard Distance and Edit Distance
+
+- Let two sets, represented by $s_1$ and $s_2$, have Jaccard distance $J$. Let the least common sequence of $s_1$ and $s_2$ have length $C$ and let $E$ be the edit distance. Then
+
+$$ 1-J = \frac{C}{C+E} \quad J = \frac{E}{C+E} $$
+
+#### dd
+
+- Create an index on the length of strings
+- Let $A$ and $B$ be the string of two sets, with length $L$ and $M$
+- Then $A$ is Jaccard Distance $J$ from $B$ only if
+
+$$ L(1-J) \le M \le L/(1-J) $$
+
+- Given a string of length $L$, we only need to check sets within this range
+
+### Prefix-Based Indexing
+
+- If two strings are $90\%$ similar, they must share some symbol in their prefixes whose length is just above $10\%$ of the length of each string
+- For two strings of length $L$, if they do not share any of the first $E$ symbols, then $J \ge E/L$
+  - Note that $J$ is Jaccard Distance, not similarity
+- Therefore index $E = \lfloor JL + 1 \rfloor$ position
+
+#### Example
+
+- Let $J= 0.2$
+- `abcdef` is put into bucket `a` and `b`
+- `bcdef` is put into `b` and `c`
+- `cdef` is put into `c`
+- For query `caaa`, only need to check items in bucket `c`
+
+### Positions/Prefixes-Based Indexing
+
+- Consider whether the first common symbol appear close enough to the fronts of both strings
+- If the $i$-th of $s$ matches the $j$-th of $t$, then the edit distance between $s$ and $t$ is at least $i+j-2$
+  - $E \ge i + j - 2$
+- The least common sequence is no longer than $L-i+1$, where $L$ is the length of $s$
+  - $C \le L-i+1$
+
+$$ \frac{i+j-2}{L+j-1} \le \frac{E}{E+C} \Longrightarrow J \le \frac{JL-J-i+2}{1-J} $$
+
+- Create a 2-tuple index $(symbol, position)$
+
+```python
+# given probe string s
+for i in range(J*L+1):
+    a = s[i]
+    for j in range(J*L-J-i+2/(1-J)):
+        # compare s with strings in bucket (a,j)
+        pass
+```
+
+### Position/Prefix/Suffix Indexing
+
+- Add a summary of what follows the positions being indexed
+- 3-tuple index
+  - Character at prefix position
+  - Index of prefix position
+  - Length of suffix
+- $E \ge i + j - 2$
+- $C \le \min|k-m| + 1$
+  - where $k$ and $m$ are suffix length of string $s$ and $t$
