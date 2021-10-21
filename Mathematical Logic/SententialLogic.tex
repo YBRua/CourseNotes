@@ -72,8 +72,8 @@ We often use Greek alphabets $\alpha,\beta,\dots$ to represent expressions.
     An expression $\alpha$ is a well-formed formula iff there is a well-formed sequence $(\alpha_1,\dots,\alpha_n)$ s.t. $\alpha = \alpha_n$
 \end{proposition}
 
-\section{The Induction Principle}
-\label{sec:Induction}
+\subsection{The Induction Principle}
+\label{sub:Induction}
 
 Well-formed formulas are a form of inductive definitions with
 \begin{itemize}
@@ -97,3 +97,144 @@ Well-formed formulas are a form of inductive definitions with
     \end{enumerate}
     Then $S$ is the set of \emph{all wffs} ($S = W$).
 \end{theorem}
+
+We can see an example of Indunction.
+
+\begin{proposition}
+    Every wff has the same number of left parentheses as right parenthesis
+\end{proposition}
+\begin{proof}
+    Let $S\triangleq \{\alpha|\alpha\text{has equal number of left and right parentheses}\}$.
+    \begin{itemize}
+        \item[Base] $\alpha = A$. Straightforward. Sentense symbols do not have parenthesis
+        \item[Step]
+        \begin{enumerate}
+            \item Let $\beta \in S$, $\alpha = (\neg \beta) \in S$.
+            \item Let $\alpha_1, \alpha_2 \in S$, $\alpha = (\alpha_1 \wedge \alpha_2) \in S$.
+            \item $\cdots$
+        \end{enumerate} 
+    \end{itemize}
+\end{proof}
+
+\subsection{Parsing Formulas}
+\label{sub:ParsingFormulas}
+
+The induction principle actually gives an algorithm for parsing formulas.
+
+On input expression $\alpha$
+
+\begin{enumerate}
+    \item If is leaf node, we are done. Return.
+    \item The first symbol must be `('.
+    \item If the second symbol is `$\neg$', then expect an non-empty expression $\beta$ and parse $\beta$.
+    \item If the second symbol is not `$\neg$', then expect a non-empty expression $\beta_1$, an operator and another expression $\beta_2$.
+\end{enumerate}
+
+\subsection{Abbreviations}
+\label{sub:Abbreviations}
+
+\begin{itemize}
+    \item The outermost parentheses can be omitted.
+    \item $\neg$ appplies to as little as possible, with the highest precedence.
+    \item $\wedge$ and $\vee$ apply to as little as possible, subject to $\neg$.
+    \item $\rightarrow$ and $\leftrightarrow$ apply to as little as possible, subject to other operators.
+    \item When handling operators with the same precedence, grouping is always to the right. $A \rightarrow B \rightarrow C= (A \rightarrow (B\rightarrow C))$.
+\end{itemize}
+
+\section{Semantics}
+\label{sec:Semantics}
+
+\subsection{Truth Assignments}
+
+Consider a math domain $\{T,F\}$ of truth values
+
+\begin{itemize}
+    \item T is called truth
+    \item F is called falsity
+\end{itemize}
+
+\begin{definition}[Truth Assignment]
+    A truth assignment for a set $\mathcal{S}$ of sentence symbols is a function
+    \[ v:\mathcal{S}\mapsto\{T,F\} \]
+\end{definition}
+
+\begin{definition}[Extended Truth Assignment]
+    Let $\bar{\mathcal{S}}$ be the set of wffs that can be built up from $\mathcal{S}$ by formula-building operations. Let $v$ be a truth assignment for $\mathcal{S}$. An \textbf{extension} $\bar{v}$ of $v$
+    \[ \bar{v}:\bar{\mathcal{S}}\mapsto \{T,F\} \]
+    assigns truth values to every wff in $\mathcal{S}$ s.t.
+    \begin{itemize}
+        \item $\bar{v}(\alpha) = v(\alpha)$ if $\alpha \in \mathcal{S}$
+        \item $\bar{v}(\neg(\alpha))$ is T if $\bar{v}(\alpha)$ is F and F otherwise.
+        \item $\bar{v}((\alpha\wedge\beta))$ is T if $\bar{v}(\alpha)$ is T and $\bar{v}(\beta)$ is T and F otherwise.
+        \item $\bar{v}((\alpha\vee\beta))$ is T if $\bar{v}(\alpha)$ is T or $\bar{v}(\beta)$ is T and F otherwise.
+        \item $\bar{v}((\alpha\to\beta))$ is F if $\bar{v}(\alpha)$ is T and $\bar{v}(\beta)$ is F and T otherwise.\footnote{Emphasizes the promise of a condition implying a consequence. If the condition is falsy then no guarantee for the consequence. \emph{“骗你是小狗”}}
+        \item $\bar{v}((\alpha\leftrightarrow\beta))$ is T if $\bar{v}(\alpha) = \bar{v}(\beta)$ and is F otherwise.
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}[Determinacy of Truth Assignments]
+    \label{thm:DeterminacyofTruthAssignments}
+    For every $v_1$ and $v_2$ and wff $\alpha$, if
+    \[ v_1(A) = v_2(A) \]
+    for every sentence symbol that occurs in $\alpha$, then
+    \[ \bar{v}_1(\alpha) = \bar{v}_2(\alpha) \]
+\end{theorem}
+
+\begin{remark}
+    To determine the value of $\bar{v}(\alpha)$, we only need to know the value of $v$ on the sentence symbols that occur in $\alpha$. This leads to the method of \textbf{truth tables}.
+\end{remark}
+
+\subsection{Satisfiability}
+\label{sub:Satisfiability}
+
+We first introduce some new notations. We use captial Greek letters, $\Delta$, $\Sigma$, etc. to represent sets of wffs. And we use $\Sigma;\alpha$ to represent $\Sigma \cup \{\alpha\}$.
+
+\begin{definition}~{}
+    \begin{itemize}
+        \item $v$ satisfies $\alpha$ if $\bar{v}(\alpha) = T$
+        \item $v$ satisfies $\Sigma$ if $\bar{v}(\alpha) = T$ for every $\alpha \in \Sigma$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Satisfiability]~{}
+    \label{def:Satisfiability}
+    \begin{itemize}
+        \item $\alpha$ is satisfiable if there exists some $v$ that satisfies $\alpha$
+        \item $\Sigma$ is satisfiable if there exists some $v$ that satisfies $\Sigma$
+    \end{itemize}
+\end{definition}
+
+\begin{remark}
+    Every $v$ satisfies $\emptyset$. Because $v$ satisfies $\emptyset$ iff
+    \[ \forall \alpha, \alpha\in\emptyset \Longrightarrow \bar{v}(\alpha) = T \]
+    The assumption itself is false, and therefore the consequence is always true.
+\end{remark}
+
+\subsection{Semantic Implications}
+\label{sub:SemanticImplications}
+
+\begin{definition}
+    A set of wffs $\Sigma$ semantically implies $\alpha$ when every truth assignment satisfying $\Sigma$ also satisfies $\alpha$.
+    \begin{itemize}
+        \item $\Sigma \vDash \alpha$ denotes that $\Sigma$ implies $\alpha$
+        \item $\alpha \vDash \beta$ denotes that $\{\alpha\} \vDash \beta$
+    \end{itemize}
+    If $\Sigma \vDash \alpha$, we call $\alpha$ a semantic consiquence of $\Sigma$.
+\end{definition}
+
+Semantic implication is also referred to as totallogical implication.
+
+\subsection{Tautologies}
+\label{sub:Tautologies}
+
+\begin{definition}[Tautologies]
+    $\alpha$ is a tautology if $\emptyset \vDash \alpha$, denoted by $\vDash \alpha$.
+\end{definition}
+\begin{remark}
+    ~{}
+    \begin{itemize}
+        \item $\alpha$ is a tautology iff $\forall v$, $\bar{v}(\alpha)=T$.
+        \item $\alpha$ is a tautology iff $\neg \alpha$ is \emph{not satisfiable}
+        \item $\alpha$ is satisfiable iff $\neg \alpha$ is a tautology.
+    \end{itemize}
+\end{remark}
