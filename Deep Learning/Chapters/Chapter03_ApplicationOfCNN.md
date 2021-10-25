@@ -161,11 +161,165 @@ Summation-->Softmax
   - Selective Search
   - Multiscale Combinatorial Grouping, MCG
 
+#### Workflow
+
+1. Input
+2. RoI (about 2k RoIs)
+3. Warp (resize to fit CNN input size)
+4. CNN
+5. Output
+
 #### R-CNN
+
+##### Bounding Box Regression
+
+- A bounding box is represented by $(x,y,h,w)$
+- Let $p$ be predicted elements and $g$ be ground-truth elements
+- $t_x = (g_x-p_x)/p_w$; $\hat{g}_x = p_wd_x(p)+p_x$
+- $t_y = (g_y-p_y)/p_h$; $\hat{g}_y = p_hd_y(p)+p_y$
+- $t_w = \log(g_w/p_w)$; $\hat{g}_w=p_w\exp(d_w(p))$
+- $t_h = \log(g_h/p_h)$; $\hat{g}_h=p_h\exp(d_h(p))$
+
+##### Pipeline
+
+> Not end-to-end
+
+1. Train network on proposals
+2. Train SVM and bounding box regressor using CNN output features
+3. Non-Maximum Suppression + Score threshold
+
+##### Non-Maximum Suppression NMS
+
+1. Select the box with the highest objectiveness score
+2. Compare the IoU of this box with other boxes
+3. Remove boxes with overlap $\ge 50\%$
+4. Move to the next and repeat the procedure
+
+##### Problem
+
+- Slowa
+- Stage-wise training. CNN and SVM are trained independently.
+
+#### Fast R-CNN
+
+Share computation of convolutional layers between region proposals for an image.
+
+- Map the input onto a feature map
+- Directly extract features of RoIs from the feature map
+
+##### RoI Pooling
+
+- Divide mapped RoI features into grids
+- Pool within each grid cell to get inputs of fixed sizes
+
+##### Problem
+
+- Fast. But still slow if we include time for region proposals
+
+#### Faster R-CNN
+
+> Learn proposals end-to-end sharing parameters with the classification network
+
+##### Region Proposal Network
 
 ```mermaid
 graph LR
-    Input-->RoIs
-    RoIs-->CNN
-    CNN-->Labela
+  ConvFeatMap-->Intermediate
+  Intermediate-->ClsLayer
+  Intermediate-->RegLayer
 ```
+
+- Anchor
+  - predefined bounding boxes of various sizes and scales
+  - 9 anchors (3 scales and 3 aspect ratios) work well in practice
+
+##### Problem
+
+- Faster. But cannot real-time
+
+### One-Stage Methods
+
+#### You Only Look Once YOLO
+
+- Proposal-free object detection pipeline
+
+##### Pipeline
+
+1. Divide input image to 7x7 cells
+2. Each cell output 2 bounding boxes $(conf,x,y,w,h)$ and shared class probability $(p_{c_1},\dots, p_{c_{20}})$
+   - Total output: 30 for each cell
+   - Final output `7x7x30`
+3. The ground truth object corresponds to the cell where the center locates
+4. The ground truth object corresponds to the predicted bounding box with larger IoU
+
+##### Loss
+
+- Localization Loss
+- Confidence Loss
+- Classification Loss
+
+#### Single Shot MultiBox Detector SSD
+
+- YOLO + Several predictors at different stages in the network
+
+### Multi-Stage Methods
+
+#### IoU
+
+- If too high, there will be too few samples to train
+- If too low (actually even if 50%), there will be samples of low quality
+
+#### Cascading Object Detection
+
+- Cascading multiple object detectors with increasing IoU thresholds
+- Gradually improving proposal quality
+
+## Instance Segmentation
+
+> Segmenting each instance (instead of labeling all persons as person)
+
+### Evaluation Metrics
+
+- Mask AP
+  - IoU for mask prediction
+
+### Methods
+
+#### Overview
+
+- R-CNN driven
+  - Object detection + Semantic segmentation
+- FCN driven
+  - Semantic segmentation + Object detection
+
+#### Mask R-CNN
+
+> Faster R-CNN with FCN on RoIs
+
+##### RoIAlign
+
+- RoI pooling includes quantization
+  - Rounding RoIs to the nearest grid
+  - Breaks translation-equivariance of convolution
+- Divide RoIs into fixed-sized sub-cells
+- Bilinear interpolate and pool RoIs to get RoIAlign output
+- Other implementation should also work
+
+##### Feature Pyramid Network FPN
+
+###### Different ways
+
+1. Resize image into multiple sizes
+   - Multiple inputs, can be slow
+2. Single input, multiple feature maps, predict on each feature map
+   - First levels of layers do not have adequate semantics
+
+###### FPN Implementation
+
+> Like U-Net
+
+- Exactly like U-Net
+  - Upsampling + direct connect
+- Except that each upsampling layer produces a prediction
+
+#### Cascading Mask R-CNN
