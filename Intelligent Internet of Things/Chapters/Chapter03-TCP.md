@@ -1,4 +1,4 @@
-# Mechanism of the TCP Protocol
+# TCP Protocol
 
 > TCP: Transmission Control Protocol
 > Provides RELIABLE data transfer over unreliable Internet
@@ -157,3 +157,43 @@ where $DevRTT$ is an estimated deviation RTT and serves as a safety margin
 - Modern improved TCP supports ECN
 - Requires router involvements
   - routers explicitly acknowledges senders
+
+## Flow Control
+
+> Make the receiver not overwhelmed by the sender
+
+- There is a `received window` field in the segment of TCP packet
+- Tells the sender the number of bytes the receiver is willing (or is able) to accept
+
+## Connection Management
+
+- `sequence number`
+- `acknowledgement number`
+- `ACK`
+- `SYN`
+- `FIN`
+
+### Sequence Number and ACK Number
+
+```mermaid
+sequenceDiagram
+  A->>B: Byte=42, ACK=79
+  B->>A: Byte=80, ACK=43
+  A->>B: Byte=43, ACK=81
+```
+
+### Three-Way Handshake
+
+```mermaid
+sequenceDiagram
+  A->>B: SYNbit=1, Seq=x
+  B->>A: SYNbit=1, Seq=y, ACKbit=1, ACKnum=x+1
+  A->>B: ACKbit=1, ACKnum=y+1
+```
+
+- Use three-way instead of two-way handshaking is mainly for security concerns
+  - In case a sender pigeons the server and wastes the reserved server resources
+- TCP Protocol is stateless, but the server can use a hash function $f$ to generate sequence number `y` to identify the client.
+  - Known as the `SYN Cookie`
+  - Not to confuse with the `HTTP Cookie`
+- When a client responds, the server can then use the same hash function to check if `ACKnum = y + 1`
