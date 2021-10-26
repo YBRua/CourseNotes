@@ -132,9 +132,9 @@ $$ \argmax_h \mathbb{P}[h|v] = \argmax_h \frac{score(h,v)}{\sum_h score(h,v)} $$
 
 $$ score(h,v) = \exp\left( \sum_{k=1}^K w_kF_k(h,v) \right) $$
 
-$$ F_k(h,v) = \sum_{i=1}^N f_k(h_i, h_{i-1},v,i) $$
+- $F_k()$ 是定义在 $h,v$ 上的特征函数
 
-## 附录：概率图模型
+## 概率图模型与条件随机场
 
 ### 概述
 
@@ -184,6 +184,140 @@ $$ \mathbb{P}[Y] = \frac{1}{Z}\prod_C \Psi_C(Y_C) $$
 - $C$ 是图的最大团
 - $\Psi_C(Y_C)$ 是 $C$ 上定义的严格正函数
   - 通常是指数函数
+- $Z$ 是归一化系数
 
 条件随机场
 : 设 $X$、$Y$ 是随机变量。若 $\mathbb{P}[Y|X]$ 符合马尔可夫性，则称 $\mathbb{P}[Y|X]$ 是一个条件随机场。
+
+线性条件随机场
+: 设 $X=[X_1,\dots,X_n]$ 与 $Y=[Y_1,\dots,Y_n]$ 是均为线性链表示的随机变量序列，若 $\mathbb{P}[Y|X]$ 构成条件随机场
+$$ \mathbb{P}[Y_i|X,Y_{\mathcal{N}(i)}] = \mathbb{P}[Y_i|X,Y_{i-1},Y_{i+1}]$$
+则称 $\mathbb{P}[Y|X]$ 为线性条件随机场
+
+### 线性条件随机场
+
+$$ F_k(h,v) = \sum_{i=1}^N f_k(h_i, h_{i-1},v,i) $$
+
+故 $\mathbb{P}[h|v]$ 可以表示为
+
+$$ \begin{aligned}
+  \mathbb{P}[h|v] &= \frac{score(h,v)}{\sum_h score(h,v)}\\
+  &= \frac{1}{Z(v)}\exp\left( \sum_{k=1}^Kw_k\sum_{i=2}^Nf_k(h_i,h_{i-1},v,i) \right)\\
+  &=\frac{1}{Z(v)}\prod_{i=2}^N\psi_i(h_i,h_{i-1},v)
+\end{aligned} $$
+
+其中 $\psi_i(h_i,h_{i-1}, v) = \exp(\sum_{k=1}^Kw_kf_k(h_i,h_{i-1},v,i))$
+
+- 其中 $f_k$ 是特征
+- $w_k$ 是参数
+
+#### 特征 $f_k$ 的选取
+
+- 通常是值域为 $\{0,1\}$ 的二值函数，在满足特征规定的条件后为1，否则为0
+
+##### 特征类型
+
+- 一元特征：前一个、当前、或后一个字符为特定字符
+  - $v_{i-1}$
+  - $v_i$
+  - $v_{i+1}$
+- 二元特征：当前和上一字符、当前和下一字符为某个字符串
+- 跳跃特征：上一个和下一个字符为特定字符组合
+- 三元特征：上一个、当前和下一个字符为特定字符串
+- 一元状态特征：上一个、当前、或下一个状态为特定状态
+- 状态转移：上一字符的状态 $h_{i-1}$ 转移到当前状态 $h_i$
+- 混合特征
+
+##### 特征选取
+
+- 对于一个具有实用价值的CRF而言，特征数量通常在 $10^5\sim 10^6$ 量级
+- 因此这些特征通常通过特征模板生成
+
+## 条件随机场的重要算法
+
+### 前向与后向算法：给定文本计算配分函数
+
+#### 计算归一化系数
+
+$$ Z(v) = \sum_h\prod_{i=2}^N\psi_i(h_i,h_{i-1},v,i) $$
+
+### Viterbi算法：给定文本推断分词方案
+
+$$ \begin{aligned}
+  \argmax_h\mathbb{P}[h|v] &= \argmax_h \frac{score(h,v)}{\sum_h score(h,v)}\\
+  &= \argmax_h \frac{score(h,v)}{Z(v)}\\
+  &= \argmax_h score(h,v)\\
+  &= \argmax_h \exp\left( \sum_{k=1}^K w_kF_k(h,v) \right)\\
+  &= \argmax_h \sum_{k=1}^Kw_k\sum_{i=2}^Nf_k(h_i,h_{i-1},v-i)\\
+  &= \argmax_h \sum_{i=2}^N\sum_{k=1}^Kw_kf_k(h_i,h_{i-1},v-i)
+\end{aligned} $$
+
+### 有监督学习
+
+- 假设训练集有 $M$ 句句子（和标注）
+
+$$\begin{aligned}
+  \max_w L(w) &= \max_w \sum_{s=1}^M \mathbb{P}[h^s|v^s]\\
+  &= \max_w \sum_{s=1}^M \frac{1}{Z(v^s)}\exp\left( \sum_{k=1}^Kw_kF_k(h^s,v^s) \right)\\
+  &= \max_w \sum_{s=1}^M \frac{1}{Z(v^s)}\exp\left( \sum_{k=1}^K\sum_{i=2}^Nw_kf_k(h_i^s,h_{i-1}^s,v^s,i) \right)\\
+  &\Leftrightarrow \max_w \log L(w)\\
+  &\Leftrightarrow \min_w -\log L(w)
+\end{aligned}$$
+
+- 可以用梯度下降求解
+
+## 评价指标
+
+### 查准率与查全率
+
+## 英文分词
+
+### 切分方法
+
+- 简单方法
+  - 按空格切分
+- 缩写词
+  1. 将缩写后的词看成一个新的词
+  2. 将缩写后的词拆开
+- 数字、符号
+  - 归一化后处理
+
+### 词级别的词元切分
+
+- 基于正则表达式的方法
+- 基于统计学习的方法
+
+### 亚词级别的词元切分
+
+- 对于英语、法语、德语等语言，词并不是一个特别合适的切分单元
+  - 对一个中等到大型的语料库，涉及的词汇将达到30-60万
+  - 即使剔除低频词，词表规模仍然可能超过10万
+  - 大量未登录词可能会导致模型在特定任务上性能下降
+  - 然而，大量词之间相互联系，或者是同一个词根的变化，或是共享部分词根
+
+#### Byte-Pair Encoding BPE
+
+1. 初始化词汇表，将所有出现的单个字母都包含进来
+2. 重复直到达到预先设定的最大迭代次数
+   1. 将现有语料库用现有词汇表表示
+   2. 将其中最常见的一个bi-gram捏合成一个新的token
+
+- 事实上只需要遍历一遍词表，统计所有出现的词的词频
+- 然后只需要遍历词表，将出现的次数乘以词频
+
+##### 优势
+
+- 解决了字母级和单词级词元切分各自的问题
+- 解决了未登录词的问题：可以用有限词表覆盖所有出现的词
+- 算法复杂度低
+- 是目前绝大部分NLP模型采用的词元切分方法
+
+### 常用工具
+
+- 词级别
+  - `nltk`
+  - `spacy`
+  - `mosestokenizer`
+- 亚词级别
+  - `sentencepiece`
+  - `wordpiece`
