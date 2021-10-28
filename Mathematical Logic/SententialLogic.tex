@@ -222,12 +222,17 @@ We first introduce some new notations. We use captial Greek letters, $\Delta$, $
     If $\Sigma \vDash \alpha$, we call $\alpha$ a semantic consiquence of $\Sigma$.
 \end{definition}
 
-Semantic implication is also referred to as totallogical implication.
+Semantic implication is also referred to as tautological implication.
+
+\begin{remark}
+    Note that $\{\alpha,\neg\alpha\} \vDash \beta$ also holds, because the assumption does not hold, so the consequence trivially holds.
+\end{remark}
 
 \subsection{Tautologies}
 \label{sub:Tautologies}
 
 \begin{definition}[Tautologies]
+    \label{def:Tautology}
     $\alpha$ is a tautology if $\emptyset \vDash \alpha$, denoted by $\vDash \alpha$.
 \end{definition}
 \begin{remark}
@@ -235,6 +240,44 @@ Semantic implication is also referred to as totallogical implication.
     \begin{itemize}
         \item $\alpha$ is a tautology iff $\forall v$, $\bar{v}(\alpha)=T$.
         \item $\alpha$ is a tautology iff $\neg \alpha$ is \emph{not satisfiable}
-        \item $\alpha$ is satisfiable iff $\neg \alpha$ is a tautology.
+        \item $\alpha$ is satisfiable iff $\neg \alpha$ is not a tautology.
     \end{itemize}
 \end{remark}
+
+\subsection{Semantic Equivalence}
+\label{sub:SemanticEquivalence}
+
+\begin{definition}[Semantic Equivalence]
+    Two wffs $\alpha$ and $\beta$ are semantically equivalent if both $\alpha\vDash\beta$ and $\beta\vDash\alpha$ hold. We use $\alpha\vDash\models\beta$
+\end{definition}
+
+\begin{proposition}
+    The following are equivalent
+    \begin{itemize}
+        \item $\alpha$ and $\beta$ are semantically equivalent
+        \item For every $v$, $\bar{v}(\alpha)=\bar{v}(\beta)$
+        \item $\alpha$ and $\beta$ have the same truth table
+    \end{itemize}
+\end{proposition}
+
+We can use semantic equivalence to derive truthfulness of wffs. If $\alpha\vDash\models\beta$, we can freely exchange one for the other in deriving the truth of some formula $\sigma$ where $\alpha$ and/or $\beta$ occur.
+
+Remember not to mix syntax and semantics
+
+\begin{itemize}
+    \item $\alpha=T$ is incorrect. Use $\bar{v}(\alpha)=T$.
+    \item $v(\Sigma)=T$ is incorrect. Use $v$ satisfies $\Sigma$.
+\end{itemize}
+
+\subsubsection{Properties of Satisfaction and Implication}
+
+\begin{itemize}
+    \item If $\alpha$ is a tautology, then $\Sigma\vDash\alpha$ for every $\Sigma$
+    \item If $\alpha\in\Sigma$ then $\Sigma\vDash\alpha$
+    \item If $\Sigma\vDash\alpha$ and $\Sigma\vDash\alpha\to\beta$ then $\Sigma\vDash\beta$
+    \item If $\Sigma\vDash\alpha$ and $\alpha\vDash\beta$ then $\Sigma\vDash\beta$.
+    \item If $\Sigma\vDash\alpha$ then for all $\beta$, $\Sigma\vDash\beta\to\alpha$
+    \item If $\Sigma\vDash\alpha$ and $\Sigma\vDash\beta$ then $\Sigma\vDash \alpha\wedge\beta$
+    \item If $\Sigma\vDash\alpha$ or $\Sigma\vDash\beta$ then $\Sigma\vDash \alpha\vee\beta$
+    \item If $\Sigma\nvDash\alpha$ iff $\Sigma\cup\{\neg\alpha\}$ is satisfiable.
+\end{itemize}
