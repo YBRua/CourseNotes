@@ -52,7 +52,7 @@ $$ \bar{y} = \sum_i\sum_j\frac{1}{A} jb_{ij} $$
 
 $$ a' = \sum_i\sum_j i^2 b_{ij} $$
 
-$$ b' = \sum_i\sum_j ij b_{ij} $$
+$$ b' = 2\sum_i\sum_j ij b_{ij} $$
 
 $$ c' = \sum_i\sum_j j^2 b_{ij} $$
 
