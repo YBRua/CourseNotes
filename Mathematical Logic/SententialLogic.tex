@@ -248,7 +248,7 @@ Semantic implication is also referred to as tautological implication.
 \label{sub:SemanticEquivalence}
 
 \begin{definition}[Semantic Equivalence]
-    Two wffs $\alpha$ and $\beta$ are semantically equivalent if both $\alpha\vDash\beta$ and $\beta\vDash\alpha$ hold. We use $\alpha\vDash\models\beta$
+    Two wffs $\alpha$ and $\beta$ are semantically equivalent if both $\alpha\vDash\beta$ and $\beta\vDash\alpha$ hold. We use $\alpha\vDash\Dashv\beta$
 \end{definition}
 
 \begin{proposition}
@@ -269,7 +269,7 @@ Remember not to mix syntax and semantics
     \item $v(\Sigma)=T$ is incorrect. Use $v$ satisfies $\Sigma$.
 \end{itemize}
 
-\subsubsection{Properties of Satisfaction and Implication}
+\subsection{Properties of Satisfaction and Implication}
 
 \begin{itemize}
     \item If $\alpha$ is a tautology, then $\Sigma\vDash\alpha$ for every $\Sigma$
@@ -279,5 +279,106 @@ Remember not to mix syntax and semantics
     \item If $\Sigma\vDash\alpha$ then for all $\beta$, $\Sigma\vDash\beta\to\alpha$
     \item If $\Sigma\vDash\alpha$ and $\Sigma\vDash\beta$ then $\Sigma\vDash \alpha\wedge\beta$
     \item If $\Sigma\vDash\alpha$ or $\Sigma\vDash\beta$ then $\Sigma\vDash \alpha\vee\beta$
-    \item If $\Sigma\nvDash\alpha$ iff $\Sigma\cup\{\neg\alpha\}$ is satisfiable.
+    \item If $\Sigma\nvDash\alpha$ iff $\Sigma\cup\{\neg\alpha\}$ is satisfiable
+    \item If $\Sigma \vDash \alpha$ iff $\Sigma \cup \{\neg \alpha\}$ is not satisfiable
+    \item If $\Sigma \vDash \alpha \to \beta$ iff $\Sigma;\alpha \vDash \beta$
+    \item If $\Sigma$ is not satisfiable, then for every $\alpha$, $\Sigma\vDash\alpha$
+    \item If $\Sigma\vDash\alpha$ and $\Sigma\subseteq\Delta$ then $\Delta\vDash\alpha$
+    \item If $\Sigma$ is satisfiable then every subset of $\Sigma$ is satisfiable
+    \item If every subset of $\Sigma$ is satisfiable then $\Sigma$ is satisfiable.
+    \item If every finite subset of $\Sigma$ is satisfiable then $\Sigma$ is satisfiable
+    \item If $\Sigma\vDash\alpha$ then there is a finite subset $\Delta$ of $\Sigma$ such that $\Delta\vDash\alpha$
 \end{itemize}
+
+\section{Normal Forms}
+\label{sec:NormalForms}
+
+\subsection{Disjunctive Normal Forms}
+\label{sub:DisjunctiveNormalForms}
+
+\begin{definition}[Disjunctive Normal Form]
+    \label{def:DisjunctiveNormalForm}
+    The wff $\alpha$ is in \textbf{disjunctive normal form} if $\alpha=\gamma_1\vee\gamma_2\vee\cdots\vee\gamma_k$ where each $\gamma_i$ is a conjunction
+    \[ \gamma_i = \beta_{i1}\wedge\beta_{i2}\wedge\cdots\wedge\beta_{in_i} \]
+    where each $\beta_{ij}$ is either a sentence symbol or the negation of a sentence symbol
+\end{definition}
+
+\subsection{Conjunctive Normal Forms}
+\label{sub:ConjunctiveNormalForms}
+
+\begin{definition}[Conjunctive Normal Form]
+    \label{def:ConjunctiveNormalForm}
+    The wff $\alpha$ is in \textbf{conjunctive normal form} if $\alpha=\gamma_1\wedge\gamma_2\wedge\cdots\wedge\gamma_k$ where each $\gamma_i$ is a conjunction
+    \[ \gamma_i = \beta_{i1}\vee\beta_{i2}\vee\cdots\vee\beta_{in_i} \]
+    where each $\beta_{ij}$ is either a sentence symbol or the negation of a sentence symbol
+\end{definition}
+
+\subsection{Completeness of Normal Forms}
+
+\begin{theorem}[Completeness of DNFs]
+    \label{thm:CompletenessOfDNF}
+    Every wff is semantically equivalent to a wff in disjunctive normal form
+\end{theorem}
+\begin{proof}
+    \begin{enumerate}
+        \item Construct the disjunctive normal form truth tables
+        \item Select all assignments $v$ s.t. $\bar{v}(\alpha)=T$
+        \item Construct $\gamma_i$ where $\beta_{ij} = A_j$ if $A_j$ is assigned $T$ and $\beta_{ij} = \neg A_j$ otherwise
+    \end{enumerate}
+\end{proof}
+
+\begin{theorem}[Completeness of CNFs]
+    \label{thm:CompletenessOfCNF}
+    Every wff is semantically equivalent to a wff in conjunctive normal form
+\end{theorem}
+\begin{proof}
+    Given $\alpha=\gamma_1\vee\cdots\vee\gamma_n$ in DNF. If every $\gamma_i$ is a sentence symbol or the negation of a sentence symbol, we are done. Otherwise, there is some $\gamma_i = \beta_{i1}\wedge\beta_{i2}$. Then
+    \[ \alpha \equiv (\beta_{i1} \wedge \beta_{i2}) \vee \alpha' \equiv (\beta_{i1}\vee\alpha') \wedge (\beta_{i2}\vee\alpha') \]
+    where $\alpha'$ is the disjunction of $\{\gamma_k|k \neq i\}$
+
+    And we recursively repeat the steps
+\end{proof}
+
+\section{Finite Satisfiability}
+\label{sec:FiniteSatisfiability}
+
+\begin{definition}[Finite Satisfiability]
+    \label{def:FiniteSatisfiability}
+    $\Sigma$ is \textbf{finitely satisfiable} if every finite subset of $\Sigma$ is satisfiable.
+\end{definition}
+\begin{remark}
+    Suppose $\Delta$ is finitely satisfiable, and for every $\alpha\in\Delta$, $\alpha\in\Delta$ or $\neg\alpha\in\Delta$
+
+    Then $\alpha\in\Delta$ iff $\neg\alpha\notin\Delta$
+\end{remark}
+
+
+\subsection{Compactness Theorem}
+
+\begin{theorem}[Compactness Theorem]
+    \label{thm:CompactnessTheorem}
+    If $\Sigma$ is finitely satisfiable, then $\Sigma$ is satisfiable
+\end{theorem}
+\begin{sketchproof}
+    We break down the proof into the following steps
+    \begin{enumerate}
+        \item From $\Sigma$, construct its superset $\Delta$ s.t.
+        \begin{enumerate}
+            \item $\Delta$ is finitely satisfiable
+            \item For every wff $\alpha$, $\alpha\in\Delta$ or $\neg\alpha\in\Delta$
+        \end{enumerate}
+        \item Show that $\Delta$ is satisfiable, so that $\Sigma$ is also satisfiable
+    \end{enumerate}
+\end{sketchproof}
+
+\begin{lemma}
+    \label{lem:CompactnessLemma1}
+    If $\Delta$ is finitely satisfiable, then for every wff $\alpha$,
+    \begin{itemize}
+        \item either $\Delta\cup\{\alpha\}$ is finitely satisfiable
+        \item or $\Delta\cup\{\neg\alpha\}$ is finitely satisfiable
+    \end{itemize}
+\end{lemma}
+\begin{remark}
+    This lemma implies that we can expand $\Sigma$ for one step, by including $\alpha$ or $\neg\alpha$
+\end{remark}
