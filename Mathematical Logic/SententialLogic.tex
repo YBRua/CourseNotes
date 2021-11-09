@@ -347,7 +347,7 @@ Remember not to mix syntax and semantics
     $\Sigma$ is \textbf{finitely satisfiable} if every finite subset of $\Sigma$ is satisfiable.
 \end{definition}
 \begin{remark}
-    Suppose $\Delta$ is finitely satisfiable, and for every $\alpha\in\Delta$, $\alpha\in\Delta$ or $\neg\alpha\in\Delta$
+    Suppose $\Delta$ is finitely satisfiable, and for every $\alpha$, $\alpha\in\Delta$ or $\neg\alpha\in\Delta$
 
     Then $\alpha\in\Delta$ iff $\neg\alpha\notin\Delta$
 \end{remark}
@@ -379,6 +379,76 @@ Remember not to mix syntax and semantics
         \item or $\Delta\cup\{\neg\alpha\}$ is finitely satisfiable
     \end{itemize}
 \end{lemma}
+\begin{proof}
+    Prove by contradiction. Suppose neither $\Delta\cup\{\alpha\}$ nor $\Delta\cup\{\neg\alpha\}$ is finitely satisfiable. Then there are some finite subsets $\Delta_1 \subseteq \Delta\cup\{\alpha\}$ and $\Delta_2\subseteq\Delta\cup\{\neg\alpha\}$ which are not satisfiable. Notice that $\alpha$ must be in $\Delta_1$ and $\Delta_2$, or otherwise $\Delta_1$ and $\Delta_2$ would be satisfiable by finite satisfiability of $\Delta$. Therefore $\Delta_1 = \Delta'_1\cup\{\alpha\}$ and $\Delta_2'\cup\{\neg\alpha\}$.
+
+    Then we construct $\Delta' = \Delta_1\cup\Delta_2 = \Delta_1'\cup\Delta_2'\cup\{\alpha,\neg\alpha\}$. Then there exists an assignment $v$ such that $v$ satisfies $\Delta_1'\cup\Delta_2'$, and that $v$ satisfies either $\alpha$ or $\neg\alpha$. Suppose $\bar{v}(\alpha)=T$, then $\Delta_1$ is satisfiable, which causes contradiction. Conversely, if $\bar{v}(\alpha) = F$ then $\bar{v}(\neg\alpha)=T$, then $\Delta_2$ is satisfiable, which is also a contradiction.
+\end{proof}
 \begin{remark}
     This lemma implies that we can expand $\Sigma$ for one step, by including $\alpha$ or $\neg\alpha$
 \end{remark}
+
+
+\begin{lemma}
+    \label{lem:CompactnessLemma2}
+    If $\Sigma$ is finitely satisfiable, then there is a $\Delta \supseteq \Sigma$ such that
+    \begin{itemize}
+        \item $\Delta$ is finitely satisfiable
+        \item For each wff $\alpha$, $\alpha\in\Delta$ or $\neg\alpha\in\Delta$
+    \end{itemize}
+\end{lemma}
+\begin{proof}
+    The set of all wffs is enumerable, so we can write all wffs in a sequence
+    \[ \alpha_1, \alpha_2,\dots,\alpha_n,\dots \]
+    Then we can scan through the sequence and check if $\alpha_i$ can be added to $\Sigma$. Starting from $\Delta_0 = \Sigma$,
+    \[\Delta_{i+1}\begin{cases}
+        \Delta_i \cup \{\alpha_i\} &\quad\text{if it is finitely satisfiable}\\
+        \Delta_i \cup \{\neg \alpha_i\} &\quad \text{otherwise}
+    \end{cases}\]
+
+    It can be proved by induction and Lemma~\ref{lem:CompactnessLemma1} that $\forall i,\Delta_i$ is finitely satisfiable.
+
+    And $\Delta$ can be constructed by the union of all $\Delta_i$'s
+
+    \[ \Delta = \bigcup_{i\in\mathbb{N}} \Delta_i \]
+
+    $\Delta$ is finitely satisifiable because for each $\Delta'\subseteq\Delta$, $\Delta'\subseteq\Delta_i$ for some $\Delta_i$. Since $\Delta_i$ is finitely sat, $\Delta'$ is also satisfiable, and therefore $\Delta$ is finitely sat.
+
+    For each wff $\alpha$, either $\alpha\in\Delta$ or $\neg\alpha\in\Delta$. Because $\alpha$ must exist as $\alpha_i$ in the sequence of all wffs, then either $\alpha_i\in\Delta_{i+1}$ or $\neg\alpha_i\in\Delta_{i+1}$.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:CompactnessLemma3}
+    Let $\Delta$ be a set of wffs such that
+    \begin{itemize}
+        \item $\Delta$ is finitely satisifiable
+        \item For every wff $\alpha$, $\alpha\in\Delta$ or $\neg\alpha\in\Delta$
+    \end{itemize}
+    Then $\Delta$ is satisfiable
+\end{lemma}
+\begin{proof}
+    Consider the sentence symbols. All sentence symbols (or their negations) must be in $\Delta$ because they are also wffs. Therefore if there is an assignment $v$ that satisfies $\Delta$, its values is already determined by the sentence symbols in $\Delta$.
+
+    \[v(A)=\begin{cases}
+        T &\quad A\in\Delta\\
+        F &\quad \neg A\in\Delta
+    \end{cases}\]
+
+    Then proving Lemma~\ref{lem:CompactnessLemma3} is equivalent to proving
+    \[ \forall \alpha, \alpha\in\Delta\Leftrightarrow\bar{v}(\alpha) = T \]
+    This can be proved by induction
+    \begin{itemize}
+        \item[base] Consider $\alpha=A$. Obviously it holds.
+        \item[induction] \begin{enumerate}[(a)]
+            \item $\alpha=\neg\beta$. The hypothesis is $\beta\in\Delta \Leftrightarrow \bar{v}(\beta)=T$. If $\neg\beta\in\Delta$, then $\beta$ cannot be in $\Delta$ due to the finite satisfiability of $\Delta$, and therefore $\bar{v}(\beta) = F$, and therefore $\bar{v}(\neg\beta) = T$. Conversely, If $\bar{v}(\neg\beta) = T$, then $\bar{v}(\beta) =F$, and therefore $\beta\notin\Delta$ and thus $\neg\beta$ must be in $\Delta$.
+        \end{enumerate}
+    \end{itemize}
+\end{proof}
+
+\begin{corollary}
+    \label{coroll:CorollaryOfTheCompactnessTheorem}
+    If $\Sigma\vDash\tau$, then there is a finite subset $\Delta$ of $\Sigma$ such that $\Delta\vDash\tau$
+\end{corollary}
+\begin{proof}
+    $\Sigma\vDash\tau\Rightarrow\Sigma\cup\{\neg\tau\}$ is unsat. Therefore $\Sigma\cup\{\neg\tau\}$ is not finitely satisfiable by Compactness Theorem \ref{thm:CompactnessTheorem}. Therefore the exists a finite subset $\Delta$ of $\Sigma$ and $\Delta$ is unsat. Therefore $\Delta\vDash\tau$.
+\end{proof}
