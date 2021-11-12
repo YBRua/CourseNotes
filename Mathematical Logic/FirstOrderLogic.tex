@@ -1,0 +1,111 @@
+\chapter{First Order Logic}
+
+\emph{"All men are mortal. Socrates is a man. Socrates is mortal."}
+
+\section{Syntax of First-Order Logic}
+
+We start with the symbols of a \textbf{first-order language} $\mathbb{L}$
+
+There are two types of symbols
+
+\begin{itemize}
+    \item \textbf{Logical symbols}
+    \item Non-logical symbols, a.k.a. \textbf{parameters}
+\end{itemize}
+
+\subsection{Symbols}
+
+\subsubsection{Logical Symbols}
+
+In a first-order language $\mathbb{L}$, we have the following symbols
+
+\begin{enumerate}
+    \item \textbf{Parentheses}. Two symbols `(' and `)'.
+    \item \textbf{Logical connective symbols}. $\to$ and $\neg$
+    \item \textbf{Variables}. An enumerable list of symbols $v_1,\dots,v_n,\dots$
+    \item \textbf{Identity or Equalily Symbol} $=$ or $\doteq$. It may or may not be present in a particular first-order language
+\end{enumerate}
+
+Notice that we do not need $\vee$, $\wedge$. $\leftrightarrow$ because $\{\to, \neg\}$ is complete.
+
+\subsubsection{Parameters}
+
+\begin{enumerate}
+    \item \textbf{Universal quantifier}. $\forall$
+    \item For each $n>0$, there is a set (possibly empty) of objects called n-ary (or n-place) \textbf{predicate symbols}
+    \item For each $n>0$, there is a set (possibly empty) of objects called n-ary (or n-place) \textbf{function symbols}
+    \item A set of (possibly empty) of objects \textbf{constant symbols}
+\end{enumerate}
+
+\subsubsection{Further Requirements}
+
+\begin{itemize}
+    \item $\doteq$ is a 2-ary predicate symbols
+    \item There is at least one predicate symbol
+    \item The symbols are distinct, and no symbol is equal to a finite sequence of other symbols
+\end{itemize}
+
+\subsubsection{Example: Set Theory as First-Order Logic}
+
+The Set Theory can be described by the following language
+
+\begin{itemize}
+    \item Equality
+    \item Predicate symbols: 2-place $\dot{\in}$
+    \item Constant symbols: empty set $\dot{\emptyset}$
+    \item Function symbols: None
+\end{itemize}
+
+Note that the symbols are (currently) just interpreted as symbols and they do not have semantic meanings.
+
+\begin{remark}
+    We do not put restrictions or requirements on number of predicate, function or constant symbols.
+\end{remark}
+
+\subsection{Expressions}
+
+An \textbf{expression} in a language $\mathbb{L}$ is a finite sequence of symbols.
+
+\subsubsection{Terms}
+
+\begin{definition}[Term Building Operation]
+    \label{def:TermBuildingOperation}
+    Given any n-ary function symbol $f$, the term-building operation $\mathcal{F}_f$ is defined by
+    \[ \mathcal{F}_f (\sigma_1,\dots,\sigma_n) = f \sigma_1\dots\sigma_n \]
+    We call $\sigma_i$ the arguments to $f$
+\end{definition}
+
+\begin{definition}[Term]
+    \label{def:Term}
+    A \textbf{term} is an expression
+    
+\end{definition}
+
+For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2v_3c_1$ is a term.
+
+\begin{definition}[Term Sequence]
+    \label{def:TermSequence}
+    A \textbf{term sequence} is a finite sequence $t_1,\dots,t_n$ of expressions s.t. each $t_i$ is
+    \begin{itemize}
+        \item either a variable, a constant
+        \item or
+    \end{itemize}
+\end{definition}
+
+\subsubsection{Atomic Formulas}
+
+\begin{definition}[Atomic Formula]
+    \label{def:AtomicFormula}
+    An expression is an \textbf{atomic formula} if it is of the form $P t_1\dots t_n$ where $t_1,\dots,t_n$ are terms and $P$ is a n-ary predicate symbol.
+\end{definition}
+
+\subsection{Well-Formed Formulas}
+
+\begin{definition}[Formula-Building Operations]
+    \label{def:FormulaBuildingOperation}
+    \begin{itemize}
+        \item $\xi_\neg(\alpha) = (\neg \alpha)$
+        \item $\xi_\to(\alpha, \beta) = (\alpha\to\beta)$
+    \end{itemize}
+    
+\end{definition}

@@ -452,3 +452,26 @@ Remember not to mix syntax and semantics
 \begin{proof}
     $\Sigma\vDash\tau\Rightarrow\Sigma\cup\{\neg\tau\}$ is unsat. Therefore $\Sigma\cup\{\neg\tau\}$ is not finitely satisfiable by Compactness Theorem \ref{thm:CompactnessTheorem}. Therefore the exists a finite subset $\Delta$ of $\Sigma$ and $\Delta$ is unsat. Therefore $\Delta\vDash\tau$.
 \end{proof}
+
+\subsection{Decidability Results for Semantic Implications}
+
+\begin{theorem}
+    Given any finite set $\Sigma$ of wffs and any wff $\alpha$, there is an algorithm for deciding whether or not $\Sigma\vDash\alpha$.
+\end{theorem}
+\begin{enumerate}
+    \item Collect all sentence symbols in $\Sigma$ and $\alpha$
+    \item Use truth table
+\end{enumerate}
+
+\begin{corollary}
+    Given a finite set of wffs $\Sigma$, the set of its semantic consequences is effectively decidable. In particular, the set of tautologies is effectively decidable.
+\end{corollary}
+
+\subsection{Enumerability Results for Semantic Implications}
+
+\begin{theorem}
+    If $\Sigma$ is an effectively enumerable set of wffs, then the set of semantic consequences of $\Sigma$ is effectively enumerable.
+\end{theorem}
+\begin{proof}
+    Let $\beta_1,\dots,\beta_n,\dots$ be an effective enumeration of $\Sigma$. Let $\Delta_n=\beta_1,\dots,\beta_n$. Let $\alpha_1,\dots,\alpha_m,\dots$ be an effective enumeration of all wffs. We construct a table $T$ where $T_{ij} = \Delta_i \vDash \alpha_j$. Due to Corollary~\ref{coroll:CorollaryOfTheCompactnessTheorem}, if some $T_{ij}$ holds, then $\alpha_j$ is a semantic consequence of $\Sigma$.
+\end{proof}
