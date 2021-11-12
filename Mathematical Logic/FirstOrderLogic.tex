@@ -77,7 +77,7 @@ An \textbf{expression} in a language $\mathbb{L}$ is a finite sequence of symbol
 
 \begin{definition}[Term]
     \label{def:Term}
-    A \textbf{term} is an expression
+    A \textbf{term} is an expression built up from constant symbols and variables by applying some finite times of term-building operations.
     
 \end{definition}
 
@@ -88,9 +88,13 @@ For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2
     A \textbf{term sequence} is a finite sequence $t_1,\dots,t_n$ of expressions s.t. each $t_i$ is
     \begin{itemize}
         \item either a variable, a constant
-        \item or
+        \item or is in the form of $f\sigma_1\dots\sigma_k$ where $f$ is a $f$-ary function and each $\sigma_1,\dots,\sigma_k$ occurs earlier in the sequence
     \end{itemize}
 \end{definition}
+
+\begin{proposition}
+    An expression $t$ is a term iff there is a term sequence $t_1,\dots,t_n$ such that $t=t_n$
+\end{proposition}
 
 \subsubsection{Atomic Formulas}
 
@@ -103,9 +107,41 @@ For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2
 
 \begin{definition}[Formula-Building Operations]
     \label{def:FormulaBuildingOperation}
-    \begin{itemize}
+    \begin{itemize}~{}
         \item $\xi_\neg(\alpha) = (\neg \alpha)$
         \item $\xi_\to(\alpha, \beta) = (\alpha\to\beta)$
+        \item $\mathcal{Q}_i(\gamma) = \forall v_i\gamma$
     \end{itemize}
-    
 \end{definition}
+
+\begin{definition}[Well-Formed Formula]
+    A \textbf{well-formed formula} (wff) is an expression built up from atomic formulas by applying some finite times of term-building operations.
+\end{definition}
+
+\begin{definition}[Well-Formed Sequence]
+    A \textbf{well-formed sequence} is a finite sequence $\alpha_1,\dots,\alpha_n$ of expressions such that each $\alpha_i$ is
+    \begin{itemize}
+        \item either an atomic formula
+        \item or is of the form of $(\neg \beta)$ or $(\beta\to\gamma)$ where $\beta$ and $\gamma$ occur earlier in the list
+        \item or is of the form $\forall v_i\beta$ where $\beta$ occurs earlier in the list
+    \end{itemize}
+\end{definition}
+
+\begin{proposition}
+    The expression $\alpha$ is a wff if there is a well-formed sequence $\alpha_1,\dots,\alpha_k$ such that $\alpha = \alpha_k$
+\end{proposition}
+
+\subsection{Abbreviations}
+
+\begin{itemize}
+    \item $(\alpha\vee\beta)$ abbreviates $((\neg\alpha)\to\beta)$
+    \item $(\alpha\wedge\beta)$ abbreviates $(\neg(\alpha \to (\neg\beta)))$
+    \item $(\alpha\leftrightarrow\beta)$ abbreviates $(\alpha\to\beta)\wedge(\beta\to\alpha)$
+    \item $\exists x\alpha$ abbreviates $(\neg\forall x(\neg\alpha))$
+    \item $u\doteq t$ abbreviates $\doteq ut$
+    \item $u \dot{\neq} t$ abbreviates $\dot{\neq} ut$
+    \item Outer-most parentheses can be omitted
+    \item $\neg$, $\forall$, $\exists$ apply to as little as possible
+    \item $\wedge$, $\vee$ apply to as little as possible, subject to previous operators
+    \item Grouping for repeated connectives is to the right
+\end{itemize}

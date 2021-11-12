@@ -88,7 +88,9 @@ $$ H = \sum_{(x,y)\in W} \begin{bmatrix}
     I_yI_x & I_y^2
   \end{bmatrix} $$
 
-is the Hessian matrix
+is the Hessian matrix (of size $(2,2)$)
+
+A weight $w_{ij}$ can be added to the summation for better performace (for example a Gaussian kernel)
 
 Therefore
 
@@ -133,7 +135,7 @@ Intuitively
 
 Define corner response function $R$
 
-$$ R = \lambda_+\lambda_- - k(\lambda_+ + \lambda_-)^2 $$
+$$ R = \det H - \mathrm{Tr}H =  \lambda_+\lambda_- - k(\lambda_+ + \lambda_-)^2 $$
 
 - $k$ is usually in the range of $0.04\le k \le 0.06$
 - Large $R$ may indicate a corner
@@ -175,3 +177,25 @@ $$ R = \lambda_+\lambda_- - k(\lambda_+ + \lambda_-)^2 $$
 $$ XCorr(P_1,P_2) = \frac{1}{N}\sum_{i}^N P_1[i]P_2[i] $$
 
 - Ordinary cross-correlation is not invariant to affine photometric transformation
+- Need to normalize each patch
+  - Zero mean
+  - Unit variance
+
+### Feature Matching
+
+- Define distance function for $I_1$ and $I_2$
+- For each feature in $I_1$, test all features in $I_2$ and match the one with the shortest distance
+
+#### Measuring Distances between Features
+
+- Sum of square distance may not work well
+  - It gives good scores to very ambigious matches
+
+##### Ratio Distance
+
+$$ RatioDist = \frac{SSD(f_1, f_2)}{SSD(f_1, f_2')} $$
+
+- $f_2$ is the best SSM match to $f_1$ in $I_2$
+- $f_2'$ is the second best match
+- Gives large values for ambiguous matches
+  - This is normal because simple vision features have limited performance
