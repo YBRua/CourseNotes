@@ -37,7 +37,11 @@ Given a 1D signal $f(x)$
 1. Compute $\frac{\partial^2 n_\sigma}{\partial x^2} \ast f$ at different scales of $\sigma$
 2. $(x^\ast,\sigma^\ast) = \arg\max$
 
-### Scale Space
+### 2D Blob Detection
+
+- Normalized Laplacian of Gaussians (NLoGs) are used as the 2D equivalent for blob detection.
+
+#### Scale-Space
 
 As we increase $\sigma$, the resolution becomes lower. Define scale space by the space created by filtering results of differernt $\sigma$
 
@@ -55,13 +59,62 @@ $$ \sigma_k = \sigma_0s^k $$
   - Then we will be able to know the characteristic scale and the size of the blob
 - For a large flat area, no extrema w.r.t. $\sigma$ can be found
 
-#### 2D Blob Detection
+#### 2D Blob Detection Procedure
 
 Given an image $I(x,y)$
 
 1. Convolve the image with many NLoG of different scales
+2. Find $\arg\max_{x,y,\sigma}|\sigma^2\nabla^2S(x,y,\sigma)|$
+3. $(x,y)$ gives the location and $\sigma$ gives the size
 
 ## Scale Invariant Feature Transform SIFT
 
 - An efficient implementation of blob detector
 - Use Difference of Gaussian (DoG) as an approximation of NLoG
+
+$$ DoG = (n_{s\sigma} - n_{\sigma}) \approx (s-1)\sigma^2\nabla^2n_{\sigma} $$
+
+### Basic Procedure
+
+1. Compute difference of Gaussians
+2. Find extrema in every 3x3 space
+3. Select interest point candidates (may contain weak extrema and bad contrast)
+4. Remove weak extrema
+
+### Descriptors for SIFT Features
+
+#### Principal Orientation
+
+- Use the histogram of gradient directions
+  - For each detected blob
+  - Divide the blob into grids
+  - Group the grids into cells
+  - Compute histogram
+- Choose the most prominent gradient direction
+
+#### Matching Features
+
+- Use characteristic size to match sizes
+- Use principal orientation to match orientations
+
+#### SIFT Descriptor
+
+- Use histograms of gradient directions as the descriptor
+  - Should be normalized using the principal gradient orientation
+  - Common implementation uses a 4x4 cell, each cell with a histogram of 8 bins
+    - So the result is 128-dimensional
+
+## Other Discriptors
+
+### Histogram-of-Oriented-Gradients HoG
+
+- Used for pedestrian detection
+
+### Shape Contexts
+
+Can be used as a desciptor to match shapes
+
+- Sample some points along each edge
+- For each point, construct a log polar system coordinate at each point
+- Divide the coordinate system into bins
+- Count the number of boundary points in each bin
