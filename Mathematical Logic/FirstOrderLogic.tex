@@ -145,3 +145,73 @@ For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2
     \item $\wedge$, $\vee$ apply to as little as possible, subject to previous operators
     \item Grouping for repeated connectives is to the right
 \end{itemize}
+
+\section{Semantics of First-Order Logic}
+
+\subsection{Structures}
+
+\begin{definition}
+    Given a first order language $\mathbb{L}$, a \textbf{structure} $\mathfrak{A}$ for $\mathbb{L}$ consists of
+    \begin{itemize}
+        \item A non-empty set called the \textbf{universe} or \textbf{domain} of the structure, written as $|\mathfrak{A}|$
+        \item For each n-ary predicate symbol $P$ of $\mathcal{L}$, other than $\doteq$, an n-ary relation $\mathbb{P}^{\mathfrak{A}}$ on $|\mathfrak{A}|$
+        \item $\doteq^{\mathfrak{A}}$ is the identity relation on $|\mathfrak{A}|$. $\doteq^{\mathfrak{A}} = \{(a,b)|a,b\in|\mathfrak{A}, a =b|\}$
+        \item For each n-ary function symbol $f$ of $\mathbb{L}$, an n-ary ooperation on the universe, i.e. an n-ary function $f^{\mathfrak{A}}: |\mathfrak{A}|\times\cdots\times|\mathfrak{A}|\mapsto|\mathfrak{A}|$
+        \item For each constant symbol $c$ of $\mathbb{L}$, $c^{\mathfrak{A}}\in|\mathfrak{A}|$
+    \end{itemize}
+\end{definition}
+
+\subsection{Assignments}
+
+Let $\mathfrak{A}$ be a structure for language $\mathbb{L}$. Let $V$ be the set of variables, and $T$ be the set of terms.
+
+\begin{definition}[Assignment Functions]
+    An \textbf{assignment} for $\mathfrak{A}$ is a function $s:V\mapsto|\mathfrak{A}|$.
+\end{definition}
+
+\begin{definition}[Assignment to Terms]
+    An assignment $s$ is extended to a function $\bar{s}:T\mapsto|\mathfrak{A}|$.
+    \begin{itemize}
+        \item $\bar{s}(v) = s(v)$ if $v$ is a variable
+        \item $\bar{s}(c) = c^{\mathfrak{A}}$ if $c$ is a constant
+        \item $\bar{s}(ft_1\dots t_n) = f^{\mathfrak{A}}(\bar{s}(t_1),\dots,\bar{s}(t_n))$ if $f$ is a n-ary function symbol and $t_1,\dots,t_n$ are terms
+    \end{itemize}
+\end{definition}
+
+\subsubsection{Changing the Assignment Function}
+
+Let $s$ be an assignment function, $x$ be a variable and $a\in\mathfrak{A}$. Then $s(x|a)$ is the new assignment, where for each variable $y$
+
+\[s(x|a)(y) = \begin{cases}
+    s(y) &\quad \text{if $(y\neq x)$}\\
+    a &\quad \text{if $(y=x)$}
+\end{cases}\]
+
+This operation actually ``overrides'' the assignment of $s$ to $x$ and makes the assignment to $x$ equal to $a$.
+
+\subsection{Satisfiability}
+
+Given a first-order language $\mathbb{L}$, let $\mathfrak{A}$ be a structure for $\mathbb{L}$, let $s$ be an assignment for $\mathbb{L}$ and let $\varphi$ be a wff in $\mathbb{L}$. We denote $\mathfrak{A}$ to satisfy $\varphi$ with $s$ by $\vDash_{\mathfrak{A}}\varphi[s]$
+
+Informally, it means ``\emph{The translation of $\varphi$ determined by $\mathfrak{A}$, where a variable $x$ is translated as $s(x)$, is true}''
+
+\subsubsection{Satisfaction for Atomic Formulas}
+
+\begin{definition}
+    Given a language $\mathbb{L}$ and a structure $\mathfrak{A}$, let $s$ be an assignment, let $P$ be a n-ary predicate,
+    \[ \vDash_{\mathfrak{A}} Pt_1\dots t_n[s] \Leftrightarrow (\bar{s}(t_1),\dots,\bar{s}(t_n)) \in P^{\mathfrak{A}} \]
+    \[ \vDash_{\mathfrak{A}} \doteq t_1t_2[s] \Leftrightarrow \bar{s}(t_1) = \bar{s}(t_2) \]
+\end{definition}
+
+\subsubsection{Satisfaction for WFF}
+
+\begin{definition}
+    Suppose $\vDash_{\mathfrak{A}}\alpha[s]$ and $\vDash_{\mathfrak{A}}\beta[s]$ have been defined, then
+    \begin{itemize}
+        \item $\vDash_{\mathfrak{A}} \neg\alpha[s]$ iff not $\vDash_{\mathfrak{A}}\alpha[s]$
+        \item $\vDash_{\mathfrak{A}}\alpha\to\beta[s]$ iff $\vDash_{\mathfrak{A}}\alpha[s]\Longrightarrow\vDash_{\mathfrak{A}}\beta[s]$
+        \item $\vDash_{\mathfrak{A}}\forall x \alpha[s]$ iff $\forall a\in|\mathfrak{A}|$, $\vDash_{\mathfrak{A}}\alpha[s(x|a)]$
+    \end{itemize}
+\end{definition}
+
+If $\vDash_{\mathfrak{A}}\varphi[s]$, we say \emph{$\mathfrak{A}$ satisfies $\varphi$ with $s$}, or \emph{$s$ satisfies $\varphi$ in the structure $\mathfrak{A}$}
