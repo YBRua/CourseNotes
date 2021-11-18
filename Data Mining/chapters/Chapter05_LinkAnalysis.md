@@ -333,7 +333,52 @@ $$ h = Aa \quad a = A^Th $$
 
 ```mermaid
 graph LR
-  AccessiblePages-->TargetPage
-  TargetPage-->OwnedPages
-  OwnedPages-->TargetPage
+  AccessiblePage1-->TargetPage
+  AccessiblePage2-->TargetPage
+  AccessiblePage3-->TargetPage
+  TargetPage-->OwnedPage1
+  OwnedPage1-->TargetPage
+  TargetPage-->OwnedPage2
+  OwnedPage2-->TargetPage
+  TargetPage-->OwnedPage3
+  OwnedPage3-->TargetPage
 ```
+
+- $M$ Owned farm pages
+- $N$ accessible pages
+- $x$: PageRank contributed by accessible pages
+- $y$: PageRank of target page
+- Rank of each farm page: $\frac{\beta y}{M} + \frac{1-\beta}{N}$
+
+Therefore
+
+$$ y = x + \beta M \left[ \frac{\beta y}{M} + \frac{1-\beta}{N} \right] + \frac{1-\beta}{N} $$
+
+After some mafs
+
+$$ y = \frac{x}{1-\beta^2} + c\frac{M}{N} $$
+
+where $c = \beta/(1+\beta)$
+
+### Combating Spam
+
+#### Against Term Spam
+
+- Analyze text using statistical methods
+- Spam filtering, like email spam filtering
+- Detecting approximate duplicated pages
+
+#### Against Link Spam
+
+- Detecting and blacklisting structures that look like spam farms
+- TrustRank
+  - Use a teleport set of trusted pages
+  - eg. `.edu` `.org` domain
+
+### TrustRank
+
+- Sample a set of seed pages from the web
+- Have an oracle (human) to identify good pages and spam pages
+- Construct a set of trusted pages
+- Perform topic-specific PageRank whose teleport set is the trusted pages
+- Assume trust propagates through the links

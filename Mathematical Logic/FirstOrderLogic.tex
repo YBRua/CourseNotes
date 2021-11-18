@@ -146,6 +146,34 @@ For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2
     \item Grouping for repeated connectives is to the right
 \end{itemize}
 
+\subsection{Free Occurrence of Variables}
+
+\begin{definition}[Free Occurrence]
+    The variable $x$ \textbf{occurs free} in an atomic wff $\varphi$ iff it occurs in $\varphi$.
+
+    $x$ \textbf{occurs free} in $\neg\alpha$ iff $x$ occurs free in $\alpha$.
+
+    $x$ \textbf{occurs free} in $\alpha\to\beta$ iff $x$ occurs free in $\alpha$ or in $\beta$.
+
+    $x$ \textbf{occurs free} in $\forall y \alpha$ iff $x$ occurs free in $\alpha$ and $x \neg y$.
+\end{definition}
+
+\begin{definition}[Sentence]
+    $\varphi$ is a \textbf{sentence} iff no variable occurs free in $\varphi$.
+\end{definition}
+\begin{remark}
+    Sentences are usually represented by $\sigma$ or $\tau$.
+\end{remark}
+
+We provide some examples
+
+\begin{itemize}
+    \item $\dot{0} \dot{<} \dot{1}$ does not have any free occurrence. It is a sentence,
+    \item $\forall x(x\dot{<}y)$. $y$ occurs free but $x$ does not.
+    \item $\forall x(\neg x \dot{<} \dot{0})$. No free occurrence.
+    \item $\forall x\forall y (x \dot{<} y \to \exists z x\dot{<}z\wedge z\dot{<}y)$. No free occurrence.
+\end{itemize}
+
 \section{Semantics of First-Order Logic}
 
 \subsection{Structures}
@@ -189,7 +217,7 @@ Let $s$ be an assignment function, $x$ be a variable and $a\in\mathfrak{A}$. The
 
 This operation actually ``overrides'' the assignment of $s$ to $x$ and makes the assignment to $x$ equal to $a$.
 
-\subsection{Satisfiability}
+\subsection{Satisfaction}
 
 Given a first-order language $\mathbb{L}$, let $\mathfrak{A}$ be a structure for $\mathbb{L}$, let $s$ be an assignment for $\mathbb{L}$ and let $\varphi$ be a wff in $\mathbb{L}$. We denote $\mathfrak{A}$ to satisfy $\varphi$ with $s$ by $\vDash_{\mathfrak{A}}\varphi[s]$
 
@@ -215,3 +243,74 @@ Informally, it means ``\emph{The translation of $\varphi$ determined by $\mathfr
 \end{definition}
 
 If $\vDash_{\mathfrak{A}}\varphi[s]$, we say \emph{$\mathfrak{A}$ satisfies $\varphi$ with $s$}, or \emph{$s$ satisfies $\varphi$ in the structure $\mathfrak{A}$}
+
+\subsubsection{Satisfaction Depends Only on Variables that Occur Free}
+
+\begin{lemma}
+    \label{lem:LemmaForFreeOccurrenceThm}
+    Let $\mathfrak{A}$ be a structure for $\mathbb{L}$, $s_1, s_2$ be two assignment for $\mathfrak{A}$ and $\varphi$ be a term of $\mathbb{L}$.
+
+    If $s_1(x)=s_2(x)$ for every $x$ that occurs in $t$, then
+    \[ \bar{s}_1(t) = \bar{s}_2(t) \]
+\end{lemma}
+\begin{proof}
+    Proof by induction on $t$.
+    \begin{itemize}
+        \item[Base] If $t=c$ is a constant. It is straightforward that $\bar{s}_1(t) = \bar{s}_2(t) = c$. If $t=x$ is a variable, then by assumption we know that $\bar{s}_1(x) = s_1(x) = s_2(x) = \bar{s}_2(x)$. So we are done.
+        \item[Induction] Consider a term $t=ft_1\dots t_n$. By inductive hypothesis we know that $\forall i$, $\bar{s}_1(t_i) = \bar{s}_2(t_i)$. $\bar{s}_1(t) = f^{\mathfrak{A}}(\bar{s}_1(t), \dots, \bar{s}_1(t) = f^{\mathfrak{A}}(\bar{s}_2(t), \dots, \bar{s}_2(t)) = \bar{s}_2(t)$.
+    \end{itemize}
+\end{proof}
+
+\begin{theorem}
+    Let $\mathfrak{A}$ be a structure for $\mathbb{L}$, $s_1, s_2$ be two assignment for $\mathfrak{A}$ and $\varphi$ be a wff of $\mathbb{L}$.
+
+    If $s_1(x)=s_2(x)$ for every $x$ that occurs free in $\varphi$, then
+    \[ \vDash_{\mathfrak{A}}\varphi[s_1] \Leftrightarrow \vDash_{\mathfrak{A}}\varphi[s_2] \]
+\end{theorem}
+
+\begin{proof}
+    Prove by induction on $\varphi$.
+    \begin{itemize}
+        \item[Base] If $\varphi$ is an atomic formula $Pt_1\dots t_n$.
+        \[ \vDash_{\mathfrak{A}} \varphi [s_1] \Leftrightarrow P^{\mathfrak{A}}(\bar{s}_1(t_1),\dots,\bar{s}_1(t_n)) \]
+        \[ \vDash_{\mathfrak{A}} \varphi [s_2] \Leftrightarrow P^{\mathfrak{A}}(\bar{s}_2(t_1),\dots,\bar{s}_2(t_n)) \]
+
+        We need to prove that the two RHSes are equivalent. By Lemma~\ref{lem:LemmaForFreeOccurrenceThm} we know that all the terms are equal under $s_1$ and $s_2$, and therefore $\vDash_{\mathfrak{A}} \varphi [s_1] = \vDash_{\mathfrak{A}} \varphi [s_2]$.
+
+        \item[Induction] Consider $\varphi=\neg\alpha$.
+        \[ \vDash_{\mathfrak{A}}(\neg\alpha)[s_1] \Leftrightarrow \nvDash_{\mathfrak{A}}\alpha[s_1] \Leftrightarrow \nvDash_{\mathfrak{A}}\alpha[s_2] \Leftrightarrow \vDash_{\mathfrak{A}}(\neg\alpha)[s_2] \]
+
+        The case $\varphi = \alpha\to\beta$ is similar.
+
+        Consider the case $\forall x \alpha$. We want to prove
+        \[ \fosat{A}{\forall x\alpha}{s_1} \Leftrightarrow \fosat{A}{\forall x\alpha}{s_2} \]
+        which is equivalent to
+        \[ \forall a\in|\mathfrak{A}|\fosat{A}{\alpha}{s_1(x|a)} \Leftrightarrow \forall a \in |\frakA| \fosat{A}{\alpha}{s_2(x|a)} \]
+
+        We only need to prove that
+        \[ \forall y \text{occurring free in $\alpha$}, s_1(x|a)(y) = s_2(x|a)(y) \]
+
+        If $y\neq x$, then $y$ is still occurring free in $\alpha$, and by inductive hypothesis they should equal. If $y=x$, then both sides are $a$. So we are done.
+    \end{itemize}
+\end{proof}
+\begin{remark}
+    This theorem is somewhat similar to the theorem in sentential logic, which states that we only need to consider sentence symbols. Similarly, in first-order logic, we only need to consider variables that occur free.
+\end{remark}
+
+\begin{definition}
+    Let $\varphi$ be a wff s.t. all variables occurring free in $\varphi$ are included amoing $v_1,\dots,v_k$. Given $a_1,\dots,a_k\in\frakA$.
+
+    \[ \fosatabbr{A}{\varphi}{a_1,\dots,a_k} \]
+
+    means that $\fosat{A}{\varphi}{s}$ for some $s:V\mapsto|\frakA|$ s.t. $s(v_i) = a_i$
+\end{definition}
+
+\begin{corollary}
+    If $\sigma$ is a sentence then
+    \begin{itemize}
+        \item either $\fosat{A}{\sigma}{s}$ for every assignment $s$. We say $\sigma$ is true in $\frakA$.
+        \item or $\founsat{A}{\sigma}{s}$ for every assignment $s$. We say $\sigma$ is false in $\frakA$
+    \end{itemize}
+\end{corollary}
+
+Therefore a sentence does not depend on $s$, and we can simply write $\sentsat{A}{\sigma}$ or $\sentunsat{A}{\sigma}$.

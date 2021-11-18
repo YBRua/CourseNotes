@@ -27,8 +27,7 @@
 \usepackage[a4paper]{geometry}
 \usepackage{titlesec}
 \usepackage{graphicx}
-
-\newcommand{\Dashv}{\rotatebox[origin=c]{180}{\ensuremath\vDash}}
+\usepackage{stmaryrd}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -45,7 +44,18 @@
 \newcommand{\range}{\textrm{rng}}
 \newcommand{\domain}{\textrm{dom}}
 
+\newcommand{\Dashv}{\rotatebox[origin=c]{180}{\ensuremath\vDash}}
+
 \newcommand{\questeq}{\stackrel{?}{=}}
+
+\newcommand{\fosat}[3]{\vDash_{\mathfrak{#1}}#2[#3]}
+\newcommand{\sentsat}[2]{\vDash_{\mathfrak{#1}}#2}
+\newcommand{\founsat}[3]{\nvDash_{\mathfrak{#1}}#2[#3]}
+\newcommand{\sentunsat}[2]{\nvDash_{\mathfrak{#1}}#2}
+
+\newcommand{\fosatabbr}[3]{\vDash_{\mathfrak{#1}}#2\llbracket#3\rrbracket}
+
+\newcommand{\frakA}{\mathfrak{A}}
 
 
 \title{Mathematical Logic}

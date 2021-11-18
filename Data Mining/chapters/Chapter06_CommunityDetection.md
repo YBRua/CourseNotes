@@ -89,3 +89,72 @@ $$ Q_d(D \to i) = -\frac{1}{m}\left( k_{i,in}^{in} + k_{i,in}^{out} \right) +\fr
   - Weight of edges between supernodes is the sum of weights from all edges between the corresponding partitions
 - Return to phase 1 and partition the new restructed graph
 - Loop until the structure of the graph does not change
+
+## Linear Time Algorithms for Community Detection
+
+Consider a large graph with 200M nodes and 2B edges. Anything slower than a linear time algorithm may fail due to the large input scale
+
+### Idea
+
+- Apply an algorithm that is similar to PageRank
+- Given seed node $s$
+- Compute Personalized PageRank (PPR) around node $s$ with teleport set $\{s\}$
+- Intuition: if $s$ belongs to a cluster, it is more likely that the random walk will stay in a cluster
+
+### Algorithm
+
+- Pick a seed $s$
+- Run PPR
+- Sort the nodes by PPR Score in decreasing order
+- Scan the nodes to find good clusters
+  - Typically, if $s$ is in a cluster, there will be a local minima in the PPR Score curve
+
+### Criteria for a Good Cluster
+
+The basic idea is to
+
+- Maximize the number of edges within a cluster
+- Minimize the number of edges between clusters
+
+#### Graph Cuts
+
+Given a graph $G=(V,E)$, a cut is a set of edges with only one node in a cluster $A$
+
+$$ cut(A) = \sum_{i\in A, j\notin A}w_{ij} $$
+
+We express the quality of the cluster as a function of the edge cut in a cluster
+
+- The cut may degerate and prefers to cut isolated points
+  - Because edge cut does not consider the "volume" within a cluster
+
+#### Conductance
+
+- Connectivity of the group to the rest of the network relative to the density of the group
+
+$$ \phi(A) = \frac{|\{ (i,j)\in E;i\in A,j\notin A \}|}{\min(Vol(A), 2m-vol(A))} $$
+
+- Where $m$ is the number of edges, and $2m$ is the total degree of the graph
+
+##### Volume
+
+$$ vol(A) = \sum_{i\in A} d_i$$
+
+### Algorithm Revisited
+
+- `for` loop over the nodes
+  - Keep a hash-table of nodes in a set $A_i$
+  - Update $\phi(A_{i+1})$
+
+#### Approximating PPR
+
+- A local fast method for approximating PPR
+- ApproxPageRank $(s, \beta, \varepsilon)$
+
+It simulates a lazy random walk with probability $1/2$ to stay at where it is, and with probability $1/2$ to move to its neighbours
+
+Define $q_u = p_u - r_u^{(t)}$
+
+- $q_u$ is the residual
+- $p_u$ is the exact PPR score
+
+If residual $q_u$ of node $u$ is too big
