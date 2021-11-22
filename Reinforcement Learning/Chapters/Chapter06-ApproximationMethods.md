@@ -162,7 +162,7 @@ $$ \frac{\partial J}{\partial\theta} = \mathbb{E}_{\pi_\theta}\left[ \frac{\part
 
 - 把似然比推导过程泛化到了多步马尔可夫决策过程
   - 用长期价值函数 $Q_{\pi_\theta}(s,a)$ 代替瞬时奖励 $r_{sa}$
-- 涉及起始状态目标函数 $J_1$，平均奖励目标函数 $J_{avR}$ 和平均价值目标函数 $_{avV}$
+- 涉及起始状态目标函数 $J_1$，平均奖励目标函数 $J_{avR}$ 和平均价值目标函数 $J_{avV}$
 
 对于任何可微的策略 $\pi_\theta(a|s)$，对上述三个目标函数中的任意一个，其策略梯度是
 
@@ -172,7 +172,7 @@ $$ \nabla J(\theta) = \mathbb{E}_{\pi_\theta}\left[ \frac{\partial\log\pi_\theta
 
 - 随机梯度上升更新策略最大化目标函数
 - 利用策略梯度定理
-- 利用累计奖励值 $G_t$ 作为 $Q_{\pi_theta}(s,a)$ 的无偏估计
+- 利用累计奖励值 $G_t$ 作为 $Q_{\pi_\theta}(s,a)$ 的无偏估计
 
 $$ \Delta\theta_t = \alpha \frac{\partial\log\pi_\theta}{\partial\theta} G_t $$
 
@@ -255,7 +255,7 @@ $$Q_\pi(s,a) = r(s,a) + \gamma\mathbb{E}_{s'\sim p,a\sim\pi_\theta}[Q_\Phi(s',a'
 
 $$ Q_\pi(s,a) = r(s,a) + \gamma\mathbb{E}_{s'\sim p(s'|s,a)}[V_\pi(s)] $$
 
-因此只需要你和状态值函数就可以拟合优势函数
+因此只需要拟合状态值函数就可以拟合优势函数
 
 $$ A(s,a) = r(s,a) +\gamma\mathbb{E}[V_\pi(s')-V_\pi(s)] \simeq r(s,a) + \gamma(V_\pi(s')-V_\pi(s)) $$
 
