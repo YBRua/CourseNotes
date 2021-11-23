@@ -77,8 +77,7 @@ An \textbf{expression} in a language $\mathbb{L}$ is a finite sequence of symbol
 
 \begin{definition}[Term]
     \label{def:Term}
-    A \textbf{term} is an expression built up from constant symbols and variables by applying some finite times of term-building operations.
-    
+    A \textbf{term} is an expression built up from constant symbols and variables by applying some finite times (zero or more times) of term-building operations.
 \end{definition}
 
 For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2v_3c_1$ is a term.
@@ -217,13 +216,13 @@ Let $s$ be an assignment function, $x$ be a variable and $a\in\mathfrak{A}$. The
 
 This operation actually ``overrides'' the assignment of $s$ to $x$ and makes the assignment to $x$ equal to $a$.
 
-\subsection{Satisfaction}
+\section{Satisfaction}
 
 Given a first-order language $\mathbb{L}$, let $\mathfrak{A}$ be a structure for $\mathbb{L}$, let $s$ be an assignment for $\mathbb{L}$ and let $\varphi$ be a wff in $\mathbb{L}$. We denote $\mathfrak{A}$ to satisfy $\varphi$ with $s$ by $\vDash_{\mathfrak{A}}\varphi[s]$
 
 Informally, it means ``\emph{The translation of $\varphi$ determined by $\mathfrak{A}$, where a variable $x$ is translated as $s(x)$, is true}''
 
-\subsubsection{Satisfaction for Atomic Formulas}
+\subsection{Satisfaction for Atomic Formulas}
 
 \begin{definition}
     Given a language $\mathbb{L}$ and a structure $\mathfrak{A}$, let $s$ be an assignment, let $P$ be a n-ary predicate,
@@ -231,7 +230,7 @@ Informally, it means ``\emph{The translation of $\varphi$ determined by $\mathfr
     \[ \vDash_{\mathfrak{A}} \doteq t_1t_2[s] \Leftrightarrow \bar{s}(t_1) = \bar{s}(t_2) \]
 \end{definition}
 
-\subsubsection{Satisfaction for WFF}
+\subsection{Satisfaction for WFF}
 
 \begin{definition}
     Suppose $\vDash_{\mathfrak{A}}\alpha[s]$ and $\vDash_{\mathfrak{A}}\beta[s]$ have been defined, then
@@ -314,3 +313,128 @@ If $\vDash_{\mathfrak{A}}\varphi[s]$, we say \emph{$\mathfrak{A}$ satisfies $\va
 \end{corollary}
 
 Therefore a sentence does not depend on $s$, and we can simply write $\sentsat{A}{\sigma}$ or $\sentunsat{A}{\sigma}$.
+
+\subsection{Elementary Equivalence}
+
+\begin{definition}[Elementary Equivalence]
+    Let $\mathfrak{A}$ and $\mathfrak{B}$ be structures for the same language $\mathbb{L}$. $\mathfrak{A}$ and $\mathfrak{B}$ are \textbf{elementarily equivalent} ($\mathfrak{A} \equiv \mathfrak{B}$) if for every \emph{sentence} of $\mathbb{L}$
+    \[ \sentsat{A}{\sigma} \Leftrightarrow \sentsat{B}{\sigma} \]
+\end{definition}
+
+\begin{remark}
+    Elementary equivalence only take into consideration sentences.
+\end{remark}
+
+\begin{proposition}
+    $\mathfrak{Q}$ and $\mathfrak{R}$ are elementary equivalent. But this is beyond the scope of the course.
+\end{proposition}
+
+\section{Models}
+
+\subsection{Models}
+
+\begin{definition}[Model]
+    $\mathfrak{A}$ is a \textbf{model} of the sentence $\sigma$ if $\sentsat{A}{\sigma}$, i.e. if $\sigma$ is true in $\mathfrak{A}$. $\mathfrak{A}$ is a \textbf{model} of a set $\Sigma$ of sentences if $\mathfrak{A}$ is a model for every sentence in $\Sigma$. i.e. every sentence in $\Sigma$ is true in $\mathfrak{A}$.
+\end{definition}
+
+For example, consider a first-order language $\mathbb{L}$, with 2-ary predicate symbols $\dot{P}$ and $\doteq$. Given a structure $\mathfrak{A}$ of $\mathbb{L}$,
+
+\begin{itemize}
+    \item $\mathfrak{A}$ is a model of $\forall x \forall y x \doteq y$
+    \begin{itemize}
+        \item $\Leftrightarrow \fosat{A}{x\doteq y}{s(x|a)(y|b)}$ for every $a,b \in |\mathfrak{A}|$
+        \item $\Leftrightarrow$ $a = b$ for every $a,b \in|\mathfrak{A}|$
+        \item $\Leftrightarrow$ $|\mathfrak{A}|$ contains only one element.
+        \item Note that $|\frakA|$ cannot be empty because the universe of a structure must be non-empty.
+    \end{itemize}
+    \item $\mathfrak{A}$ is a model of $\forall x \forall y \dot{P}xy$
+    \begin{itemize}
+        \item iff $P^\mathfrak{A}(a,b)$ for all $a,b\in|\mathfrak{A}|$
+        \item iff $\dot{P}^{\frakA} = |\frakA| \times |\frakA|$
+    \end{itemize}
+    \item $\mathfrak{A}$ is a model of $\forall x \forall y \neg\dot{P}xy$
+    \begin{itemize}
+        \item iff $P^{\frakA}(a,b)$ does not hold for all $a,b\in|\frakA|$
+        \item iff $\dot{P}^{\frakA} = \emptyset$
+    \end{itemize}
+    \item $\frakA$ is a model of $\forall x \exists y \dot{P}xy$
+    \begin{itemize}
+        \item iff forall $a\in|\frakA|$, there is a $b\in|\frakA|$ s.t. $\dot{P}^{\frakA}(a,b)$
+        \item iff the domain of $\dot{P}^{\frakA}$ is $|\frakA|$
+        \item Conversely, if we want the range of $\dot{P}^{\frakA}$ is $|\frakA|$, we can write $\forall y \exists x \dot{P}xy$
+    \end{itemize}
+\end{itemize}
+
+\subsection{Linearly Ordered Structures}
+
+\begin{definition}[Trichotomy]
+    Let $R$ be a binary relation, $R$ satisfies \textbf{trichotomy} if exactly one of the following is true
+    \[ (a,b) \in R \quad (b,a) \in R \quad a = b \]
+\end{definition}
+
+\begin{definition}[Linear Ordering]
+    A binary relation $R$ is a \textbf{linear ordering} on $A$ if $R$ is transitive and satisfies trichotomy on $A$.
+\end{definition}
+
+\begin{definition}
+    Let $\mathbb{L}$ be the language with a binary relation symbol $\dot{R}$ and $\doteq$ (and no other symbols). Let $\frakA = (A,R)$, i.e. $A=|\frakA|$ and $R = \dot{R}^{\frakA}$.
+    \begin{itemize}
+        \item $\frakA$ is transitive if $R$ is transitive
+        \item $\frakA$ is a linearly ordered structure if $R$ is a linear ordering on $\frakA$
+    \end{itemize}
+\end{definition}
+
+For a set of structures with some certain properties, the set can be defined by a sentence.
+
+Let $\frakA = (A,R)$,
+\begin{itemize}
+    \item $\frakA$ is transitive iff $\sentsat{A}{\sigma}$, where $\sigma=\forall x \forall y \forall z \dot{R}xy \to \dot{R}yz \to \dot{R}xz$. Therefore $\sigma$ defines the set of all transitive structures
+    \item $\frakA$ is linearly ordered iff $\sentsat{A}{\sigma}$ where
+    \begin{itemize}
+        \item $\sigma_1 = \forall x \forall y \forall z \dot{R}xy \to \dot{R}yz \to \dot{R}xz$
+        \item $\sigma_2 = \forall x \forall y (\dot{R}xy \vee x=y \vee \dot{R}yx)$
+        \item $\sigma_3 = \forall x \forall y (\dot{R}xy \to \neg\dot{R}yx)$
+        \item $\sigma = \sigma_1 \wedge \sigma_2 \wedge \sigma_3$
+    \end{itemize}
+    Therefore $\sigma$ defines the set of all linearly ordered structures
+    \item $\domain{R} = A$ iff $\sentsat{A}{\sigma}$ where $\sigma = \forall x \exists y \dot{R}xy$
+    \item $\range{R} = A$ iff $\sentsat{A}{\sigma}$ where $\sigma = \forall y \exists x \dot{R}xy$
+    \item $R$ is a (total) function iff $\sentsat{A}{\sigma}$ where
+    \begin{itemize}
+        \item $\sigma_4 =  \forall x \exists y \dot{R}xy$
+        \item $\sigma_5 = \forall x \forall y \forall z \dot{R}xy \to \dot{R}xz \to x \doteq z$
+        \item $\sigma = \sigma_4 \wedge \sigma_5$
+    \end{itemize}
+\end{itemize}
+
+\subsection{Elementary Class}
+
+For example, the set of all graphs is an elementary class.
+
+Let $\mathbb{L}$ be the language with a binary predicate symbol $\dot{E}$ and $\doteq$, and no other symbols. A structure $\mathfrak{G} = (G, E)$ for $\mathbb{L}$ is a graph if
+\begin{itemize}
+    \item $E$ is symmetric (undirected graph)
+    \item For every $a \in G$, $(a, a) \notin E$ (no self-loops)
+\end{itemize}
+
+To show that the set of graphs defined above is an elementary class, we need to show that there is a sentence $\sigma$ s.t.
+\[ \text{$G$ is a graph} \Leftrightarrow \sentsat{G}{\sigma} \]
+
+Therefore $\sigma$ should be able to represent the symmetric and non-reflexible properties.
+
+\[\sigma = (\forall x \forall y (\dot{E}xy \to \dot{E}yx)) \wedge (\forall x(\neg \dot{E}xx))\]
+
+\subsubsection{In the Wider Sense}
+
+\begin{definition}[Elementary Class in the Wider Sense]
+    A set of structures $\mathcal{K}$ is an \textbf{elementary class in the wider sense} ($EC_\Delta$) if there is a set $\Sigma$ of sentences s.t.
+    \[ \mathcal{K} = \{\} \]
+\end{definition}
+
+For example, we can use a set $\Sigma$ to define the set of strucutures whose univerise is infinite.
+
+\[ \Sigma = \{ \lambda_2, \lambda_3, \dots, \lambda_n, \dots \} \]
+
+where $\lambda_i$ denotes ``At least $i$ elements exists in $|\frakA|$'', for example $\lambda_2 = \exists x \exists y x \neq y$.
+
+However, it is hard to decide whether there is a single sentence $\sigma$ s.t. the model
