@@ -308,7 +308,7 @@ Problem: What about the mismatched outliers?
 - Try many candidate lines and keep the best one with the most inliers and least outliers
   - Which lines are candidates?
 
-#### Random Sample Consensus RASAC
+#### Random Sample Consensus RANSAC
 
 - All the inliers will agree with each other on the translation vector
 - The (hopufully small) number of outliers will (hopefully) disagree with each other
@@ -326,3 +326,87 @@ Problem: What about the mismatched outliers?
 1. Randomly choose $s$ samples
    - Usually $s$ is the minimum sample size required to fit the model
    - e.g. for translation, $s=1$; for affine transformations, $s=3$
+2. Fit a model (line) to the samples
+3. Count the number of inliers
+4. Repeat $N$ times
+5. Choose the model that has the largest set of inliers
+
+##### Pros and Cons
+
+- Pros
+  - Simple and general
+  - Applicable to many different problems
+  - Often works well
+- Cons
+  - Requires parameter tuning
+  - Sometimes requires too many iterations
+  - Can fail for low inlier ratios
+
+## Panorama
+
+Given two images, we
+
+1. Detect features
+2. Match features
+3. Compute homography by RANSAC
+4. Combine the images together (somehow)
+
+But can a 360 panorama be created by estimating homographies?
+
+- No. Because lines no longer maps to lines in a 360 panorama
+- For non-360 panoramas, we can project images onto a **common plane**
+- For 360 panoramas, we need to project images onto a sphere
+
+### Spherical Projection
+
+> Welcome to 3D coordinates
+
+Consider mapping a point $(X,Y,Z)$ in the physical world onto a unit sphere
+
+$$ (\hat{x}, \hat{y}, \hat{z}) = \frac{1}{\sqrt{X^2+Y^2+Z^2}}(X,Y,Z) $$
+
+We can convert the point to spherical corrdinates
+
+$$ (\hat{x},\hat{y},\hat{z}) = (\sin\theta\cos\phi, \sin\phi, \cos\theta\cos\phi) $$
+
+Further convert to spherical image corrdinates
+
+$$ (\tilde{x}, \tilde{y}) = (s\theta, s\phi) + (\tilde{x}_c, \tilde{y}_c) $$
+
+- This is done by unwrapping the sphere into a plane and shift the origin from the center to the bottom-left corner
+- $s$ is a scaling factor that defines the final size of the image
+  - Often convenient to set $s$ to the focal length of the camera (in pixel)
+- Therefore for spherical reprojection, we need the focal length of the camera
+
+### Spherical Alignment
+
+Suppose we rotate the camera by $\theta$
+
+- In the spherical image, it corresponds to a translation by $\theta$
+- Therefore we can align the spherical image by translation
+
+#### Drifting
+
+- During alignment, the alignment error may accumulate
+- This causes the aligned image to drift
+
+##### Solution
+
+- Add another copy of the first image at the end
+  - Gives a constraint $y_n = y_1$
+    - Add displacement $(y_1-y_n)/(n-1)$ to each image after the first image
+    - apply affine warp $y' = y + ax$
+    - run a big optimazation problem with the constraint
+      - works best, but more complicated
+      - known as 'bundle adjustment'
+
+## Blending
+
+- Artifacts exist in the aligned image
+- Want to seamlessly blend the images together
+
+### Feathering
+
+- Linearly decrease the intensity of images at borderline
+- Window size matters
+  - Smooth and without 'ghost'
