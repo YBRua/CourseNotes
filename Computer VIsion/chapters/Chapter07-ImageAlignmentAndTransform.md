@@ -96,7 +96,7 @@ $$ \begin{bmatrix}
 
 #### Affine Transformations
 
-Any linear transformation in Euclidean space can be formulated as an affine transformation in the Homogeneous Coordinate, with the last row of $T$ fixed to $(0,0,1)$
+Any linear transformation in Euclidean **space** can be formulated as an affine transformation in the Homogeneous Coordinate, with the last row of $T$ fixed to $(0,0,1)$
 
 $$ T = \begin{bmatrix}
     a & b & t_x\\

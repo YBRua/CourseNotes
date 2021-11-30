@@ -46,8 +46,36 @@
   - 但是只有 `thread_1` 的 `SP` 指向了自己的栈
   - 其他线程的栈没有人用
   - `fork` 之后的进程只有1个线程在工作
+- 这种实现相对比较简单，但是显然会造成内存资源的浪费
+- 然而如果 `fork` 时拷贝了进程的所有线程，则可能出现迷惑行为
+  - 比如一个线程 `fork` 时，另一个线程恰好在写文件
+  - 那么 `fork` 后如果新产生一个正在写文件的线程，该文件就会被写两次
+- 因此事实上建议程序员不要 `fork` 一个正在多线程执行的进程
 
 ### 线程控制块 TCB
 
-- 每个线程有一个 TCB 存储元数据
-- 原有的PCB中维护一个指向该进程的线程控制块的指针
+- 原有的PCB中维护一个链表，记录该进程的所有线程
+- 由于线程拥有独立的上下文，因此进程控制块不再需要维护指向上下文的引用
+
+```cpp
+struct process {
+  struct vmspace *vmspace;
+  struct list_head thread_list;
+}
+```
+
+- 线程控制块 Thread Control Block 包含以下内容
+  - 线程上下文。与之前的进程上下文对应。保存了线程在暂停后能恢复执行所需要保存的最小状态集合
+  - 所属进程信息。
+  - 进程间通信相关。
+
+```cpp
+struct thread {
+  struct thread_ctx thread_ctx;
+  struct process *process;
+  struct ipc_connection *active_conn; // beyond the scope
+  struct server_ipc_config *server_ipc_config; // beyond the scope
+}
+```
+
+- 除此之外，操作系统（指ChCore）还会为每个线程配备独立的内核栈，以保证各个线程进入内核后互不干扰

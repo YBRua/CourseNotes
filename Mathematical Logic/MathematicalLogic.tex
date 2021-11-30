@@ -48,14 +48,24 @@
 
 \newcommand{\questeq}{\stackrel{?}{=}}
 
-\newcommand{\fosat}[3]{\vDash_{\mathfrak{#1}}#2[#3]}
-\newcommand{\sentsat}[2]{\vDash_{\mathfrak{#1}}#2}
-\newcommand{\founsat}[3]{\nvDash_{\mathfrak{#1}}#2[#3]}
-\newcommand{\sentunsat}[2]{\nvDash_{\mathfrak{#1}}#2}
+\newcommand{\semanticalImply}[2]{#1\vDash{}#2}
+\newcommand{\tautology}[1]{\vDash{}#1}
 
-\newcommand{\fosatabbr}[3]{\vDash_{\mathfrak{#1}}#2\llbracket#3\rrbracket}
+\newcommand{\sat}[3]{\vDash_{\mathfrak{#1}}#2[#3]}
+\newcommand{\sentSat}[2]{\vDash_{\mathfrak{#1}}#2}
+\newcommand{\unsat}[3]{\nvDash_{\mathfrak{#1}}#2[#3]}
+\newcommand{\sentunsat}[2]{\nvDash_{\mathfrak{#1}}#2}
+\newcommand{\assignSat}[3]{\vDash_{\mathfrak{#1}}#2\llbracket #3 \rrbracket}
+
+\newcommand{\naturalSet}{\mathbb{N}}
+\newcommand{\realSet}{\mathbb{R}}
+\newcommand{\naturalStruct}{\mathfrak{N}}
+\newcommand{\realStruct}{\mathfrak{R}}
+
+% \newcommand{\iff}{\Leftrightarrow}
 
 \newcommand{\frakA}{\mathfrak{A}}
+\newcommand{\frakB}{\mathfrak{B}}
 
 
 \title{Mathematical Logic}

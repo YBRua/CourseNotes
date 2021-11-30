@@ -67,7 +67,7 @@ $$ K =\begin{bmatrix}
 
 is called the **calibration matrix**, and the upper right triangle matrix $M_{int} = [K | 0]$ is called the **intrinsic matrix**
 
-### World Coordinate to Camera Coordinate
+### World Coordinate to Camera Coordinate, Extrinsic Parameters
 
 - It's just a coordinate transformation involving rotation and translation
 - The position $\mathbf{c}_w$ and orientation $R$ of the camera in the world coordinate are the **extrinsic parameters** of a camera
@@ -95,8 +95,8 @@ Again the World-to-Camera transformation can be rewritten in homogeneous matrix 
 $$ \begin{bmatrix}
     x_c\\y_c\\z_c\\1
 \end{bmatrix} = \begin{bmatrix}
-    \mathbf{R} & \mathbf{t}\\
-    \mathbf{0} & 1
+    \mathbf{R}_{3\times 3} & \mathbf{t}_{3\times 1}\\
+    \mathbf{0}_{1\times 3} & 1
 \end{bmatrix} \begin{bmatrix}
     x_w\\y_w\\z_w\\1
 \end{bmatrix}$$
@@ -107,6 +107,108 @@ Combining the two models, we get the projection matrix $\mathbf{P}$
 
 $$ \tilde{\mathbf{u}} = M_{int}M_{ext}\tilde{\mathbf{x}}_w = \mathbf{P}\tilde{\mathbf{x}}_w $$
 
+where $\mathbf{P} \in \mathbb{R}^{3\times 4}$ is a projetion matrix with 12 parameters
+
+Note that proejction matrix acts on homogenous corrdinates. Therefore the scale of $\mathbf{P}$ does not matter.
+
 ## Camera Calibration
 
+### Calibration with Known 3D Object
+
+1. Capture the image of an object with known geometry
+2. Identify correspondence between 3D scene points and captured image
+3. For each correponding pair of points, we can construct an equation
+4. Solve the equations by least squares
+
+$$ \begin{bmatrix}
+    u\\v\\1
+\end{bmatrix} = \begin{bmatrix}
+    p_{11} & p_{12} & p_{13} & p_{14}\\
+    p_{21} & p_{22} & p_{23} & p_{24}\\
+    p_{31} & p_{32} & p_{33} & p_{34}
+\end{bmatrix} \begin{bmatrix}
+    x_w\\y_w\\z_w\\1
+\end{bmatrix} $$
+
+Expand the matrix as linear equations and rewrite it into matrix form
+
+$$ \mathbf{A}\mathbf{p} = \mathbf{0} $$
+
+where $\mathbf{A}$ is known and $\mathbf{p} = \mathrm{vec}(\mathbf{P)}$ is to be determined
+
+Since projection matrix can be determined up to a scale factor, any $k\mathbf{p}$ suffices as a solution. So we restrict $\|\mathbf{p}\|^2=1$
+
+$$ \min \|\mathbf{A}\mathbf{p}\|^2 \quad \text{s.t.} \quad \|\mathbf{p}\|^2=1 $$
+
+### Calibration with Known 2D Object
+
+If we use a 2D checkboard (instead of a 3D object) to calibrate the camera, since all points lie in the same plane, we can assume that $z_w = 0$, and we can also remove the 3rd column of the extrinsic parameter matrix
+
+### Distortion
+
+#### Types of Distortions
+
+Pinhole cameras do not exhibit distortions, but lenses do. The mathematical model for a model camera have to incorporate the distortion coefficients.
+
+##### Radial Distortion
+
+##### Tagential Distortion
+
 ## Photogrammetry and Stereo
+
+### Backward Projection
+
+Projection of an image point back into the scene results in an outgoing ray. We can know the direction of the ray, but we cannot know the exact position of the original point.
+
+But what if we use **two** cameras?
+
+### Simple Stereo
+
+Consider two cameras placed together with horizontal baseline $b$ (i.e. the distance between the two cameras is $b$). Assume the pinhole of one camera $\mathfrak{C}_L$ is at origin $(0,0,0)$ and the pinhold of the other $\mathfrak{C}_R$ is at $(b,0,0)$
+
+Consider a real-world position $(x,y,z)$, which is mapped to $(u_l,v_l)$ and $(u_r,v_r)$ respectively.
+
+We know that
+
+$$ u_l = f \cdot \frac{x}{z} \quad v_l = f\cdot \frac{y}{z}$$
+
+$$ u_r = f \cdot \frac{x-b}{z} \quad v_r = f \cdot \frac{y}{z} $$
+
+Therefore
+
+$$ u_l-u_r = f\cdot\frac{b}{z} \Longrightarrow z = f\cdot\frac{b}{u_l-u_r} $$
+
+Once we know $z$, we can efficiently solve for $x$ and $y$, thus reconstructing the scene
+
+Define $(u_l-u_r)$ to be the **Disparity**. Given the baseline $b$ and focal length $f$, the scene depth can be determined by determining disparity.
+
+Depth is inversely proportional to disparity
+
+#### Finding Disparity
+
+The two cameras depicts the same scenes, and therefore a template matching method can be used to determine disparity.
+
+$v_l = v_r$, therefore corresponding scene points should lie on the same horizontal line. So the search only need to be performed along horizontal line.
+
+##### Window-based Method
+
+- Select a rectangular window in image $L$
+- Move the window along the same horizontal line on image $R$ and do template matching
+
+##### Size of Windows
+
+- Small window
+  - Noisy
+- Large window
+  - Too coarse
+
+##### Adaptive Region-based Method
+
+- Decide the range of disparsities to search
+- Assume a non-verged system (horizontal offset between cameras only)
+  - $d = fb/z$ where $d$ is the disparsity
+  - Given a range of $z_{min}$ and $z_{max}$ we compute
+    - $d_{min} = fb/z_{max} $
+    - $d_{max} = fb/z_{min}$
+- Thus for each point $u$, we search points $u + d_{min}$ to $u + d_{max}$
+- Note that we can turn around and search for $u - d_{max}$ to $u - d_{min}$

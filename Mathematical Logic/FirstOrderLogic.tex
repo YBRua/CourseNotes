@@ -282,9 +282,9 @@ If $\vDash_{\mathfrak{A}}\varphi[s]$, we say \emph{$\mathfrak{A}$ satisfies $\va
         The case $\varphi = \alpha\to\beta$ is similar.
 
         Consider the case $\forall x \alpha$. We want to prove
-        \[ \fosat{A}{\forall x\alpha}{s_1} \Leftrightarrow \fosat{A}{\forall x\alpha}{s_2} \]
+        \[ \sat{A}{\forall x\alpha}{s_1} \Leftrightarrow \sat{A}{\forall x\alpha}{s_2} \]
         which is equivalent to
-        \[ \forall a\in|\mathfrak{A}|\fosat{A}{\alpha}{s_1(x|a)} \Leftrightarrow \forall a \in |\frakA| \fosat{A}{\alpha}{s_2(x|a)} \]
+        \[ \forall a\in|\mathfrak{A}|\sat{A}{\alpha}{s_1(x|a)} \Leftrightarrow \forall a \in |\frakA| \sat{A}{\alpha}{s_2(x|a)} \]
 
         We only need to prove that
         \[ \forall y \text{occurring free in $\alpha$}, s_1(x|a)(y) = s_2(x|a)(y) \]
@@ -299,26 +299,26 @@ If $\vDash_{\mathfrak{A}}\varphi[s]$, we say \emph{$\mathfrak{A}$ satisfies $\va
 \begin{definition}
     Let $\varphi$ be a wff s.t. all variables occurring free in $\varphi$ are included amoing $v_1,\dots,v_k$. Given $a_1,\dots,a_k\in\frakA$.
 
-    \[ \fosatabbr{A}{\varphi}{a_1,\dots,a_k} \]
+    \[ \assignSat{A}{\varphi}{a_1,\dots,a_k} \]
 
-    means that $\fosat{A}{\varphi}{s}$ for some $s:V\mapsto|\frakA|$ s.t. $s(v_i) = a_i$
+    means that $\sat{A}{\varphi}{s}$ for some $s:V\mapsto|\frakA|$ s.t. $s(v_i) = a_i$
 \end{definition}
 
 \begin{corollary}
     If $\sigma$ is a sentence then
     \begin{itemize}
-        \item either $\fosat{A}{\sigma}{s}$ for every assignment $s$. We say $\sigma$ is true in $\frakA$.
-        \item or $\founsat{A}{\sigma}{s}$ for every assignment $s$. We say $\sigma$ is false in $\frakA$
+        \item either $\sat{A}{\sigma}{s}$ for every assignment $s$. We say $\sigma$ is true in $\frakA$.
+        \item or $\unsat{A}{\sigma}{s}$ for every assignment $s$. We say $\sigma$ is false in $\frakA$
     \end{itemize}
 \end{corollary}
 
-Therefore a sentence does not depend on $s$, and we can simply write $\sentsat{A}{\sigma}$ or $\sentunsat{A}{\sigma}$.
+Therefore a sentence does not depend on $s$, and we can simply write $\sentSat{A}{\sigma}$ or $\sentunsat{A}{\sigma}$.
 
 \subsection{Elementary Equivalence}
 
 \begin{definition}[Elementary Equivalence]
     Let $\mathfrak{A}$ and $\mathfrak{B}$ be structures for the same language $\mathbb{L}$. $\mathfrak{A}$ and $\mathfrak{B}$ are \textbf{elementarily equivalent} ($\mathfrak{A} \equiv \mathfrak{B}$) if for every \emph{sentence} of $\mathbb{L}$
-    \[ \sentsat{A}{\sigma} \Leftrightarrow \sentsat{B}{\sigma} \]
+    \[ \sentSat{A}{\sigma} \Leftrightarrow \sentSat{B}{\sigma} \]
 \end{definition}
 
 \begin{remark}
@@ -334,7 +334,7 @@ Therefore a sentence does not depend on $s$, and we can simply write $\sentsat{A
 \subsection{Models}
 
 \begin{definition}[Model]
-    $\mathfrak{A}$ is a \textbf{model} of the sentence $\sigma$ if $\sentsat{A}{\sigma}$, i.e. if $\sigma$ is true in $\mathfrak{A}$. $\mathfrak{A}$ is a \textbf{model} of a set $\Sigma$ of sentences if $\mathfrak{A}$ is a model for every sentence in $\Sigma$. i.e. every sentence in $\Sigma$ is true in $\mathfrak{A}$.
+    $\mathfrak{A}$ is a \textbf{model} of the sentence $\sigma$ if $\sentSat{A}{\sigma}$, i.e. if $\sigma$ is true in $\mathfrak{A}$. $\mathfrak{A}$ is a \textbf{model} of a set $\Sigma$ of sentences if $\mathfrak{A}$ is a model for every sentence in $\Sigma$. i.e. every sentence in $\Sigma$ is true in $\mathfrak{A}$.
 \end{definition}
 
 For example, consider a first-order language $\mathbb{L}$, with 2-ary predicate symbols $\dot{P}$ and $\doteq$. Given a structure $\mathfrak{A}$ of $\mathbb{L}$,
@@ -342,7 +342,7 @@ For example, consider a first-order language $\mathbb{L}$, with 2-ary predicate 
 \begin{itemize}
     \item $\mathfrak{A}$ is a model of $\forall x \forall y x \doteq y$
     \begin{itemize}
-        \item $\Leftrightarrow \fosat{A}{x\doteq y}{s(x|a)(y|b)}$ for every $a,b \in |\mathfrak{A}|$
+        \item $\Leftrightarrow \sat{A}{x\doteq y}{s(x|a)(y|b)}$ for every $a,b \in |\mathfrak{A}|$
         \item $\Leftrightarrow$ $a = b$ for every $a,b \in|\mathfrak{A}|$
         \item $\Leftrightarrow$ $|\mathfrak{A}|$ contains only one element.
         \item Note that $|\frakA|$ cannot be empty because the universe of a structure must be non-empty.
@@ -388,8 +388,8 @@ For a set of structures with some certain properties, the set can be defined by 
 
 Let $\frakA = (A,R)$,
 \begin{itemize}
-    \item $\frakA$ is transitive iff $\sentsat{A}{\sigma}$, where $\sigma=\forall x \forall y \forall z \dot{R}xy \to \dot{R}yz \to \dot{R}xz$. Therefore $\sigma$ defines the set of all transitive structures
-    \item $\frakA$ is linearly ordered iff $\sentsat{A}{\sigma}$ where
+    \item $\frakA$ is transitive iff $\sentSat{A}{\sigma}$, where $\sigma=\forall x \forall y \forall z \dot{R}xy \to \dot{R}yz \to \dot{R}xz$. Therefore $\sigma$ defines the set of all transitive structures
+    \item $\frakA$ is linearly ordered iff $\sentSat{A}{\sigma}$ where
     \begin{itemize}
         \item $\sigma_1 = \forall x \forall y \forall z \dot{R}xy \to \dot{R}yz \to \dot{R}xz$
         \item $\sigma_2 = \forall x \forall y (\dot{R}xy \vee x=y \vee \dot{R}yx)$
@@ -397,9 +397,9 @@ Let $\frakA = (A,R)$,
         \item $\sigma = \sigma_1 \wedge \sigma_2 \wedge \sigma_3$
     \end{itemize}
     Therefore $\sigma$ defines the set of all linearly ordered structures
-    \item $\domain{R} = A$ iff $\sentsat{A}{\sigma}$ where $\sigma = \forall x \exists y \dot{R}xy$
-    \item $\range{R} = A$ iff $\sentsat{A}{\sigma}$ where $\sigma = \forall y \exists x \dot{R}xy$
-    \item $R$ is a (total) function iff $\sentsat{A}{\sigma}$ where
+    \item $\domain{R} = A$ iff $\sentSat{A}{\sigma}$ where $\sigma = \forall x \exists y \dot{R}xy$
+    \item $\range{R} = A$ iff $\sentSat{A}{\sigma}$ where $\sigma = \forall y \exists x \dot{R}xy$
+    \item $R$ is a (total) function iff $\sentSat{A}{\sigma}$ where
     \begin{itemize}
         \item $\sigma_4 =  \forall x \exists y \dot{R}xy$
         \item $\sigma_5 = \forall x \forall y \forall z \dot{R}xy \to \dot{R}xz \to x \doteq z$
@@ -408,6 +408,13 @@ Let $\frakA = (A,R)$,
 \end{itemize}
 
 \subsection{Elementary Class}
+
+\begin{definition}[Elementary Class]
+    A set of strucutures $\mathcal{K}$ is an \textbf{elementary class} if there exists a sentence $\sigma$ s.t.
+    \[ \mathcal{K} = \{ \frakA | \frakA \text{ is a model of $\sigma$} \} \]
+    i.e.
+    \[ \mathcal{K} = \{ \frakA | \sentSat{A}{\sigma} \} \]
+\end{definition}
 
 For example, the set of all graphs is an elementary class.
 
@@ -418,7 +425,7 @@ Let $\mathbb{L}$ be the language with a binary predicate symbol $\dot{E}$ and $\
 \end{itemize}
 
 To show that the set of graphs defined above is an elementary class, we need to show that there is a sentence $\sigma$ s.t.
-\[ \text{$G$ is a graph} \Leftrightarrow \sentsat{G}{\sigma} \]
+\[ \text{$G$ is a graph} \Leftrightarrow \sentSat{G}{\sigma} \]
 
 Therefore $\sigma$ should be able to represent the symmetric and non-reflexible properties.
 
@@ -428,7 +435,9 @@ Therefore $\sigma$ should be able to represent the symmetric and non-reflexible 
 
 \begin{definition}[Elementary Class in the Wider Sense]
     A set of structures $\mathcal{K}$ is an \textbf{elementary class in the wider sense} ($EC_\Delta$) if there is a set $\Sigma$ of sentences s.t.
-    \[ \mathcal{K} = \{\} \]
+    \[ \mathcal{K} = \{ \frakA | \frakA \text{ is a model of } \Sigma \} \]
+    i.e.
+    \[ \mathcal{K} = \{ \frakA | \sentSat{A}{\sigma} \text{ for every $\sigma \in \Sigma$} \} \]
 \end{definition}
 
 For example, we can use a set $\Sigma$ to define the set of strucutures whose univerise is infinite.
@@ -437,4 +446,220 @@ For example, we can use a set $\Sigma$ to define the set of strucutures whose un
 
 where $\lambda_i$ denotes ``At least $i$ elements exists in $|\frakA|$'', for example $\lambda_2 = \exists x \exists y x \neq y$.
 
-However, it is hard to decide whether there is a single sentence $\sigma$ s.t. the model
+However, it is hard to decide whether there is a single sentence $\sigma$ s.t. $\frakA$ is a model of $\sigma$ iff $|\frakA|$ is infinite.
+
+\section{Logical Implications and Satisfiability}
+
+\subsection{Logical Implications}
+
+\begin{definition}
+    Let $\Gamma$ be a set of wffs and $\varphi$ be a wff. $\Gamma$ \textbf{logically implies} $\varphi$, written as
+    \[ \Gamma \vDash \varphi \]
+    if for every structure $\frakA$ and every assignment $s$, if $\frakA$ satisfies $\Gamma$ with $s$, then $\frakA$ satisfies $\varphi$ with $s$
+\end{definition}
+
+\begin{theorem}
+    For a set of sentences $\Sigma$, and a sentence $\sigma$, $\Sigma\vDash\sigma$ iff for every model $\frakA$ of $\Sigma$, $\frakA$ is a model of $\sigma$.
+\end{theorem}
+
+As before, we denote $\{\alpha\}\vDash\beta$ by $\alpha\vDash\beta$
+
+\subsection{Logical Equivalence}
+
+\begin{definition}[Logical Equivalence]
+    $\alpha$ and $\beta$ are logically equivalent, written as $\alpha\vDash\Dashv\beta$ if $\alpha\vDash\beta$ and $\beta\vDash\alpha$
+\end{definition}
+
+\subsection{Valid Formulas}
+
+\begin{definition}[Valid WFFs]
+    Let $\varphi$ be a wff in the language $\mathbb{L}$. $\varphi$ is \textbf{valid} if $\semanticalImply{\emptyset}{\varphi}$, written as $\tautology{\varphi}$.
+\end{definition}
+
+For example,
+
+\begin{itemize}
+    \item $x \doteq x$ is valid
+    \item $\exists x \doteq x$ is valid
+    \item $\forall x \exists y x\dot{\neq}y$ is not valid
+    \item $\dot{P}x \vee \neg \dot{P}x$ is valid
+    \item $\exists x(\dot{P}x \to \forall x \dot{P}x)$ is valid
+\end{itemize}
+
+We detail the proof of the last example
+
+\begin{itemize}
+    \item $\sat{A}{\exists x (Px\to\forall x Px)}{s}$
+    \item[$\Leftrightarrow$] There is some $a \in |\frakA|$ s.t. $\sat{A}{Px \to \forall x Px}{s(x|a)}$
+    \item[$\Leftrightarrow$] $\sat{A}{\dot{P}(x)}{s(x|a)} \Rightarrow \sat{A}{\forall x Px}{s(x|a)}$
+    \item[$\Leftrightarrow$] $\sat{A}{\dot{P}(x)}{s(x|a)} \Rightarrow \sat{A}{\forall x Px}{s(x|a)}$
+    \item[$\Leftrightarrow$] There is some $a$ s.t. if $a \in \dot{P}^{\frakA}$, then for every $b \in |\frakA|$, $b\in\dot{P}^{\frakA}$
+    \item If there is some $a$ s.t. $a \notin \dot{P}^{\frakA}$, then the consequence holds trivially
+    \item If there is no $a$ s.t. $a \notin \dot{P}^{\frakA}$, this means that for every $a \in |\frakA|$, $a\in\dot{P}^{\frakA}$. This is exactly the consequence so we are done
+\end{itemize}
+
+\subsection{Satisfiability}
+
+\begin{definition}[Satisfiability]
+    \begin{itemize}
+        \item The wff $\varphi$ is \textbf{satisfiable} if there is some structure $\frakA$ and some assignment $s$ s.t. $\sat{A}{\varphi}{s}$.
+        \item The set of wffs $\Gamma$ is \textbf{satisfiable} if there is some structure $\frakA$ and some assignment $s$ s.t. $\sat{A}{\varphi}{s}$ for every $\varphi$ in $\Gamma$.
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}
+    $\varphi$ is not satisfiable iff $\neg\varphi$ is valid
+\end{theorem}
+
+\section{Definability}
+
+\begin{definition}[Relations Defined by WFFs]
+    Let $\frakA$ be a structure, and $\varphi$ be a wff, and $n$ be such that the variables occurring free in $\varphi$ are included among $v_1,\dots,v_n$
+
+    The n-ary relation \textbf{defined by $\varphi$ in $\frakA$} is
+    \[ \{ (a_1,\dots,a_n) | \assignSat{A}{\varphi}{a_1,\dots,a_n}\} \]
+\end{definition}
+
+Let $\mathfrak{N} = (\mathbb{N},\le, +, 1)$, the 2-ary relation $\{(a,b)|a < b\}$ is defined by
+\[ v_1 \dot{+}\dot{1}\doteq v_2 \]
+
+To show this, we will show that $(a,b) \in R \iff \assignSat{N}{\varphi}{a,b}$.
+
+If $(a,b) \in R$, $\assignSat{N}{\varphi}{a,b} \iff a+1 \le b$
+
+Conversely, if $\assignSat{N}{\varphi}{a,b}$, it's equivalent to $a+1 \le b$, which mathematically implies that $a < b$
+
+\begin{definition}[Definability]
+    The relation $R$ is \textbf{definable in the structure $\frakA$} if there is some wff $\varphi$ that defines it in $\frakA$.
+\end{definition}
+
+We show some examples for definability of functions. Let $\mathfrak{N} = (\mathbb{N}, <, +, x, 0, 1)$.
+
+\begin{itemize}
+    \item $v_1 \dot{+} v_2 \doteq v_3$ defines $\{ (a,b,c) | a + b = c\}$ which is the same as function $f$, where $f(a,b) = a + b$.
+\end{itemize}
+
+\subsection{Definable Relations}
+
+\begin{definition}[Relations Defined by WFFs]
+    Let
+    \begin{itemize}
+        \item $\frakA$ be a structure
+        \item $\varphi$ be a wff and $n$ be such that the variables occurring free in $\varphi$ are included among $v_1,\dots,v_n$
+    \end{itemize}
+
+    The $n$-ary relation defined by $\varphi$ in $\frakA$ is
+    \[ \{ (a_1,\dots,a_n) | \assignSat{A}{\varphi}{a_1,\dots,a_n} \} \]
+\end{definition}
+
+For example,
+
+\begin{itemize}
+    \item Let $\mathfrak{R} = (\mathbb{R},<,+,\times,0,1)$. The $1$-ary relation $\{ a \in \mathbb{R} | 0 \le a \}$ is defined by
+    \[ \exists v_2, v_1 \doteq v_1 \times v_2 \]
+    \item Let $\mathfrak{R} = (\mathbb{R},<,+,\times,0,1)$。 The $2$-ary relation $\{ (a,b) | a < b \}$ is defined by
+    \[ \exists v_3 (v_1\dot{+}(\dot{1}\dot{+}v_3)\doteq v_2) \]
+\end{itemize}
+
+\begin{definition}[Definable Relations]
+    The relation $R$ is \textbf{definable in structure} $\frakA$ if there is some wff that defines it in $\frakA$
+
+    Let $f$ be a n-ary function $f$ whose domain is a subset $|\frakA| \times \dot \times |\frakA|$ and whose range is a subset of $|\frakA|$, $f$ is definable in $\frakA$ if the $(n+1)$-ary relation
+    \[ \{ (a_1,\dots,a_n, b) | f(a_1,\dots,a_n) = b \} \]
+    is definable in $\frakA$.
+\end{definition}
+
+Consider $\mathfrak{N} = (\mathbb{N},<,+,\times,0,1)$.
+\begin{itemize}
+    \item $v_1 + v_2 = v_3$ defines $\{ (a,b,c) | a + b = c \}$, which is the same as function $f(a,b) = a + b$
+    \item $v_1 + v_3 = v_2$ defines $\{ (a,b,c) | a+c = b \}$, which is the same as function $f(a,b)$
+    \[ f(a,b) = \begin{cases}
+        b - a &\quad a \le b\\
+        Undefined &\quad o.w.
+    \end{cases} \]
+\end{itemize}
+
+\begin{lemma}
+    Given a structure $\frakA$, the set of definable relations is \emph{enumerable}
+\end{lemma}
+\begin{lemma}
+    Not every subset of $\mathbb{N}$ is definable.
+\end{lemma}
+
+The proof of the two lemmas are similar. Note that the set of wffs is enumerable, and every wff may define only one relation. And the set of all subsets of $\mathbb{N}$ is uncountable.
+
+We now move from $\mathbb{N}$ to $\mathbb{R}$ and consider a more generall case. Consider whether the following subsets of $\mathbb{R}$ are definable in $\mathfrak{R} = (\mathbb{R}, <)$
+
+\begin{itemize}
+    \item $\emptyset$. Yes.
+    \item $\mathbb{N}$. Yes.
+    \item Anything else?
+\end{itemize}
+
+\section{Homomorphisms}
+
+\begin{definition}[Homomorphism]
+    Let $\mathfrak{A}$ and $\mathfrak{B}$ be structures for $\mathbb{L}$. A \textbf{homomorphism} from $\frakA$ to $\mathfrak{B}$ is a function $h:|\frakA| \mapsto |\mathfrak{B}|$ s.t.
+    \begin{itemize}
+        \item For every n-ary predicate symbol $R$, other than $\doteq$, and $a_1,\dots,a_n \in |\frakA|$,
+        \[ (a_1,\dots,a_n) \in R^{\frakA} \iff (h(a_1),\dots,h(a_n))\in R^{\mathfrak{B}} \]
+        \item For every n-ary function symbol $f$, and $a_1,\dots,a_n \in |\frakA|$,
+        \[ h(f^\frakA(a_1,\dots,a_n)) = f^\mathfrak{B}(h(a_1),\dots,h(a_n)) \]
+        \item For every constant symbol $c$
+        \[ h(c^\frakA) = c^\mathfrak{B} \]
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Onto of Homomorphism]
+    $h$ is a homomorphism of $\frakA$ \textbf{onto} $\mathfrak{B}$ if $h$ is a homomorphism from $\mathfrak{A}$ to $\mathfrak{B}$ and $h$ maps $\frakA$ onto $\mathfrak{B}$.
+\end{definition}
+
+\begin{definition}[Isomorphism]
+    A homomorphism $h$ from $\mathfrak{A}$ to $\mathfrak{B}$ is an \textbf{isomorphism} if $h$ is one-to-one
+\end{definition}
+
+\begin{definition}[Isomorphic]
+    The structures $\frakA$ and $\mathfrak{B}$ are \textbf{isomorphic}, denoted by $\frakA \simeq \mathfrak{B}$ if there is some \emph{isomorphism} of $\frakA$ \emph{onto} $\mathfrak{B}$. (One-to-one correspondence)
+\end{definition}
+
+\begin{definition}[Automorphism]
+    An \textbf{automorphism} of $\frakA$ is an isomorphism of $\frakA$ onto $\frakA$
+\end{definition}
+
+\subsubsection{Examples of Homomorphism}
+
+For example, let $\frakA = (\naturalSet, <^\naturalSet, +^\naturalSet)$, $\mathfrak{B} = (\mathbb{E}, <^\mathbb{E}, +^\mathbb{E})$, where $\mathbb{E}$ is the set of even non-negative integers. Then we claim that $h(n)=2n$ is an isomorphism of $\mathfrak{A}$ onto $\mathfrak{B}$
+
+To do this, we show that 1) $h$ is a homomorphism; 2) $h$ is one-to-one; 3) $h$ is onto
+
+\begin{itemize}
+    \item[$\dot{<}$] $(a,b) \in <^\mathbb{N} \iff (h(a), h(b)) = (2a,2b) \in <^\mathbb{E}$
+    \item[$\dot{+}$] $h(a +^\mathbb{N} b) = (h(a) +^\mathbb{E} h(b)) = (2a +^\mathbb{E} 2b)$
+\end{itemize}
+
+However, let $\mathfrak{C} = (\mathbb{O}, <^\mathbb{O}, +^\mathbb{O})$, where $\mathbb{O}$ is the set of all odd non-negative integers, then there is no isomorphism of $\frakA$ onto $\mathfrak{C}$. Infact $\mathfrak{C}$ is not even a valid strucutre because $+^\mathbb{O}$ is not closed.
+
+\subsubsection{Automorphism of $\mathfrak{R}=(\realSet, <)$}
+
+Consider which of the following $h$ are automorphisms of $\mathfrak{R}$. Note that to show this, we need to show that 1) $h$ is a homomorphism; 2) $h$ is one-to-one; 3) $h$ is onto; and 4) $h$ maps $\realSet$ to $\realSet$.
+
+\begin{itemize}
+    \item The identity function. Obviously yes.
+    \item $h(a) = a + 3$. Yes.
+    \item $h(a) = a - 4$. Yes.
+    \item $h(a) = 2a$. Yes.
+    \item $h(a) = -a$. Yes.
+    \item $h(a) = ka + l$. Yes if $k>0$.
+    \item $h(a) = a^3$. Yes.
+    \item $h(a) = a^2$. No.
+\end{itemize}
+
+\subsubsection{Automorphism of $\mathfrak{N} = (\naturalSet, <)$}
+
+Obviously the identity function is an automorphism. We consider other cases.
+
+If we map $0$ to any $n>0$, i.e. $h(0) = n > 0$. Since $h$ is onto, there exists some $m > 0$ s.t. $h(m) = 0$. And here comes a problem
+\[ m > 0 \iff h(m) = 0 > h(0) = n > 0 \]
+Therefore $0$ can only be mapped to $0$, i.e. $h(0) = 0$
+
+Similarly, $h(1)$ can only be mapped to $1$, and for each $n$, $h(n) = n$. Therefore the identity function $h(n) = n$ is the \emph{only} automorphism of $\frakA$.
