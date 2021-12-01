@@ -12,9 +12,9 @@ def matrix_formatter(symbol: str, n_rows: int, n_cols: int):
     """
     SUBSCRIPT = '_'
     t = Template('$symbol$subscript{$r$c} $delimiter')
-    for r in range(n_rows):
-        for c in range(n_cols):
-            if c + 1 == n_cols:
+    for r in range(1, n_rows + 1):
+        for c in range(1, n_cols + 1):
+            if c + 1 == n_cols + 1:
                 delimiter = r'\\'
             else:
                 delimiter = '& '
