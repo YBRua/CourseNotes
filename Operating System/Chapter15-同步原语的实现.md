@@ -284,3 +284,62 @@ def yield_wait():
 #### 处理时钟中断
 
 当一个线程的时间片到了，将会触发时钟中断，由中断处理函数调用 `yield()`。万一CPU在
+
+## 信号量的实现
+
+### 信号量的语义实现
+
+这个实现是不对的。
+
+```cpp
+void wait(int S) {
+    while (S <=0)
+        /* waiting */;
+    atomic_add(&S, -1); // problematic here
+}
+
+void signal(int S) {
+    atomic_add(&S, 1);
+}
+```
+
+两个等待中的线程可能同时以为自己拿到了资源，同时执行 `atomic_add(&S, -1)`，然后信号量变成了 `-1`。寄！
+
+因此需要对信号量本身加锁
+
+```cpp
+void wait(sem_t *S) {
+    lock(S->lock);
+    while (S->value <=0) {
+        unlock(S->lock);
+        lock(S->lock);
+    }
+    S->value--;
+    unlock(S->lock);
+}
+
+void signal(sem_t *S) {
+    lock(S->lock);
+    S->value++;
+    unlock(S->lock);
+}
+```
+
+> “我们这里都是假设程序员无比地智慧。写代码都没有bug。”
+
+信号量的最终实现使用了条件变量、互斥锁和一个计数器
+
+- `value`
+  - 正数为信号量
+  - 负数为有人等待
+- `wakeup`
+  - 等待时可以唤醒的数量
+- 某一时刻真实的信号量是 `value >= 0 ? value : wakeup`
+
+```cpp
+void wait(sem_t *S) {
+    lock(S->sem_lock);
+    S->value--;
+    if ()
+}
+```

@@ -317,8 +317,9 @@ Therefore a sentence does not depend on $s$, and we can simply write $\sentSat{A
 \subsection{Elementary Equivalence}
 
 \begin{definition}[Elementary Equivalence]
+    \label{def:ElementaryEquivalence}
     Let $\mathfrak{A}$ and $\mathfrak{B}$ be structures for the same language $\mathbb{L}$. $\mathfrak{A}$ and $\mathfrak{B}$ are \textbf{elementarily equivalent} ($\mathfrak{A} \equiv \mathfrak{B}$) if for every \emph{sentence} of $\mathbb{L}$
-    \[ \sentSat{A}{\sigma} \Leftrightarrow \sentSat{B}{\sigma} \]
+    \[ \sentSat{A}{\sigma} \iff \sentSat{B}{\sigma} \]
 \end{definition}
 
 \begin{remark}
@@ -619,7 +620,7 @@ We now move from $\mathbb{N}$ to $\mathbb{R}$ and consider a more generall case.
 \end{definition}
 
 \begin{definition}[Isomorphic]
-    The structures $\frakA$ and $\mathfrak{B}$ are \textbf{isomorphic}, denoted by $\frakA \simeq \mathfrak{B}$ if there is some \emph{isomorphism} of $\frakA$ \emph{onto} $\mathfrak{B}$. (One-to-one correspondence)
+    The structures $\frakA$ and $\mathfrak{B}$ are \textbf{isomorphic}, denoted by $\frakA \cong \mathfrak{B}$ if there is some \emph{isomorphism} of $\frakA$ \emph{onto} $\mathfrak{B}$. (One-to-one correspondence)
 \end{definition}
 
 \begin{definition}[Automorphism]
@@ -662,4 +663,282 @@ If we map $0$ to any $n>0$, i.e. $h(0) = n > 0$. Since $h$ is onto, there exists
 \[ m > 0 \iff h(m) = 0 > h(0) = n > 0 \]
 Therefore $0$ can only be mapped to $0$, i.e. $h(0) = 0$
 
-Similarly, $h(1)$ can only be mapped to $1$, and for each $n$, $h(n) = n$. Therefore the identity function $h(n) = n$ is the \emph{only} automorphism of $\frakA$.
+Similarly, $h(1)$ can only be mapped to $1$, and for each $n$, $h(n) = n$. Therefore the identity function $h(n) = n$ is the \emph{only} automorphism of $\naturalStruct$.
+
+\subsection{Substructures}
+
+We now consider a special kind of isomorphism
+
+\begin{definition}[Substructures]
+    Let $\frakA = (A,\dots)$ and $\frakB = (B,\dots)$ be structures for $\mathbb{L}$. $\frakA$ is a \textbf{substructure} of $\frakB$, denoted by $\frakA \subseteq \frakB$ if
+    \begin{itemize}
+        \item $A \subseteq B$
+        \item For every $k$-ary predicate symbol,
+        \[ P^\frakA = P^\frakB \cap A^k \]
+        Note that this is to guarantee that $(a_1,\dots,a_k)\in P^\frakB \Longrightarrow (a_1,\dots,a_k)\in P^\frakA$
+        \item For every $k$-ary function $f$ and every $k$-tuple of $A$
+        \[ f^\frakA(a_1,\dots,a_k) = f^\frakB(a_1,\dots,a_k) \]
+        \item For every constant $c$
+        \[ c^\frakA = c^\frakB \]
+    \end{itemize}
+\end{definition}
+\begin{remark}
+    Substructures are defined under identity map $h(x)=x$. The identity map is an isomorphism of $\frakA$ into $\frakB$ iff
+    \begin{enumerate}
+        \item For each predicate $P$, $P^\frakA$ is the restriction of $P^\frakB$ to $A$
+        \item For each function $f$, $f^\frakA$ is the restriction of $f^\frakB$ to $A$
+        \item $c^\frakA = c^\frakB$.
+    \end{enumerate}
+    If these conditions are met, then $\frakA$ is called a \textbf{substructure} of $\frakB$.
+\end{remark}
+
+\subsection{Homomorphism Theorem}
+
+\begin{lemma}
+    \label{lem:HomomorphismLemma}
+    Let $\frakA$ and $\frakB$ be structures for the language $\mathbb{L}$. Let $h$ be a homomorphism from $\frakA$ to $\frakB$, and $s:V\to|\frakA|$ be an assignment for $\frakA$. Then for every term $t$ of $\mathbb{L}$
+    \[ h(\bar{s}(t)) = \overline{h\circ s}(t) \]
+\end{lemma}
+\begin{proof}
+    Prove by induction.
+    \begin{itemize}
+        \item[] \textbf{Base Case.} If $t=c$, then
+        \[ h(\bar{s}(c)) = h(c^\frakA) = c^\frakB = \overline{h\circ s(c)} \]
+        If $t=v$, then
+        \[ h(\bar{s}(x)) = h(s(x)) = h \circ s(x) \]
+        \item[] \textbf{Inductive Case.} If $t = ft_1,\dots,t_n$,
+        \[ h(\bar{s}(t)) = h(f^\frakA(\bar{s}(t_1),\dots,\bar{s}(t_n))) = f^\frakB(\bar{s}(t_1),\dots,\bar{s}(t_n)) \]
+        \[ \overline{h\circ s} = f^\frakB(\overline{h\circ s}(t_1),\dots,\overline{h\circ s}(t_n)) \]
+        From inductive hypothesis we know $\overline{h\circ s}(t_k) = h(\bar{s}(t_k))$, and we are done.
+    \end{itemize}
+\end{proof}
+
+\begin{theorem}[Homomorphism Theorem]
+    \label{thm:HomomorphismTheorem}
+    Let $h$ be a homomorphism form $\frakA$ to $\frakB$ and $s$ be an assignment function for $\frakA$. The statement
+    \[ \sat{A}{\varphi}{s} \iff \sat{B}{\varphi}{h \circ s} \]
+    \begin{itemize}
+        \item is true for every quantifier-free wff $\varphi$ not containing $\doteq$
+        \item is true for every quantifier-free wff $\varphi$ if $h$ is one-to-one
+        \item is true for every wff $\varphi$ wff $\varphi$ not containing $\doteq$ if $h$ is onto
+        \item is true for every wff $\varphi$ if $h$ is an isomorphism of $\frakA$ onto $\frakB$ ($\frakA \cong \frakB$)
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    Prove by induction on $\varphi$.
+    \begin{itemize}
+        \item[] \textbf{Base Case.} Let $\varphi = Pt_1\dots t_n$.
+         Since $h$ is a homomorphism, by definition we have
+         \[ (\bar{s}(t_1),\dots,\bar{s}(t_n))\in P^\frakA \iff (h(\bar{s}(t_1)),\dots, h(\bar{s}(t_n))) \in P^\frakB \]
+         Further, by Lemma~\ref{lem:HomomorphismLemma},
+         \[ (\overline{h\circ s}(t_1),\dots,\overline{h\circ s}(t_2)) = (h(\bar{s}(t_1)),\dots, h(\bar{s}(t_n))) \in P^\frakB \]
+         So we are done.
+         \item[] \textbf{Inductive Case.}\begin{itemize}
+             \item If $\varphi = \neg \alpha$, by induction hypothesis
+             \[ \sat{A}{\alpha}{s} \iff \sat{B}{\alpha}{h \circ s} \]
+             We can negate both sides
+             \[ \unsat{A}{\alpha}{s} \iff \unsat{B}{\alpha}{h \circ s} \]
+             Therefore,
+             \[ \sat{A}{\neg\alpha}{s} \iff \sat{B}{\neg\alpha}{h\circ s} \]
+             \item If $\varphi = \alpha \to \beta$.
+             \[ \sat{A}{\alpha\to\beta}{s} \iff \sat{B}{\alpha\to\beta}{h\circ s} \]
+             is equivalent to
+             \[ \text{If} \sat{A}{\alpha}{s} \text{then} \sat{A}{\beta}{s} \iff \text{If} \sat{B}{\alpha}{h \circ s} \text{then} \sat{B}{\beta}{s} \]
+             By induction hypothesis, we are done.
+         \end{itemize}
+    \end{itemize}
+    Until now we have proved (a). We now further consider $\doteq$ and $\forall$
+
+    We start from $\doteq$, which is a base case,
+    If $\varphi = t_1\doteq t_2$
+        \[ \sat{A}{t_1\doteq t_2}{s} \iff \sat{B}{t_1\doteq t_2}{h\circ s} \]
+        \[ \bar{s}(t_1) = \bar{s}(t_2) \iff \overline{h\circ s}(t_1) = \overline{h\circ s}(t_2) \iff h(\bar{s}(t_1)) = h(\bar{s}(t_2)) \]
+        $\Leftrightarrow$ always holds. However, $\Leftarrow$ requires an additional condition that $h$ is one-to-one.
+
+    Finally, consider $\varphi=\forall x\alpha$ in the inductive case.
+    \[ \sat{A}{\forall x \alpha}{s} \iff \sat{B}{\forall x \alpha}{h\circ s} \]
+    \[ \text{For any $a\in|\frakA|$,} \sat{A}{\alpha}{s(x|a)} \iff \text{For any $b\in|\frakB|$,}\sat{B}{\alpha}{(h\circ s)(x|b)} \]
+    Assume LHS, we prove RHS. Note that since $a$ and $b$ are arbitrary, we cannot relate them without additional conditions. Therefore to prove this we would require $h$ to be \emph{onto}. Then there is some $a'\in|\frakA|$ s.t. $h(a')=b$.
+    \[ \sat{B}{\alpha}{(h\circ s)(x|h(a'))} \iff \sat{B}{\alpha}{h\circ(s(x|a'))} \]
+    By LHS, we have $\sat{A}{\alpha}{s(x|a')}$, and by hypothesis, we have $\sat{B}{\alpha}{h\circ (s(x|a'))}$, so we are done.
+
+    Assume RHS, we prove LHS. Let $b=h(a)$,
+    \[ \sat{B}{\alpha}{(h\circ s)(x|h(a))} \iff \sat{B}{\alpha}{h\circ(s(x|a))} \]
+    By hypothesis, we have $\sat{A}{\alpha}{s(x|a)}$. Done.
+\end{proof}
+
+\begin{corollary}
+    \label{cor:HomomorphismToElementaryEquiv}
+    If $\frakA \cong \frakB$, then $\frakA \equiv \frakB$. Recall that $\equiv$ means Elementary Equivalence (Def~\ref{def:ElementaryEquivalence}).
+\end{corollary}
+
+Corollary~\ref{cor:HomomorphismToElementaryEquiv} follows immediately from Homomorphism Theorem~\ref{thm:HomomorphismTheorem} because sentences do not care about assignments.
+
+But the converse is not true. Take $\mathfrak{R} = (\realSet, <)$ and $\mathfrak{Q}=(\mathbb{Q}, <)$ as a counter example. We have claimed that they are elementary equivalent (though the proof is beyond the scope).
+
+\begin{corollary}[Automorphism Theorem]
+    \label{cor:AutomorphismTheorem}
+    Let $h$ be an automorphism of $\frakA$. Let $R$ be an n-ary relation on $|\frakA|$ that is definable in $\frakA$. For every n-tuple $(a_1,\dots,a_n)$ of elements of $\frakA$,
+    \[ (a_1,\dots,a_n) \in R \iff (h(a_1),\dots,h(a_n)) \in R \]
+\end{corollary}
+\begin{proof}
+    Since $R$ is definable in $\frakA$,
+    \begin{itemize}
+        \item[] $(a_1,\dots,a_n) \in R$
+        \item[$\iff$] $\assignSat{A}{\varphi}{a_1,\dots,a_n}$ 
+        \item[$\iff$] $\assignSat{A}{\varphi}{h(a_1),\dots,h(a_n)}$ 
+        \item[$\iff$] $(h(a_1),\dots,h(a_n))\in R$ 
+    \end{itemize}
+\end{proof}
+
+Corollary~\ref{cor:AutomorphismTheorem} is often used for proving some relations are \emph{not definable}. For example, consider $\mathfrak{R} = (\realSet, <)$, its subset $\mathbb{N}$ is not definable in $\realStruct$.
+
+Assume $\naturalSet$ is definable in $\realStruct$. Let $h(a)=a^3$. Obviously $h$ is an automorphism of $\realStruct$.
+
+\begin{itemize}
+    \item[] $a \in \mathbb{N}$
+    \item[$\iff$] $\assignSat{R}{\varphi}{a}$
+    \item[$\iff$] $\assignSat{R}{\varphi}{h(a)}$
+    \item[$\iff$] $h(a)\in\naturalSet$
+    \item[$\iff$] $a^3 \in \naturalSet$.  
+\end{itemize}
+
+This leads to a contradiction. If $a^3 = 2$, then no $a \in \naturalSet$.
+
+\section{Deductive Calculus}
+
+Proofs are (purely) syntactic constructs that caputre \emph{derivability of facts}. Deductive calculi provide descriptions of proofs in logic. There are more than one forms for deductive calculi.
+
+We adopt the Hilbert-style deductive calculus, which contains
+
+\begin{itemize}
+    \item A set $\Lambda$ of wffs called \textbf{logical axioms}
+    \item A \emph{single} \textbf{rule of inference} for forming a new wff from a pair of wffs
+\end{itemize}
+
+We then systematically generate a set of wffs from the axioms by using the rules of inference. They are called \textbf{derivable} wffs.
+
+Another deductive calculus is called the natural calculus, which has many rules of inference and one single axiom (\emph{“排中律”}, that a proposition is either True or False).
+
+Yet another deductive calculus is called the sequent calculus, which contains no axiom and a set of symmetric rules.
+
+\subsection{Introduction to Soundness and Completeness}
+
+The goal is to prove that for any language $\mathbb{L}$, the following are equivalent
+
+\begin{itemize}
+    \item The set of derivable wffs in $\mathbb{L}$
+    \item The set of valid wffs in $\mathbb{L}$
+\end{itemize}
+
+This is done by proving the soundness and completeness
+
+\begin{theorem}[Soundness]
+    \label{thm:FOSoundness}
+    Every derivable of wff is valid.
+\end{theorem}
+
+\begin{theorem}[Completeness]
+    \label{thm:FOCompleteness}
+    Every valid wff is derivable.
+\end{theorem}
+
+\subsection{Logical Axioms}
+
+\begin{definition}[Generalization]
+    A \textbf{generalization} of the wff $\alpha$ is any wff obtained by putting zero or more universal quantifiers in front of $\alpha$
+\end{definition}
+
+For example, $\forall x\forall y\forall y\alpha$ is a generalization of $\alpha$.
+
+Note that every wff is a generalization of itself.
+
+\begin{definition}[Axioms]
+    Let $\mathbb{L}$ be a first-order language. The set $\Lambda$ of logical axioms of $\mathbb{L}$ consists of all generalizations of the wffs in the following groups
+    \begin{axiom}
+        \label{axiom:InstanceOfTautology}
+        \textbf{Instances} of tautologies.
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:Substitution}
+        Wffs of the form $\forall \alpha \to \alpha_t^x$ such that the term $t$ is \textbf{substitutable} for $x$ in $\alpha$.
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:PushUniversalIntoImplication}
+        Wffs of the form $\forall x(\alpha\to\beta) \to (\forall x \alpha\to \forall x \beta)$.
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:QuantifyBoundedVar}
+        Wffs of the form $\alpha\to\forall x \alpha$ if $x$ \emph{does not occur free} in $\alpha$
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:Equality}
+        Wffs of the form $x \doteq x$
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:EqualitySubstitution}
+        Wffs of the form $x \doteq y \to (\alpha \to \alpha')$ where $\alpha$ is atomic and $\alpha'$ is obtained from $\alpha$ by replacing zero or more free occurrences of $x$ in $\alpha$ by $y$
+    \end{axiom}
+\end{definition}
+
+For example,
+
+\begin{itemize}
+    \item $\alpha=Py$, $Py \to \forall x Py$ is an instance of Axiom \ref{axiom:QuantifyBoundedVar}
+    \item $\alpha=Py$, $\forall y(Py\to \forall xPy)$ is a \emph{generalization} of instance of Axiom \ref{axiom:QuantifyBoundedVar}
+    \item $\alpha = Px$, $x \doteq y \to Px\to Py$ is an instance of Axiom \ref{axiom:EqualitySubstitution}
+    \item $\alpha = Px$, $x \doteq y \to Px \to Px$ is also an instance of Axiom \ref{axiom:EqualitySubstitution} because zero or more $x$ can be substituted
+    \item $\alpha = Qxx$, $x\doteq y \to Qxx \to Qxy$ is also an instance of Axiom~\ref{axiom:EqualitySubstitution}
+\end{itemize}
+
+Despite being axioms, we can prove the validity of some of these axioms.
+
+\subsection{Instance of Tautologies}
+
+In this section we show the validity of Axiom~\ref{axiom:InstanceOfTautology}.
+
+\begin{definition}[Instance of WFFs of Sentential Logic]
+    Let $\alpha_1,\dots,\alpha_n,\dots$ be an infinite sequence of wffs of the first-order language of $\mathbb{L}$, $\varphi$ be a wff of sentential logic with junst the connectives $\to$ and $\neg$, $\varphi^\ast$ be the wff of $\mathbb{L}$ obtained by replacing every occurrence of the sentence symbol $A_n$ in $\varphi$ by $\alpha_n$ for each $m$. We say that $\varphi^\ast$ is an \textbf{instance} of $\varphi$
+\end{definition}
+
+For example, let $\varphi=A_1\to A_3$, $\varphi^\ast = \alpha_1 \to \alpha_3$ is an instance of $\varphi$.
+
+\begin{definition}[Instance of Tautologies]
+    For any tautologies $\varphi$ in the sentential logic, $\varphi^\ast$ is an instance of the tautology $\varphi$
+\end{definition}
+
+\begin{lemma}
+    Given a structure $\frakA$ for language $\mathbb{L}$,
+    \begin{itemize}
+        \item $s$ be an assignment function
+        \item $\varphi$ be a wff of sentential logic
+        \item $\varphi^\ast$ be the instance of $\varphi$
+        \item $v$ be the truth assignment such that
+        \[ v(A_i) = T \iff \sat{A}{\alpha_i}{s} \]
+    \end{itemize}
+    Then
+    \[ \bar{v}(\varphi) = T \iff \sat{A}{\varphi^\ast}{s} \]
+\end{lemma}
+\begin{proof}
+    Prove by induction.
+    \begin{itemize}
+        \item[] \textbf{Base.} $\varphi = A_i$ follows immediately from the assumption that $v(A_i) = T \iff \sat{A}{\alpha_i}{s}$
+        \item[] \textbf{Inductive.} \begin{enumerate}
+            \item $\varphi = \neg \beta$.
+            \begin{itemize}
+                \item[] $\bar{v}(\neg\beta) = T \iff \sat{A}{(\neg\beta)^\ast}{s}$
+                \item[$\equiv$] $\bar{v}(\beta) = F \iff \unsat{A}{\beta^\ast}{s}$ 
+                \item[$\equiv$] $\bar{\beta} = T \iff \sat{A}{\beta^\ast}{s}$
+            \end{itemize}
+            \item $\varphi = \gamma \to \beta$
+            \begin{itemize}
+                \item[] $\bar{v}(\gamma\to\beta) = T \iff \sat{A}{\gamma\to\beta}{s}$
+                \item[$\equiv$] If $\bar{v}(\gamma) = T$ then $\bar{v}(\beta) = T$ $\iff$ If $\sat{A}{\gamma}{s}$ then $\sat{A}{\beta}{s}$ 
+            \end{itemize}
+        \end{enumerate}
+    \end{itemize}
+\end{proof}
+
+\begin{corollary}
+    Every instance of a tautology is valid.
+\end{corollary}
