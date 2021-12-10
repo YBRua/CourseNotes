@@ -1,0 +1,289 @@
+\chapter{Deductive Calculus of First Order Logic}
+
+\section{Deductive Calculus}
+
+Proofs are (purely) syntactic constructs that caputre \emph{derivability of facts}. Deductive calculi provide descriptions of proofs in logic. There are more than one forms for deductive calculi.
+
+We adopt the Hilbert-style deductive calculus, which contains
+
+\begin{itemize}
+    \item A set $\Lambda$ of wffs called \textbf{logical axioms}
+    \item A \emph{single} \textbf{rule of inference} for forming a new wff from a pair of wffs
+\end{itemize}
+
+We then systematically generate a set of wffs from the axioms by using the rules of inference. They are called \textbf{derivable} wffs.
+
+Another deductive calculus is called the natural calculus, which has many rules of inference and one single axiom (\emph{“排中律”}, that a proposition is either True or False).
+
+Yet another deductive calculus is called the sequent calculus, which contains no axiom and a set of symmetric rules.
+
+\subsection{Introduction to Soundness and Completeness}
+
+The goal is to prove that for any language $\mathbb{L}$, the following are equivalent
+
+\begin{itemize}
+    \item The set of derivable wffs in $\mathbb{L}$
+    \item The set of valid wffs in $\mathbb{L}$
+\end{itemize}
+
+This is done by proving the soundness and completeness
+
+\begin{theorem}[Soundness]
+    \label{thm:FOSoundness}
+    Every derivable of wff is valid.
+\end{theorem}
+
+\begin{theorem}[Completeness]
+    \label{thm:FOCompleteness}
+    Every valid wff is derivable.
+\end{theorem}
+
+\section{Logical Axioms}
+
+\begin{definition}[Generalization]
+    A \textbf{generalization} of the wff $\alpha$ is any wff obtained by putting zero or more universal quantifiers in front of $\alpha$
+\end{definition}
+
+For example, $\forall x\forall y\forall y\alpha$ is a generalization of $\alpha$.
+
+Note that every wff is a generalization of itself.
+
+\begin{definition}[Axioms]
+    Let $\mathbb{L}$ be a first-order language. The set $\Lambda$ of logical axioms of $\mathbb{L}$ consists of all generalizations of the wffs in the following groups
+    \begin{axiom}
+        \label{axiom:InstanceOfTautology}
+        \textbf{Instances} of tautologies.
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:Substitution}
+        Wffs of the form $\forall \alpha \to \alpha_t^x$ such that the term $t$ is \textbf{substitutable} for $x$ in $\alpha$.
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:PushUniversalIntoImplication}
+        Wffs of the form $\forall x(\alpha\to\beta) \to (\forall x \alpha\to \forall x \beta)$.
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:QuantifyBoundedVar}
+        Wffs of the form $\alpha\to\forall x \alpha$ if $x$ \emph{does not occur free} in $\alpha$
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:Equality}
+        Wffs of the form $x \doteq x$
+    \end{axiom}
+    \begin{axiom}
+        \label{axiom:EqualitySubstitution}
+        Wffs of the form $x \doteq y \to (\alpha \to \alpha')$ where $\alpha$ is atomic and $\alpha'$ is obtained from $\alpha$ by replacing zero or more free occurrences of $x$ in $\alpha$ by $y$
+    \end{axiom}
+\end{definition}
+
+For example,
+
+\begin{itemize}
+    \item $\alpha=Py$, $Py \to \forall x Py$ is an instance of Axiom \ref{axiom:QuantifyBoundedVar}
+    \item $\alpha=Py$, $\forall y(Py\to \forall xPy)$ is a \emph{generalization} of instance of Axiom \ref{axiom:QuantifyBoundedVar}
+    \item $\alpha = Px$, $x \doteq y \to Px\to Py$ is an instance of Axiom \ref{axiom:EqualitySubstitution}
+    \item $\alpha = Px$, $x \doteq y \to Px \to Px$ is also an instance of Axiom \ref{axiom:EqualitySubstitution} because zero or more $x$ can be substituted
+    \item $\alpha = Qxx$, $x\doteq y \to Qxx \to Qxy$ is also an instance of Axiom~\ref{axiom:EqualitySubstitution}
+\end{itemize}
+
+Despite being axioms, we can prove the validity of some of these axioms. We detail the proof of \ref{axiom:InstanceOfTautology} and \ref{axiom:Substitution}. Proof of others are trivial.
+
+\subsection{Instance of Tautologies}
+
+In this section we show the validity of Axiom~\ref{axiom:InstanceOfTautology}.
+
+\begin{definition}[Instance of WFFs of Sentential Logic]
+    Let $\alpha_1,\dots,\alpha_n,\dots$ be an infinite sequence of wffs of the first-order language of $\mathbb{L}$, $\varphi$ be a wff of sentential logic with junst the connectives $\to$ and $\neg$, $\varphi^\ast$ be the wff of $\mathbb{L}$ obtained by replacing every occurrence of the sentence symbol $A_n$ in $\varphi$ by $\alpha_n$ for each $m$. We say that $\varphi^\ast$ is an \textbf{instance} of $\varphi$
+\end{definition}
+
+For example, let $\varphi=A_1\to A_3$, $\varphi^\ast = \alpha_1 \to \alpha_3$ is an instance of $\varphi$.
+
+\begin{definition}[Instance of Tautologies]
+    For any tautologies $\varphi$ in the sentential logic, $\varphi^\ast$ is an instance of the tautology $\varphi$
+\end{definition}
+
+\begin{lemma}
+    Given a structure $\frakA$ for language $\mathbb{L}$,
+    \begin{itemize}
+        \item $s$ be an assignment function
+        \item $\varphi$ be a wff of sentential logic
+        \item $\varphi^\ast$ be the instance of $\varphi$
+        \item $v$ be the truth assignment such that
+        \[ v(A_i) = T \iff \sat{A}{\alpha_i}{s} \]
+    \end{itemize}
+    Then
+    \[ \bar{v}(\varphi) = T \iff \sat{A}{\varphi^\ast}{s} \]
+\end{lemma}
+\begin{proof}
+    Prove by induction.
+    \begin{itemize}
+        \item[] \textbf{Base.} $\varphi = A_i$ follows immediately from the assumption that $v(A_i) = T \iff \sat{A}{\alpha_i}{s}$
+        \item[] \textbf{Inductive.} \begin{enumerate}
+            \item $\varphi = \neg \beta$.
+            \begin{itemize}
+                \item[] $\bar{v}(\neg\beta) = T \iff \sat{A}{(\neg\beta)^\ast}{s}$
+                \item[$\equiv$] $\bar{v}(\beta) = F \iff \unsat{A}{\beta^\ast}{s}$ 
+                \item[$\equiv$] $\bar{\beta} = T \iff \sat{A}{\beta^\ast}{s}$
+            \end{itemize}
+            \item $\varphi = \gamma \to \beta$
+            \begin{itemize}
+                \item[] $\bar{v}(\gamma\to\beta) = T \iff \sat{A}{\gamma\to\beta}{s}$
+                \item[$\equiv$] If $\bar{v}(\gamma) = T$ then $\bar{v}(\beta) = T$ $\iff$ If $\sat{A}{\gamma}{s}$ then $\sat{A}{\beta}{s}$ 
+            \end{itemize}
+        \end{enumerate}
+    \end{itemize}
+\end{proof}
+
+\begin{corollary}
+    Every instance of a tautology is valid.
+\end{corollary}
+
+\subsection{Substitutions}
+
+\begin{definition}[Substitution for Terms]
+    Let $u$ be a term, $x$ be a variable, and $t$ be a term. $u_t^x$ is the result of replacing every occurrence of $x$ in $u$ by $t$
+\end{definition}
+
+\begin{definition}[Substitution for Formulas]
+    For a wff $\alpha$, a variable $x$, let $\alpha_t^x$ be the result of replacing every free occurence of $x$ in $\alpha$ by $t$,
+
+    \begin{itemize}
+        \item If $\alpha$ is atomic. $\alpha = Pu_1,\dots,u_n$, then $\alpha_t^x = Pu_{1t}^x,\dots,u_{nt}^x$
+        \item If $\alpha = \neg \beta$, then $\alpha_t^x = \neg\beta_t^x$
+        \item if $\alpha = \beta\to\gamma$, then $\alpha_t^x = \beta_t^x \to \gamma_t^x$
+        \item If $\alpha = \forall y \beta$, then $\alpha_t^x = \alpha$ if $y=x$, and $\alpha_t^x = \forall y \beta_t^x$
+    \end{itemize}
+\end{definition}
+
+Now we return to Axiom~\ref{axiom:Substitution}. Is every $\forall x \alpha \to \alpha_t^x$ valid?
+
+Of course the answer is ``No'', or otherwise we would not have required that $t$ is \emph{substitutable} for $x$ in $\alpha$.
+
+To see this, let $\alpha = \exists y x\neq y$, $t=y$, then
+
+\[ \forall x \exists y x\neq y \to \exists y y\neq y \]
+
+which is obviously not valid.
+
+The problem here is that by this substitution we made $x$ ``local/bounded'' (\emph{capture of free variables}), and the new formula is semantically different from the original one.
+
+\begin{definition}[Substitutability]
+    Let $\alpha$ be a wff, $x$ be a variable, and $t$ be a term. $t$ is substitutable for $x$ in $\alpha$ if
+    \begin{itemize}
+        \item $\alpha$ is atomic
+        \item $\alpha = \neg\beta$ and $t$ is substitutable for $x$ in $\beta$
+        \item $\alpha = \beta \to \gamma$ and $t$ is substitutable for $x$ in $\beta$ and $\gamma$
+        \item $\alpha = \forall y \beta$ and
+        \begin{itemize}
+            \item either $x$ does not occur free in $\forall y \beta$
+            \item or $x$ occurs free in $\beta$, and $t$ is substitutable for $x$ in $\beta$, and $y$ does not occur in $t$
+        \end{itemize}
+    \end{itemize}
+\end{definition}
+
+We can check this with our previous example $\alpha = \exists y x\neq y$, $t=y$. $\alpha = \neg\forall y (\neg x \neq y)$. Notice that $y$ ocurrs in $t$ ($t=y$), therefore $y$ is not substitutable for $x$ in $\alpha$.
+
+\subsubsection{Substitution Lemma}
+
+\begin{lemma}
+    Given a first-order language $\mathbb{L}$, let $\frakA$ be a structure for $\mathbb{L}$, $s$ be an assignment for $\frakA$, $u$ and $t$ be two terms and $x$ be a variable. Then
+    \[ \bar{s}(u_t^x) = \overline{s(x|\bar{s}(t))}(u) \]
+\end{lemma}
+
+This looks very intuitive. It just states that the assignment for substitution is equal to first changing the assignment function and then apply the assignment on original term.
+
+\begin{proof}
+    Prove by induction.
+    \begin{itemize}
+        \item[] \textbf{Base.} (1) If $u = c$, trivial. (2) If $u=x$, then LHS would be $\bar{s}(t)$, RHS would also be $\bar{s}(t)$. (3) $u=y\neq x$, then LHS and RHS will both be $\bar{s}(y)$.
+        \item[] \textbf{Inductive.} If $u = ft_1\dots t_n$.
+        \[ \bar{s}(u_t^x) = \bar{s}(ft_{1t}^x\dots f(t_{nt}^x)) = f(\bar{s}(t_{1t}^x\dots t_{nt}^x)) \]
+        which can be shown equal to RHS by applying inductive hypothesis
+    \end{itemize}
+\end{proof}
+
+\begin{lemma}[Substitution Lemma]
+    \label{lem:SubstitutionLemma}
+    Let $s$ be an assignment function for $\frakA$. If $t$ is substitutable for $x$ in $\alpha$, then
+    \[ \sat{A}{\alpha_t^x}{s} \iff \sat{A}{\alpha}{s(x|\bar{s}(t))} \]
+\end{lemma}
+\begin{proof}
+    Prove by induction on $\alpha$.
+    \begin{itemize}
+        \item[] \textbf{Base.} $\alpha = Pt_1\dots t_n$
+        \begin{itemize}
+            \item[] $\sat{A}{(Pt_1\dots t_n)}{s}$
+            \item[$\iff$] $\sat{A}{Pt_{1t}^x\dots t_{nt}^x}{s}$ 
+            \item[$\iff$] $(\bar{s}(t_{1t}^x),\dots,\bar{s}(t_{nt}^x)) \in P^\frakA$
+            \item[$\iff$] $(\bar{s'}(t_1),\dots,\bar{s'}(t_n)) \in P^\frakA$
+            \item[$\iff$] $\sat{A}{\alpha}{s(x|\bar{s}(t))}$
+        \end{itemize}
+        \item[] \textbf{Inductive.} \begin{enumerate}
+            \item  $\alpha = \neg \beta$
+            \begin{itemize}
+                \item[] $\sat{A}{\neg \beta_t^x}{s}$
+                \item[$\iff$] $\unsat{A}{\beta_t^x}{s}$
+                \item[$\iff$] $\unsat{A}{\beta}{s'}$
+                \item[$\iff$] $\sat{A}{\neg\beta}{s'}$
+            \end{itemize}
+            \item $\alpha = \beta \to \gamma$. Similar.
+            \item $\alpha = \forall y \beta$.
+            \begin{itemize}
+                \item[] $\sat{A}{\forall y \beta_t^x}{s}$
+                \item[$\iff$] For any $d \in |\frakA|$, $\sat{A}{\beta_t^x}{s(y|d)}$
+                \item[] $\sat{A}{\forall y\beta}{s'}$
+                \item[$\iff$] For any $d \in |\frakA|$, $\sat{A}{\beta}{s(x|\bar{s}(t))(y|d)}$
+                \item[] Since $y \neq x$, we can exchange the order of assignment overwriting
+                \item[] For any $d \in |\frakA|$, $\sat{A}{\beta}{s(y|d)(x|\bar{s}(t))}$. For brevity denote $s(y|d)$ by $s''$. By induction hypothesis, we have $\sat{A}{\beta_t^x}{s''} \iff \sat{A}{\beta}{s''(x|\bar{s}''(t))}$. And by Substitutability, we have $\bar{s}''(t) = \bar{s}(t)$. Then we have proved the lemma.
+            \end{itemize}
+        \end{enumerate} 
+    \end{itemize}
+\end{proof}
+
+\subsubsection{Validity of Axiom~\ref{axiom:Substitution}}
+
+\begin{theorem}
+    If $t$ is substitutable for $x$ in $\alpha$, then $\forall \alpha \to \alpha_t^x$ is valid.
+\end{theorem}
+\begin{proof}
+    If $\sat{A}{\forall x \alpha}{s}$, since $s(x|\bar{s}(t))$ is an instance of ``for all $x$'', it holds that $\sat{A}{\alpha}{s(x|\bar{s}(t))}$. Then by the Substitution Lemma~\ref{lem:SubstitutionLemma}, we have $\sat{A}{\alpha_t^x}{s}$.
+\end{proof}
+
+Now we have proved that every member in the set of axioms $\Lambda$ is valid.
+
+\section{Deductions}
+
+\subsection{Rule of Inference}
+
+
+
+\subsection{Deduction}
+
+\begin{definition}[Deduction]
+    Let $\Gamma$ be a set of wffs of $\mathbb{L}$. A \textbf{deduction from $\Gamma$} is a finite sequence
+    \[ \alpha_0,\dots,\alpha_n \]
+    of wffs such that for every $\alpha_i$, at least one of the following holds
+    \begin{itemize}
+        \item $\alpha\in\Gamma$
+        \item $\alpha\in\Lambda$
+        \item $\alpha$ is inferred by modus ponens from two wffs $\alpha_j$ and $\alpha_k$ s.t. $j,k < i$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+    $\Gamma\vdash\alpha$ ($\alpha$ is a theorem of $\Gamma$) if there is a deduction $\alpha_0,\dots,\alpha_n$ from $\Gamma$ s.t. $\alpha=\alpha_n$.
+
+    We write $\vdash\alpha$ for $\emptyset\vdash\alpha$
+\end{definition}
+
+Notice that deduction is purely based on symtax, and the logical implications we have learned before requires semantics.
+
+As an example, we show that $\vdash Px \to \exists yPy$. Since $\Gamma = \emptyset$, we can only derive the conclusion from the axioms and modus ponens.
+
+\[ Px \to \exists yPy \iff Px \to \neg\forall y \neg Py \]
+
+$\forall y \neg Py \to \neg x$ is in axiom group~\ref{axiom:Substitution}. Further, $(\forall y \neg Py \to \neg x) \to (Px \to \neg \forall y \neg Py)$ is an instance of tautology $(A_1 \to \neg A_2) \to (A_2 \to \neg A_1)$. We can then finish the proof by applying modus ponens.
+
+The proof can be formatted into a tree. But I cannot draw it so please refer to slides. A key problem is that few human beings (if any) is able to prove things like this, as it gradually ``factorizes'' the target wffs into members in $\Gamma$ or $\Lambda$. Fortunately we will later see some more helper rules to help normal people prove theorems in first-order logic.
+
+\section{The Soundness Theorem}

@@ -86,5 +86,3 @@ $$ \tilde{f} = P(s_{t+1}|s_t,a_t) = \mathcal{N}(\mu_\theta(s_t,a_t), \Sigma_\the
   - 设计比较合理的rollout情景
   - 在误差造成问题之前停止rollout
 - 但是问题仍然存在
-
-
