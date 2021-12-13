@@ -50,7 +50,7 @@ $$ \pi^\ast = \arg\min_\pi \mathbb{E}_{s\sim \rho_{\pi_E}^s}[l(\pi_E(\cdot|s), \
 
 - Essentially an MLE on each single step
 
-#### Limiatations
+#### Limitations
 
 - Distributional Shift
   - When $\pi_\theta$ takes a wrong action and starts to diverge from the expert, the distribution will be different from that of the expert
@@ -68,6 +68,48 @@ $$ \pi^\ast = \arg\min_\pi \mathbb{E}_{s\sim \rho_{\pi_E}^s}[l(\pi_E(\cdot|s), \
 - When learning reactive behaviours
 - When expert trajectories covers the entire space
 
+#### Dataset Aggregation DAgger
+
+- Agent can interact with the environment using its learned policy
+- Experts then label the generated trajectory to provide partial dataset
+  - 'Partial' means that if the agent deviates from the trajectory, the data cannot be used since the agent is in a different state
+
 ### Inverse Reinforcement Learning
 
+Learn a reward function $r^\ast$ from expert datasets.
+
+Once $r^\ast$ is learned, a model can be trained with the reward function
+
+$$ \pi^\ast = \arg\max_\pi \mathbb{E}){(s,a)\sim\rho_pi}[r^\ast(s,a)] $$
+
+#### Learning Reward Function
+
+The pricinple is that the expert should be optimal. i.e. the expert trajectory should achieve the highest value in the leared reward function
+
+$$ r^\ast = \arg\max_r \mathbb{E}\left[ \sum_{t=0}^\infty \gamma^tr(s,a)|\pi^\ast \right] - \mathbb{E}\left[ \sum_{t=0}^\infty \gamma^tr(s,a)|\pi \right] $$
+
+- Want the reward of the expert to be high, and the reward of others to be low
+
+The training process is usually implemented in a nested loop
+
+- Outer loop: find $r$
+  - Inner loop: train policy $\pi$ with $r$
+  - Check if $V(\pi^\ast) - V(\pi)$ is minimized
+
+However, this formulation is ambiguous. The solution $r$ may not be unique.
+
+#### Max-Entropy RL Formulation
+
+- Learns a more diversed strategy
+  - More chances to explore the environment
+  - More robust
+- Resolves ambiguity in IRL
+
 ### Generative Adversarial Imitation Learning
+
+> Idea: Expert and policy occupancy measure can be formulated as the discriminator and generator in GAN
+> Also proved that the duality of IRL with MaxEnt setting is equivalent to GAIL
+
+$$ \min_\pi\max_D \mathbb{E}_{\pi_E}[\log D(s,a)] + \mathbb{E}_\pi[\log(1-D(s,a))] - \lambda H(\pi) $$
+
+- Uses a discriminator $D$ to determine whether the current policy is from the expert or from the agent
