@@ -286,4 +286,101 @@ $\forall y \neg Py \to \neg x$ is in axiom group~\ref{axiom:Substitution}. Furth
 
 The proof can be formatted into a tree. But I cannot draw it so please refer to slides. A key problem is that few human beings (if any) is able to prove things like this, as it gradually ``factorizes'' the target wffs into members in $\Gamma$ or $\Lambda$. Fortunately we will later see some more helper rules to help normal people prove theorems in first-order logic.
 
+\subsection{Properties of Deductions}
+
+\begin{itemize}
+    \item If $\Gamma\vdash\varphi$, then there must be a finite subset $\Delta$ of $\Gamma$ s.t. $\Gamma\vdash\varphi$. This is guaranteed by definition of deduction: it is finite.
+    \item If $\alpha_1,\dots,\alpha_n$ is a deduction from $\Gamma$ and $\beta_1,\dots,\beta_m$ is a deduction from $\Gamma$, then $\alpha_1,\dots,\alpha_n,\beta_1,\dots,\beta_m$ is also a deduction from $\Gamma$
+    \item If $\varphi\in\Gamma$ then $\Gamma\vdash\varphi$
+    \item If $\Gamma\vdash\varphi$ and $\Gamma\subseteq\Delta$ then $\Delta\vdash\varphi$
+    \item If $\Gamma\vdash\alpha$ and $\Gamma\vdash\alpha\to\beta$, then $\Gamma\vdash\beta$
+    \item (Cut Rule) If $\Gamma\vdash\alpha$ and $\alpha\to\beta$, then $\Gamma\vdash\beta$. This property allows proving some theorem $\beta$ by one or more lemmas $\alpha$
+    \item If $\Gamma\to\alpha$ then for any $\beta$, $\Gamma\vdash\beta\to\alpha$. Notice that $\alpha\to\left( \beta\to\alpha \right)$ is an instance of tautology.
+    \item If $\Gamma\vdash\alpha\wedge\beta$, then $\Gamma\vdash\alpha$ and $\Gamma\vdash\beta$. Notice that $\alpha\wedge\beta = \neg\left( \alpha\to\neg\beta \right)$, and that $\neg\left( \alpha\to\neg\beta \right) \to \alpha$ (or $\beta$) are two instances of tautologies.
+    \item If $\Gamma\vdash\alpha$ and $\Gamma\vdash\beta$ then $\Gamma\vdash\alpha\wedge\beta$
+    \item If $\Gamma\vdash\alpha$ or $\Gamma\vdash\beta$ then $\Gamma\vdash\alpha\vee\beta$
+    \item If $\Gamma\vdash\alpha\to\beta$ then $\Gamma;\alpha\to\beta$
+\end{itemize}
+
+\subsection{Relations between Tautologies and Derivations}
+
+\begin{definition}
+    In first-order logic, a set of wffs $\Gamma$ \textbf{tautologically implies} $\varphi$ if there is a set $\Gamma'$ of wffs in the sentential logic s.t. under the same replacement of $A_i$ with $\alpha_i$,
+    \begin{itemize}
+        \item For every $\beta\in\Gamma'$, $\beta^*\in\Gamma$
+        \item $\varphi=\varphi^*$
+        \item $\Gamma'$ tautologically ipmlies $\varphi$ in the sentential logic
+    \end{itemize}
+\end{definition}
+
+\begin{lemma}
+    $\Gamma\vdash\varphi$ iff $\Gamma\cup\Lambda$ tautologically implies $\varphi$
+\end{lemma}
+
+\begin{lemma}[Rule T (Enderton)]
+    \label{lem:RuleT}
+    If $\Gamma\vdash\alpha_1,\dots,\Gamma\vdash\alpha_n$ and $\{\alpha_1,\dots,\alpha_n\}$ tautologically implies $\beta$ then $\Gamma\vdash\beta$
+\end{lemma}
+
+\subsection{The Deduction Theorem}
+
+\begin{theorem}[Deduction Theorem]
+    \label{thm:DeductionTheorem}
+    If $\Gamma;\alpha\to\beta$, then $\Gamma\vdash\alpha\to\beta$
+\end{theorem}
+\begin{proof}
+    By induction on $\Gamma;\alpha\to\beta$.
+    \begin{itemize}
+        \item[] \textbf{Base.} If $\beta\in\Lambda$, then
+        \[ \vdash\beta \Rightarrow \vdash \alpha\to\beta \Rightarrow \Gamma\vdash\alpha\to\beta \]
+        If $\beta\in\Gamma$, then
+        \[ \Gamma\vdash\beta \Rightarrow \Gamma\vdash\alpha\to\beta \]
+        If $\beta=\alpha$, then it is an instance of tautology so it is in $\Lambda$
+        \item[] \textbf{Inductive.} If $\Gamma;\alpha\vdash\gamma\to\beta$ and $\Gamma;\alpha\vdash\gamma$. By IH, $\Gamma\vdash\alpha\to(\gamma\to\beta)$ and $\Gamma\vdash\alpha\to\gamma$. Notice that $\{ \alpha\to(\gamma\to\beta), \alpha\to\gamma \}$ tautologically imply $\alpha\to\beta$. Then we apply ``Rule T''~\ref{lem:RuleT}.
+    \end{itemize}
+\end{proof}
+-
+\subsubsection{Contraposition}
+
+\emph{Contraposition} is a corollary of the deduction theorem
+
+\begin{theorem}[Contraposition]
+    $\Gamma;\varphi\vdash\neg\psi$ iff $\Gamma;\psi\vdash\neg\varphi$
+\end{theorem}
+\begin{proof}
+    \begin{itemize}
+        \item[$\Rightarrow$] If $\Gamma;\varphi\vdash\neg\psi$, then by Deduction Theorem~\ref{thm:DeductionTheorem}, $\Gamma\vdash\varphi\to\neg\psi$. Notice that $\left( \varphi\to\neg\psi \right) \to \left( \psi\to\neg\varphi \right)$ is an instance of tautological implication in sentential logic. Therefore by Rule T~\ref{lem:RuleT} $\Gamma\vdash\psi\to\neg\varphi$, and $\Gamma;\psi\to\neg\varphi$. The converse is similar
+    \end{itemize}
+\end{proof}
+
 \section{The Soundness Theorem}
+
+\begin{lemma}
+    Given a set $\Gamma$ of wffs and the wffs $\alpha$ and $\beta$, if $\Gamma\vDash\alpha\to\beta$ and $\Gamma\vDash\alpha$, then $\Gamma\vDash\beta$
+\end{lemma}
+
+\begin{theorem}[Soundness Theorem]
+    \label{thm:SoundnessTheorem}
+    If $\Gamma\vdash\alpha$, then $\Gamma\vDash\alpha$
+\end{theorem}
+\begin{proof}
+    Prove by induction on the deduction. Assume $\Gamma=\{ \gamma_0,\dots,\gamma_n \}$, we show that $\Gamma\vdash\varphi_i$ for all $i$
+    \begin{itemize}
+        \item[] \textbf{Base.} If $\varphi_i \in \Lambda$, by validity of all axioms, it holds. If $\varphi_i \in \Gamma$, then obviously $\Gamma\vDash\varphi_i$
+        \item[] \textbf{Inductive.} Suppose there exists some $\varphi_j$ and $\varphi_k$ s.t. $j,k \le i$. Let $\varphi_k = \varphi_j \to \varphi_i$, and $\Gamma\vdash\varphi_j, \Gamma\vdash\varphi_k$. By inductive hypothesis we have $\Gamma\vDash\varphi_j$ and $\Gamma\vDash\varphi_k=\varphi_j\to\varphi_i$. Therefore by lemma we have $\Gamma\vDash\varphi_i$. 
+    \end{itemize}
+\end{proof}
+
+\begin{corollary}
+    If $\vdash\alpha$, then $\vDash\alpha$.
+\end{corollary}
+
+\section{The Completeness Theorem}
+
+\begin{theorem}[G\"{o}del Extended Completeness Theorem]
+    If $\Gamma\vDash\alpha$, then $\Gamma\vdash\alpha$.
+\end{theorem}
+
+\begin{corollary}[G\"odel Completeness Theorem]
+    If $\vDash\alpha$, then $\vdash\alpha$.
+\end{corollary}
