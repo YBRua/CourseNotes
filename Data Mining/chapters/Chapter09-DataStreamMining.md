@@ -134,7 +134,134 @@ To estimate the number of 1's in the most $N$ bits
   - Each element of data stream is a tuple
   - Given a list of keys $S$
   - Determine which tuples of stream are in $S$
+  - Assume $S$ is very very large
 - Application example
   - Spam filtering
+  - Publish-subscribe system
 
+An obvious idea would be to use a hash table and look for collisions, but sometimes $S$ may be too large to be stored in hash table
 
+### Bit Array Filtering
+
+- Create a bit array $B$ of $n$ bits initialized with $0$'s
+- Choose a hash function $h$ with range $[0, n)$
+- Hash each member of $s\in S$ to one of $n$ buckets, and set that bit to $1$
+- Hash each element $a$ of the stream
+- Only output $a$ if the hashed value corresponds to $1$
+
+This method may produce **false positives** (due to collision of hashing) but **no false negatives**. If an item hashes to $0$, it cannot be in the filter.
+
+#### Analysis
+
+We analyze the number of false positives. Assume we throw $m$ balls into $n$ bins, what is the probability that a certain bin gets at least one ball? In our scene, balls are hashed values and bins are bits.
+
+$$ p = 1 - \left( 1-\frac{1}{n} \right)^m = 1 - \left( 1-\frac{1}{n} \right)^{n\cdot (m/n)} \to 1 - e^{-m/n} $$
+
+### Bloom Filter
+
+Assume $m$ items, $n$ bits, and $k$ independent hash function $h_1,\dots,h_k$
+
+1. Initialized all bits to be 0
+2. Hash each element with $h_i(s)$ and set $B[h_i(s)]=1$ for each $i$ in $k$
+3. For input $x$, if $B[h_i(x)] = 1$ for all $i$, then $x$ is in $S$. Otherwise drop $x$
+
+In this case, the probability that we create false positives is $(1 - e^{-km/n})$. The optimal $k$ is $n/m \cdot \ln(2)$.
+
+## Counting Distinct Elements
+
+Suppose elements come from a set of $N$ items. We want to count the number of distinct items seen so far. Again assume we cannot maintain a set of all seen items due to memory restrictions. Buy new RAM!
+
+### Flajolet-Martin Approach
+
+- Pick a hash function $h$ that maps each of the $N$ elements to at least $\log_2N$ bits
+- For each element $a$, let $r(a)$ be the number of trailing 0's in $h(a)$
+  - i.e. position of the first 1 counting from the least significant bit
+- Let $R = \max_a r(a)$, and the estimated number of distinct items is $2^R$
+
+#### Analysis
+
+##### Intuition of FM Approach
+
+Assume $h$ hashes $a$ with equal probability to any of $N$ integers, then $h(a)$ is a sequence of $\log_2N$ bits.
+
+$2^{-r}$ fraction of all $a$'s have a tail of $r$ zeros
+
+- About 50% of $a$'s hash to $***0$
+- Aoubt 25% hash to $**00$, etc.
+- So it takes about $2^r$ distinct items to produce a trailing of $r$ zeros
+  - For example, if we have seen $**00$, then we have probably seen $4$ distinct items
+
+##### Formal Proof
+
+Let $m$ be the number of distinct items seen so far. We will show that the probability of finding a tail or $r$ zeros goes to $1$ if $m\gg 2^r$, and goes to $0$ if $m \ll 2^r$.
+
+- This indicates that $2^R$ will always be a number around $m$
+
+The probability of not seeing a tail of length $r$ among $m$ elements is
+
+$$ (1 - 2^{-r})^m \approx e^{-m\cdot 2^{-r}} $$
+
+Therefore $m$ will have to be around $2^{r}$
+
+- Notice that probability halves when $R \to R+1$, but the estimated number doubles
+- Workaround involves using more than one hash functions, and combine different $R_i$'s -- But how?
+  - All estimations are powers of 2, taking average may be easily biased to large numbers; taking median always results in another power of 2
+- Solution: Average of medians
+  - Partition samples into groups
+  - Take median of groups
+  - Average the medians
+
+## Computing Moments
+
+Can be seen as a generalized version of counting distinct items.
+
+Assume elements are from a set $A$ of $N$ items. Define the $k$-th moment by
+
+$$ \sum_{i \in A}m_i^k $$
+
+- $k = 0$: distinct items
+- $k = 1$: Length of the stream
+- $k = 2$: A measure of how uneven the distribution is (deviation if the data is zero-meaned)
+
+### AMS Method
+
+> AMS: Abbrevation of 3 names of persons
+
+The AMS method works for all moments and gives an unbiased estimation
+
+For each variable, we store $X_{el}$ and $X_{val}$
+
+- $X_{el}$ corresponds to item $i$
+- $X_{val}$ corresponds to the count of item $i$
+
+#### Finite Stream Version
+
+- Assume input stream has length $n$
+- We start from any time $t$ uniformly at random
+- If the time $t$ has item $i$, we set $X_{el} = i$
+- Then we maintain count $c$ of the number of $i$'s in the stream starting from $t$.
+  - $c$ will be stored in $X_{val}=c$
+- The estimate of second moment is given by $f(X) = S = n(2c - 1)$
+- We keep track of multiple $X$ and the final estimate will be
+
+$$ \frac{1}{k}\sum_k f(X_k) $$
+
+- For $k=2$, we use $n(2c-1)$
+- For $k=3$, we use $n(3c^2 - 3c + 1)$
+- The number is chosen by $\sum_c c^2 - \sum_c (c-1)^2$ so that the expectation of result sum up to $m_i^2$
+
+##### Practical Implementation
+
+- Compute as many $f(X)$ as possible
+- Average the result in groups
+- Take median of averages
+
+##### Extension to Infinite Streams
+
+Suppose we can only store $k$ $X$'s, we drop some $X$ if we do not have enough space.
+
+If the input stream is infinite, we want to sample a fixed size $k$ s.t. each starting time $t$ is selected with probability $k/n$. This reduces to a fixed-size sampling.
+
+## Counting Itemsets
+
+Given a stream, we want to know which items appear more than a threshold of $m$ times in a window.
