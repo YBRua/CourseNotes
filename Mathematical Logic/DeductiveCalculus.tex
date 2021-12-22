@@ -373,6 +373,49 @@ The proof can be formatted into a tree. But I cannot draw it so please refer to 
 
 The Deduction Theorem and the Generalization Theorem are ``meta-theorem''s that applies to deductive calculi. In Hilbert-style Calculus, we use the six logical axioms to derive these meta-theorems. In other calculi, they may use other axioms, or directly use these meta-theorems.
 
+\subsubsection{Generalization on Constants}
+
+\begin{theorem}
+    \label{thm:GeneralizationOnConsts}
+    If $\Gamma\vdash\varphi$ and $c$ is a constant symbol that is not in any member of $\Gamma$, then there is some variable $y$ not in $\varphi$ s.t. $\Gamma\vdash\forall y \varphi_y^c$ ($c$ replaced by $y$).
+
+    Furthermore, there is a deduction of $\forall y \varphi_y^c$ from $\Gamma$ in which $c$ does not occur.
+\end{theorem}
+
+Intuitively, if $\varphi$ can be derived from $\Gamma$, then the constant $c$ in $y$ is somewhat like a quantified variable $y$.
+
+\begin{proof}
+    Since $\Gamma\vdash\varphi$, we have a deduction
+    \[ \varphi_0,\varphi_1,\dots,\varphi_n \]
+    s.t. $\varphi_n=\varphi$.
+
+    We first show by induction (on deduction $\Gamma\vdash\varphi_i$) that
+    \[ \varphi_{0y}^c,\dots,\varphi_{ny}^c \]
+    is a deduction from $\Gamma$.
+    \begin{itemize}
+        \item[] \textbf{Base.} If $\varphi_i \in \Gamma$, since $c$ does not occur in members of $\Gamma$, we have $\varphi_{iy}^c = \varphi_i$. Then $\Gamma\vdash\varphi_{iy}^c$. If $\varphi_i\in\Lambda$, it can be verified by checking all 6 axioms.
+        \item[] \textbf{Inductive.} If $\varphi_j = \varphi_k\to\varphi_i$, $\varphi_k$, $k,j < i$. By IH, $\Gamma\vdash\varphi_{ky}^c \to \varphi_{iy}^c$ and $\Gamma\vdash\varphi_{ky}^c$. We are done by Modus Ponens
+    \end{itemize}
+
+    We have shown so far that $\Gamma\vdash\varphi_y^c$ and $y$ does not occur in $\varphi$ (and the finite deduction sequence $\Delta$ that derives $\varphi$). Therefore we have $\Gamma\vdash\forall y \varphi_y^c$
+
+    It also follows from this proof that the deduction does not contain $c$
+\end{proof}
+
+\begin{corollary}[Corollary 24G]
+    \label{coroll:Corollary24G}
+    If $\Gamma\vdash\varphi_c^x$, and $c$ is a constant symbol that is not in $\varphi$ or any member of $\Gamma$, then $\Gamma\vdash\varphi$
+\end{corollary}
+
+\begin{corollary}[Rule El]
+    If $\Gamma;\varphi_c^x\vdash\psi$ and $c$ does not occur in $\varphi,\psi,\Gamma$, then $\Gamma;\exists x \varphi\vdash\psi$.
+    
+    Furthermore, there is a deduction of $\psi$ from $\Gamma;\exists x \varphi$ in which $c$ does not occur.
+\end{corollary}
+\begin{proof}
+    To be completed.
+\end{proof}
+
 \subsection{The Re-Replacement Lemma}
 
 \begin{lemma}[Re-Replacement Lemma]
@@ -383,7 +426,7 @@ The Deduction Theorem and the Generalization Theorem are ``meta-theorem''s that 
 \subsection{Consistency}
 
 \begin{definition}[Consistency]
-    $\Gamma$ is \textbf{inconsistent} if there is some wff $\alpha$ s.t. $\Gamma\vdash\gamma$ and $\Gamma\vdash\neg\alpha$
+    $\Gamma$ is \textbf{inconsistent} if there is some wff $\alpha$ s.t. $\Gamma\vdash\alpha$ and $\Gamma\vdash\neg\alpha$
 
     $\Gamma$ is \textbf{consistent} if it is not inconsistent.
 \end{definition}
@@ -420,7 +463,9 @@ Some properties of consistency
     If $\Gamma;\alpha$ is inconsistent, then $\Gamma\vdash\neg\alpha$
 \end{theorem}
 
-\section{Backward Inference}
+\section{Backward Inference and Prove Strategies}
+
+\subsection{Backward Inference}
 
 With all the properties derived so far, we can formulate a general method to prove theorems.
 
@@ -443,6 +488,64 @@ Assume we are showing $\Gamma\vdash\varphi$
 \end{itemize}
 
 Note that due to that applying this method will not always lead to a proof, or may lead to something that is not provable, this method is \emph{incomplete}.
+
+\subsubsection{Examples}
+
+\begin{enumerate}
+    \item Assume $x$ does not occur free in $\beta$, derive
+
+    \begin{itemize}
+        \item $\vdash\forall x \left( \alpha \to \beta \right) \rightarrow \left( \alpha\to\forall x \beta \right)$
+        \item[$\Leftarrow$] $\forall x \left( \alpha\to\beta \right)\vdash\exists x\alpha\to\beta$ (Deduction Thm)
+        \item[$\Leftarrow$] $\forall x \left( \alpha\to\beta \right), \exists x \alpha \vdash \beta$ (Deduction Thm)
+        \item[$\Leftarrow$] $\forall x \left( \alpha\to\beta \right), \exists x \alpha \vdash \neg\neg\beta$ (Rule T)
+        \item[$\Leftarrow$] $\forall x \left( \alpha\to\beta \right),\neg\beta \vdash \neg\neg\forall x\neg \alpha$ (Contraposition)
+        \item[$\Leftarrow$] $\dots \vdash \forall x\neg \alpha$
+        \item[$\Leftarrow$] $\dots\vdash\neg\alpha$ (Generalization, note that $x$ does not occur free in $\beta$)
+        \item[$\Leftarrow$] $\forall x \left( \alpha\to\beta \right),\alpha\vdash\neg\neg\beta$ (Contraposition)
+        \item[$\Leftarrow$] $\dots\vdash\beta$   
+    \end{itemize}
+
+    \item Show $\vdash\forall x \forall z Pxz \to \forall{y} Pyy$
+    \begin{itemize}
+        \item[$\Leftarrow$] $\forall x \forall z Pxz \vdash \forall y Pyy$
+        \item[$\Leftarrow$] $\forall x \forall z Pxz \vdash Pyy$
+        \item[$\Leftarrow$] $\forall x \forall z Pxz \to \forall z Pyz$ (Substitution)
+        \item[] Suffice to show $\forall zPyz \vdash \forall z Pyz$, again can be proved by substitution.  
+        \item[] However, cannot prove $\vdash\forall x\forall y Pxy \to \forall y Pyy$ like this, although this formula is semantically valid ($\vDash$)
+    \end{itemize}
+
+    \item Show $\vdash\forall x \forall y Pxy \to \forall{y} Pyy$
+    \begin{itemize}
+        \item[] We have shown that Show $\vdash\forall x \forall z Pxz \to \forall{y} Pyy$
+        \item[] We will show that $\forall x\forall y Pxy \vdash\forall{x}\forall{z}Pxz$
+        \item[$\Leftarrow$] $\forall{x}\forall{y}Pxy \vdash Pxz$ (Generalization)
+        \item[] Done. (Substitution)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Alphabetic Variants}
+
+\begin{theorem}[Alphabetic Variants]
+    \label{thm:AlphabeticVariants}
+    Given a wff $\alpha$, a term $t$ and a variable $x$. There is a wff $\alpha'$ s.t. $\alpha'$ differs from $\alpha$ only in quantified variables; $\vdash \alpha\leftrightarrow\alpha'$ and $t$ is substitutable for $x$ in $\alpha'$.
+\end{theorem}
+
+Intuitively, we can always find a $\alpha'$ such that we can do substitution whenever there is a conflicting variable in $\alpha$. For the examples mentioned above, $\alpha=\forall{x}\forall{y}Pxy$, and $\alpha'=\forall{x}\forall{z}Pxz$
+
+Can be proved by induction on $\alpha$, and can refer to Enderton.
+
+\subsubsection{Example}
+
+Show $\forall{x}\forall{y}Pxy\vdash\forall{y}Pyy$, and $y$ is \emph{not} substitutable for $x$ in $\forall{y}Pxy$.
+
+Apply the alphabetic variants theorem to $\forall{y}Pxy$ to get $\forall{z}Pxz$.
+
+\begin{itemize}
+    \item $\vdash\forall{y}Pxy\leftrightarrow\forall{z}Pxz$
+    \item $\forall{x}\forall{y}Pxy\to\forall{x}\forall{z}Pxz$ (Generalization)
+    \item $\forall{x}\forall{z}Pxz$ TO BE COMPLETED.
+\end{itemize}
 
 \section{The Soundness Theorem}
 
