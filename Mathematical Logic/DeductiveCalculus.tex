@@ -52,7 +52,7 @@ Note that every wff is a generalization of itself.
     Let $\mathbb{L}$ be a first-order language. The set $\Lambda$ of logical axioms of $\mathbb{L}$ consists of all generalizations of the wffs in the following groups
     \begin{axiom}
         \label{axiom:InstanceOfTautology}
-        \textbf{Instances} of tautologies.
+        Instances of tautologies.
     \end{axiom}
     \begin{axiom}
         \label{axiom:Substitution}
@@ -75,6 +75,10 @@ Note that every wff is a generalization of itself.
         Wffs of the form $x \doteq y \to (\alpha \to \alpha')$ where $\alpha$ is atomic and $\alpha'$ is obtained from $\alpha$ by replacing zero or more free occurrences of $x$ in $\alpha$ by $y$
     \end{axiom}
 \end{definition}
+
+\begin{lemma}
+    A wff $\varphi$ is valid $\iff$ $\forall{x}\varphi$ is valid.
+\end{lemma}
 
 For example,
 
@@ -255,7 +259,9 @@ Now we have proved that every member in the set of axioms $\Lambda$ is valid.
 
 \subsection{Rule of Inference}
 
-
+\begin{definition}[Modus Ponens]
+    Given any wffs $\alpha$ and $\beta$, the rule of \textbf{modus ponens} provides the operation for deriving $\beta$ from $\alpha\to\beta$ and $\alpha$.
+\end{definition}
 
 \subsection{Deduction}
 
@@ -305,11 +311,11 @@ The proof can be formatted into a tree. But I cannot draw it so please refer to 
 \subsection{Relations between Tautologies and Derivations}
 
 \begin{definition}
-    In first-order logic, a set of wffs $\Gamma$ \textbf{tautologically implies} $\varphi$ if there is a set $\Gamma'$ of wffs in the sentential logic s.t. under the same replacement of $A_i$ with $\alpha_i$,
+    In first-order logic, a set of wffs $\Gamma$ \textbf{tautologically implies} $\varphi$ if there is a wff $\alpha$ and a set $\Sigma$ of wffs in the sentential logic such that for some $*$ of $\mathbb{L}$
     \begin{itemize}
-        \item For every $\beta\in\Gamma'$, $\beta^*\in\Gamma$
-        \item $\varphi=\varphi^*$
-        \item $\Gamma'$ tautologically ipmlies $\varphi$ in the sentential logic
+        \item For every $\beta\in\Sigma$, $\beta^*\in\Gamma$
+        \item $\varphi=\alpha^*$
+        \item $\Sigma$ tautologically implies $\alpha$ in the sentential logic ($\Sigma\vDash\alpha$)
     \end{itemize}
 \end{definition}
 
@@ -449,7 +455,7 @@ Some properties of consistency
     \item $\Gamma$ is consistent $\iff$ every finite subset of $\Gamma$ is consistent.
     \begin{itemize}
         \item[] Equivalent to $\Gamma$ is inconsistent $\iff$ there is some subset of $\Gamma$ which is inconsistent
-        \item[$\Rightarrow$] $\Gamma\vdash\alpha$, $\Gamma\vdash\neg\alpha$. Then there exists some finite subset $\beta_1\vdash\alpha$ and $\beta_2\vdash\alpha$. And the union of $\beta_1$ and $\beta_2$ is the desired subset.
+        \item[$\Rightarrow$] $\Gamma\vdash\alpha$, $\Gamma\vdash\neg\alpha$. Then there exists some finite subset $\beta_1\vdash\alpha$ and $\beta_2\vdash\neg\alpha$. And the union of $\beta_1$ and $\beta_2$ is the desired subset.
         \item[$\Leftarrow$] Trivial. 
     \end{itemize}
     \item If $\Gamma$ is consistent, then for every $\alpha$, either $\Gamma;\alpha$ is consistent or $\Gamma;\neg\alpha$ is consistent.
@@ -569,6 +575,39 @@ Apply the alphabetic variants theorem to $\forall{y}Pxy$ to get $\forall{z}Pxz$.
     If $\vdash\alpha$, then $\vDash\alpha$.
 \end{corollary}
 
+\begin{corollary}
+    If $\vdash\varphi\leftrightarrow\psi$, then $\varphi$ and $\psi$ are logically equivalent.
+\end{corollary}
+\begin{proof}
+    If $\vdash\varphi\rightarrow\psi$, then $\varphi\vDash\psi$. The converse is similar.
+\end{proof}
+
+\begin{corollary}
+    If $\varphi'$ is an alphabetic variant of $\varphi$, then $\varphi$ and $\varphi'$ are logically equivalent.
+\end{corollary}
+
+\subsection{Soundness and Satisfiability}
+
+\begin{corollary}
+    If $\Gamma$ is satisfiable, then $\Gamma$ is consistent.
+\end{corollary}
+
+In fact, soundness is equivalent to the above corollary.
+
+\begin{theorem}
+    The following two statements are equivalent.
+    \begin{itemize}
+        \item For any $\Gamma$ and $\alpha$, if $\Gamma\vdash\alpha$, then $\Gamma\vDash\alpha$
+        \item For any $\Gamma$, if $\Gamma$ is satisfiable, then $\Gamma$ is consistent.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    \begin{itemize}
+        \item[$\Rightarrow$] If we have soundness, we prove consistency by contradiction. Assume $\Gamma$ is satisfiable, but $\Gamma$ is inconsistent. Then there exists some $\varphi$ s.t. $\Gamma\vdash\varphi$ and $\Gamma\vdash\neg\varphi$. By soundness we have $\Gamma\vDash\varphi$ and $\Gamma\vDash\neg\varphi$. Since $\Gamma$ is satisfiable, there is some structure $\frakA$ and assignment $s$ s.t. $\sat{A}{\varphi}{s}$ and $\sat{A}{\neg\varphi}{s}$. 寄!
+        \item[$\Leftarrow$] Conversely, if we have the latter, we prove soundness by contradiction. Assume $\Delta\vdash\alpha$ but $\Delta\nvDash\alpha$. Then $\Delta;\neg\alpha$ is satisfiable. So $\Delta;\neg\alpha$ is consistent. By property of consistency we have $\Delta\nvdash\alpha$. 寄!
+    \end{itemize}
+\end{proof}
+
 \section{The Completeness Theorem}
 
 \begin{theorem}[G\"{o}del Extended Completeness Theorem]
@@ -578,3 +617,200 @@ Apply the alphabetic variants theorem to $\forall{y}Pxy$ to get $\forall{z}Pxz$.
 \begin{corollary}[G\"odel Completeness Theorem]
     If $\vDash\alpha$, then $\vdash\alpha$.
 \end{corollary}
+
+\subsection{Equivalent Statement for Completeness}
+
+\begin{theorem}
+    The following statements are equivalent
+    \begin{itemize}
+        \item For any $\Gamma$ and $\alpha$, if $\Gamma\vDash\alpha$, then $\Gamma\vdash\alpha$
+        \item For any $\Gamma$, if $\Gamma$ is consistent then $\Gamma$ is satisfiable
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    \begin{itemize}
+        \item[$\Rightarrow$] Assmue completeness, and assume $\Gamma$ is consistent. Assume for contradiction that $\Gamma$ is unsatisfiable. Then $\Gamma\vDash\alpha$ and $\Gamma\vDash\neg\alpha$. By completeness $\Gamma\vdash\alpha$ and $\Gamma\vdash\neg\alpha$, which means $\Gamma$ is inconsistent.
+        \item[$\Leftarrow$] Assume the latter, we prove completeness by constradiction. Assume $\Gamma\vDash\alpha$ but $\Gamma\nvdash\alpha$. Then by property of consistency $\Gamma;\neg\alpha$ is consistent and thus satisfiable. Therefore $\Gamma\vDash\neg\alpha$. 寄!
+    \end{itemize}
+\end{proof}
+
+\subsection{Proof of Completeness}
+
+\emph{“20世纪逻辑学最重要的发现之一。”}
+
+The proof is similar to that for compactness.
+
+\begin{enumerate}
+    \item Extend $\Gamma$ to $\Delta\supseteq\Gamma$ s.t. $\Delta$ is consistent and maximal (for any $\alpha$, either $\alpha\in\Delta$ or $\neg\alpha\in\Delta$)
+    \item Define a structure $\frakA$ and an assignment $s$ for $\frakA$ s.t. $\frakA$ satisfies $\Gamma$ with $s$
+\end{enumerate}
+
+But the actual proof is more complex, because we have to deal with $\doteq$. The actual proof consists of 6 steps.
+
+\subsubsection{Expanding a Language with Constants}
+
+Let $\Gamma$ be a consistent set of wffs in a \emph{countable} language. We expand the language with a countably infinite set of new constant symbols $c_1,\dots,c_n,\dots$
+
+Assume $\Gamma$ is defined in $\mathbb{L}$, and let
+\[ \mathbb{L}' = \mathbb{L}\cup\{ c_1,\dots,c_n,\dots \} \]
+
+We show by contradiction that $\Gamma$ is also consistent in $\mathbb{L}'$.
+
+\begin{proof}
+    Assume $\Gamma$ is inconsistent in $\mathbb{L}'$. Then there is some wff $\alpha$ s.t. $\Gamma\vdash\alpha$ and $\Gamma\vdash\neg\alpha$. Therefore $\Gamma\vdash\alpha\wedge\neg\alpha$. $\alpha$ may contain the new introduced constant symbols, but since we have Generalization on Constants, we can show that there is some deduction
+    \[ \alpha_1',\dots,\alpha_n' = \alpha'\wedge\neg\alpha' \]
+    where $\alpha_i'$ is $\alpha_i$ with all constants not in $\mathbb{L}$ replaced with some variable. Therefore $\Gamma$ is inconsistent in $\mathbb{L}$.
+\end{proof}
+
+\subsubsection{Preparing for Satisfiability of Quantified WFFs}
+
+In the new language, for any pair of wff $\varphi$ and variable $x$, we introduce a formula
+\[ \neg\forall{x}\varphi \to \neg\varphi_c^x \]
+
+where $c$ is a new constant symbol. Let $\Theta$ be the set of all these formulas. This is essentially (1) $c$ identifies a \emph{counter example} for $\varphi$, and (2) $\Gamma\cup\Theta$ is consistent.
+
+Note that the pairs of $\varphi$ and $x$ are enumerable
+
+\[ (\varphi_1,x_1), (\varphi_2,x_2),\dots \]
+
+and the newly introduced constant are also enumerable
+
+\[ c_1,c_2,\dots \]
+
+Since each $\varphi$ contains finitely many constants, there must be some certain way of enumeration such that $c_{i+1}$ does not occur in $\varphi_1,\dots,\varphi_i$.
+
+We now show that $\Gamma\cup\Theta$ is consistent.
+
+\begin{proof}
+    Assume for contradiction that $\Gamma\cup\Theta$ is inconsistent. Then $\Gamma\cup\Theta\vdash\alpha$ and $\Gamma\cup\Theta\vdash\neg\alpha$.
+
+    So there is some finite subset $\Theta_k = \{\theta_1,\dots,\theta_k\} \subseteq \Theta$ s.t. $\Gamma\cup\Theta_k$ is inconsistent. This is guaranteed by the finiteness of deduction. Notice that since $\Gamma$ itself is consistent, $\Theta_k$ cannot be empty. Let $k$ be the minimal number s.t. $\Gamma\cup\Theta_k$ is inconsistent.
+
+    By Reductio Ad Absurdum, we have
+    \[ \Gamma:=\Gamma\cup\{ \theta_1,\dots,\theta_{k-1} \} \vdash \neg \theta_k \]
+    where
+    \[ \theta_k = \neg\forall x \varphi_k \to \neg \varphi_{kc_k}^x \]
+
+    Therefore
+    \[ \Gamma' \vdash \neg\forall{x}\varphi_k \wedge \varphi_{kc_k}^k \]
+    i.e. $\Gamma' \vdash \neg\forall{x}\varphi_k$ and $\Gamma'\vdash\varphi_{kc_k}^k$
+
+    Note that from a corollary of Generalization on constants \ref{coroll:Corollary24G}. We have $\Gamma'\vdash\varphi_{kc_k}^k\Longrightarrow \Gamma'\vdash\forall{x}\varphi_k$. This shows that $\Gamma'$ is inconsistent, which is contradictory to our assumption that $k$ (not $k-1$) is the smallest number that makes $\Gamma\cup\Theta_k$ inconsistent.
+\end{proof}
+
+\subsubsection{Generate Maximally Consistent Set}
+
+We extend $\Gamma\cup\Theta$ to a set $\Delta$ s.t.
+
+\begin{itemize}
+    \item $\Delta$ is consistent.
+    \item For each wff $\alpha$, either $\alpha\in\Delta$ or $\neg\alpha\in\Delta$
+\end{itemize}
+
+\begin{proof}
+    $\Gamma\cup\Theta$ is consistent.
+    \begin{itemize}
+        \item There is no $\beta$ s.t. $\Gamma\cup\Theta\vdash\beta$ and $\Gamma\cup\Theta\vdash\neg\beta$.
+        \item[$\Leftrightarrow$] There is no $\beta$ s.t. $\Gamma\cup\Theta\cup\Lambda$ tautologically imply $\beta$ and $\neg\beta$
+        \item[$\Rightarrow$] Therefore $\Gamma\cup\Theta\cup\Lambda$ is satisfiable \emph{in the sense of sentential logic}
+        \item[$\Rightarrow$] There is some truth assignment $v$ satisfying $\Gamma\cup\Theta\cup\Lambda$. Therefore we pick
+        \[ \Delta = \{ \varphi | \bar{v}(\varphi) = T \} \]
+    \end{itemize}
+\end{proof}
+
+We continue to show some properties of $\Delta$.
+
+\begin{proposition}
+    For any $\alpha$, either $\alpha\in\Delta$ or $\neg\alpha\in\Delta$, but not both.
+\end{proposition}
+\begin{proof}
+    If $\bar{v}(\alpha) = T$, then $\alpha\in\Delta$. $\bar{v}(\neg\alpha)=F$. Then $\neg\alpha\notin\Delta$. Conversely, if $\bar{v}(\alpha)=F$, then $\neg\alpha\in\Delta$, and thus $\alpha\notin\Delta$.
+\end{proof}
+
+\begin{proposition}
+    $\Delta$ is a \emph{theory}. That is,
+    \[ \Delta\vdash\alpha \Longrightarrow \alpha\in\Delta \]
+\end{proposition}
+\begin{proof}
+    If $\Delta\vdash\alpha$, then $\Delta\cup\Lambda$ tautologically implies $\alpha$. This is equivalent to $\Delta$ tautologically implies $\alpha$, because by definition of $\Delta$ we have $\Lambda\subseteq\Delta$. Since we know that $v$ satisfies $\Delta$ (in sentential logic), by tautological implication we know that $v$ should also satisfy $\alpha$. Thus $\alpha\in\Delta$
+\end{proof}
+
+\begin{proposition}
+    $\Delta$ is consistent.
+\end{proposition}
+\begin{proof}
+    If $\Delta$ is inconsistent, then there exists some formula $\beta$ s.t. $\Delta\vdash\beta$ and $\neg\beta$. Then $\beta\in\Delta$ and $\neg\beta\in\Delta$. 噔噔咚
+\end{proof}
+
+\subsubsection{Make a Structure for the New Language}
+
+We make a structure $|\frakA|$ from $\Delta$ for the new language where $\doteq$ is replaced by a 2-nary symbol $E$.
+
+sudo make install!
+
+\begin{itemize}
+    \item Let $|\frakA|$ be the set of all terms in the new language
+    \item $(u,t)\in E^\frakA \iff u\doteq t \in \Delta$
+    \item For any n-ary predicate symbol,
+    \[ (t_1,\dots,t_n) \in P^\frakA \iff Pt_1\dots t_n \in \Delta \]
+    \item For any n-ary predicate symbol,
+    \[ f^\frakA (t_1,\dots,t_n) = ft_1\dots t_n \]
+    \item For any constant symbol $c$, $c^\frakA=c$
+\end{itemize}
+
+Then we make an assignment function $s:V\mapsto|\frakA|$
+\[ s(x)=x \]
+
+Then $\bar{s}(t)=t$. For any wff $\varphi$, let $\varphi^*$ be $\varphi$ with $\doteq$ replaced by $E$. We have
+\[ \sat{A}{\varphi^*}{s} \iff \varphi\in\Delta \]
+
+Notice that once we prove this, we have already found a structure $\frakA$ and an assignment $s$ that satisfies $\Delta$. That is, if the language does not contain $\doteq$, we have proved completeness.
+
+\begin{proof}
+    Assume $n$ is the number of connectives in $\varphi$. Prove by induction on $n$. We do induction on $n$ to avoid $\doteq$'s in $\varphi$ that may cause troubles.
+    \begin{itemize}
+        \item[] \textbf{Base.} $n=0$. Then $\varphi$ is $u\doteq t$ or $Pt_1\dots t_n$. If $\varphi$ is $u\doteq t$, then $\varphi^*$ is $Eut$.
+        \[ \sat{A}{Eut}{s} \iff (\bar{s}(u), \bar{s}(t)) \in E^\frakA \iff (u,t) \in E^\frakA \iff u\doteq t \in \Delta \]
+        If $\varphi$ is $Pt_1\dots t_n$, the proof is similar.
+
+        \item[] \textbf{Inductive.} If $\varphi = \neg\alpha$, then $\varphi^*=\neg\alpha^*$.
+        \[ \sat{A}{\neg\alpha^*}{s} \iff \unsat{A}{\alpha^*}{s} \iff \alpha\notin\Delta\iff\neg\alpha\in\Delta \]
+        The second step uses the inductive hypothesis.
+
+        If $\varphi=\alpha\to\beta$, then $\varphi^*=\alpha^*\to\beta^*$.
+        \[ \sat{A}{\alpha^*\to\beta^*}{s} \iff \unsat{A}{\alpha^*}{s}\text{ or }\sat{A}{\beta^*}{s} \iff \alpha\notin\Delta \text{ or }\beta\in\Delta \]
+        \begin{itemize}
+            \item We first show $\alpha\notin\Delta$ or $\beta\in\Delta$ implies $\alpha\to\beta\in\Delta$. To show this, it suffices to show that $\Delta\vdash\alpha\to\beta$, and it suffices to show that $\Delta;\alpha\vdash\beta$. Then 分类讨论两种前提 and we are done.\footnote{“事实上我也忘了这个怎么证明，我们来证一下。”}
+            \item To show $\alpha\to\beta\in\Delta\Rightarrow\alpha\notin\Delta$ or $\beta\in\Delta$.
+            \[ \alpha\to\beta\in\Delta\iff\Delta\vdash\alpha\to\beta\Longleftarrow\Delta;\alpha\vdash\beta \]
+        \end{itemize}
+
+        If $\varphi=\forall{x}\alpha$. $\varphi^*=\forall{x}\alpha^*$.
+        \[ \sat{A}{\forall{x}\alpha^*}{s} \iff \text{For every $t\in|\frakA|$,} \sat{A}{\alpha^*}{s(x|t)} \]
+        \begin{itemize}
+            \item[$\iff$] $\sat{A}{\alpha^*}{s(x|\bar{s}(t))}$
+            \item[$\iff$] $\sat{A}{(\alpha^*)^x_t}{s}$ (Substitution Lemma)
+            \item[$\iff$] $\sat{A}{(\alpha^x_t)^*}{s}$
+            \item[$\iff$] $\alpha_t^x \in \Delta$ (IH) 
+            \item[$\Longrightarrow$] $\alpha_c^x\in\Delta$ 
+        \end{itemize}
+        Notice that $\neg\forall{x}\alpha\to\neg\alpha_c^x \in \Delta$. Since we have $\alpha_c^x\in\Delta$, the condition $\neg\forall{x}\alpha$ cannot hold, so $\forall{x}\alpha\in\Delta$
+
+        So far we have proved $\Rightarrow$. Now consider the other side $\forall{x}\alpha\in\Delta\Rightarrow\sat{A}{\forall{x}\alpha^*}{s}$. This is equivalent to showing
+        \[ \unsat{A}{\forall{x}\alpha^*}{s} \Longrightarrow \forall{x}\alpha\notin\Delta \]
+        Assume there is some $t$ s.t. $\unsat{A}{\alpha^*}{s(x|t)}$, equivalent to $\unsat{A}{(\alpha_t^x)^*}{s}$.
+        
+        Let $\beta$ be alphabetic equivalent to $\alpha$ s.t. $t$ is substitutable for $x$ in $\beta$. We have $\alpha\vDash\Dashv\beta$ by alphabetical equivalence.
+
+        Therefore previous equation is equivalent to
+        \[ \unsat{A}{(\beta_t^x)^*}{s} \iff \beta_t^x \notin \Delta \]
+
+        If $\forall{x}\alpha\in\Delta$, then $\Delta\vdash\forall{x}\alpha$, and thus $\Delta\vdash\forall{x}\beta$. We have axiom $\forall{x}\beta\to\beta_t^x$ since $t$ is substitutable for $x$ in $\beta$. Thus $\Delta\vdash\beta_t^x$ and $\beta_t^x\in\Delta$. Contradiction. So $\forall{x}\alpha\notin\Delta$, we are done.
+    \end{itemize}
+\end{proof}
+
+Until now, we are done if the language does not contain $\doteq$. But to actually complete the proof for all cases, we need an extra step.
+
+\subsubsection{Deal with Equality}
+
+Not enough time. Pigeoned. Refer to slides or reference books.

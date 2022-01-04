@@ -104,9 +104,9 @@ For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2
 
 \subsection{Well-Formed Formulas}
 
-\begin{definition}[Formula-Building Operations]
+\begin{definition}[Formula-Building Operations]~{}
     \label{def:FormulaBuildingOperation}
-    \begin{itemize}~{}
+    \begin{itemize}
         \item $\xi_\neg(\alpha) = (\neg \alpha)$
         \item $\xi_\to(\alpha, \beta) = (\alpha\to\beta)$
         \item $\mathcal{Q}_i(\gamma) = \forall v_i\gamma$
@@ -154,7 +154,7 @@ For example, let $f$ and $g$ be 2-ary and 3-ary function symbols, then $gfc_1c_2
 
     $x$ \textbf{occurs free} in $\alpha\to\beta$ iff $x$ occurs free in $\alpha$ or in $\beta$.
 
-    $x$ \textbf{occurs free} in $\forall y \alpha$ iff $x$ occurs free in $\alpha$ and $x \neg y$.
+    $x$ \textbf{occurs free} in $\forall y \alpha$ iff $x$ occurs free in $\alpha$ and $x \neq y$.
 \end{definition}
 
 \begin{definition}[Sentence]
@@ -247,7 +247,7 @@ If $\vDash_{\mathfrak{A}}\varphi[s]$, we say \emph{$\mathfrak{A}$ satisfies $\va
 
 \begin{lemma}
     \label{lem:LemmaForFreeOccurrenceThm}
-    Let $\mathfrak{A}$ be a structure for $\mathbb{L}$, $s_1, s_2$ be two assignment for $\mathfrak{A}$ and $\varphi$ be a term of $\mathbb{L}$.
+    Let $\mathfrak{A}$ be a structure for $\mathbb{L}$, $s_1, s_2$ be two assignment for $\mathfrak{A}$ and $t$ be a term of $\mathbb{L}$.
 
     If $s_1(x)=s_2(x)$ for every $x$ that occurs in $t$, then
     \[ \bar{s}_1(t) = \bar{s}_2(t) \]
@@ -264,7 +264,7 @@ If $\vDash_{\mathfrak{A}}\varphi[s]$, we say \emph{$\mathfrak{A}$ satisfies $\va
     Let $\mathfrak{A}$ be a structure for $\mathbb{L}$, $s_1, s_2$ be two assignment for $\mathfrak{A}$ and $\varphi$ be a wff of $\mathbb{L}$.
 
     If $s_1(x)=s_2(x)$ for every $x$ that occurs free in $\varphi$, then
-    \[ \vDash_{\mathfrak{A}}\varphi[s_1] \Leftrightarrow \vDash_{\mathfrak{A}}\varphi[s_2] \]
+    \[ \vDash_{\mathfrak{A}}\varphi[s_1] \iff \vDash_{\mathfrak{A}}\varphi[s_2] \]
 \end{theorem}
 
 \begin{proof}
@@ -565,7 +565,7 @@ For example,
 \begin{definition}[Definable Relations]
     The relation $R$ is \textbf{definable in structure} $\frakA$ if there is some wff that defines it in $\frakA$
 
-    Let $f$ be a n-ary function $f$ whose domain is a subset $|\frakA| \times \dot \times |\frakA|$ and whose range is a subset of $|\frakA|$, $f$ is definable in $\frakA$ if the $(n+1)$-ary relation
+    Let $f$ be a n-ary function $f$ whose domain is a subset $|\frakA| \times \dots \times |\frakA|$ and whose range is a subset of $|\frakA|$, $f$ is definable in $\frakA$ if the $(n+1)$-ary relation
     \[ \{ (a_1,\dots,a_n, b) | f(a_1,\dots,a_n) = b \} \]
     is definable in $\frakA$.
 \end{definition}

@@ -279,9 +279,9 @@ Remember not to mix syntax and semantics
     \item If $\Sigma\vDash\alpha$ then for all $\beta$, $\Sigma\vDash\beta\to\alpha$
     \item If $\Sigma\vDash\alpha$ and $\Sigma\vDash\beta$ then $\Sigma\vDash \alpha\wedge\beta$
     \item If $\Sigma\vDash\alpha$ or $\Sigma\vDash\beta$ then $\Sigma\vDash \alpha\vee\beta$
-    \item If $\Sigma\nvDash\alpha$ iff $\Sigma\cup\{\neg\alpha\}$ is satisfiable
-    \item If $\Sigma \vDash \alpha$ iff $\Sigma \cup \{\neg \alpha\}$ is not satisfiable
-    \item If $\Sigma \vDash \alpha \to \beta$ iff $\Sigma;\alpha \vDash \beta$
+    \item $\Sigma\nvDash\alpha$ iff $\Sigma\cup\{\neg\alpha\}$ is satisfiable
+    \item $\Sigma \vDash \alpha$ iff $\Sigma \cup \{\neg \alpha\}$ is not satisfiable
+    \item $\Sigma \vDash \alpha \to \beta$ iff $\Sigma;\alpha \vDash \beta$
     \item If $\Sigma$ is not satisfiable, then for every $\alpha$, $\Sigma\vDash\alpha$
     \item If $\Sigma\vDash\alpha$ and $\Sigma\subseteq\Delta$ then $\Delta\vDash\alpha$
     \item If $\Sigma$ is satisfiable then every subset of $\Sigma$ is satisfiable
@@ -308,7 +308,7 @@ Remember not to mix syntax and semantics
 
 \begin{definition}[Conjunctive Normal Form]
     \label{def:ConjunctiveNormalForm}
-    The wff $\alpha$ is in \textbf{conjunctive normal form} if $\alpha=\gamma_1\wedge\gamma_2\wedge\cdots\wedge\gamma_k$ where each $\gamma_i$ is a conjunction
+    The wff $\alpha$ is in \textbf{conjunctive normal form} if $\alpha=\gamma_1\wedge\gamma_2\wedge\cdots\wedge\gamma_k$ where each $\gamma_i$ is a disjunction
     \[ \gamma_i = \beta_{i1}\vee\beta_{i2}\vee\cdots\vee\beta_{in_i} \]
     where each $\beta_{ij}$ is either a sentence symbol or the negation of a sentence symbol
 \end{definition}
@@ -450,7 +450,7 @@ Remember not to mix syntax and semantics
     If $\Sigma\vDash\tau$, then there is a finite subset $\Delta$ of $\Sigma$ such that $\Delta\vDash\tau$
 \end{corollary}
 \begin{proof}
-    $\Sigma\vDash\tau\Rightarrow\Sigma\cup\{\neg\tau\}$ is unsat. Therefore $\Sigma\cup\{\neg\tau\}$ is not finitely satisfiable by Compactness Theorem \ref{thm:CompactnessTheorem}. Therefore the exists a finite subset $\Delta$ of $\Sigma$ and $\Delta$ is unsat. Therefore $\Delta\vDash\tau$.
+    Assume for every subset $\Delta$ of $\Sigma$, $\Delta \nvDash \tau$. Then $\Delta;\tau$ is satisfiable. So $\Sigma;\tau$ is finitely satisfiable, and by compactness theorem we have $\Sigma;\tau$ is satisfiable, which implies $\Sigma\nvDash\tau$, and this leads to a contradiction.
 \end{proof}
 
 \subsection{Decidability Results for Semantic Implications}

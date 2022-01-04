@@ -1,0 +1,22 @@
+\chapter{Wrapping Up}
+
+\section{Programs and Proofs}
+
+\begin{itemize}
+    \item Law of Excluded Middle $\forall{Q} Q\vee\neg Q$
+    \item $Programs \equiv Proofs$
+\end{itemize}
+
+Not all proofs have a corresponding program.
+
+Let $isProgram(P)$ and $halts(P)$ be two predicates.
+\[ \varphi \triangleq \forall{P} isProgram(P) \to halts(P) \vee \neg halts(P) \]
+$\varphi$ is valid. i.e. $\vDash\varphi$. By completeness of first order logic, $\vdash\varphi$. So there must exist a proof (deduction) $\Phi=\{\varphi_1,\dots,\varphi_n\}$ s.t. $\varphi_n = \varphi$. If every proof had a corresponding program, then this program would be able to solve the Halting problem.
+
+Not all programs have a corresponding proof.
+
+\begin{lstlisting}[language=c]
+    while(1) {}
+\end{lstlisting}
+
+This program has a dead loop, which implies ``false''. If this program had a proof, then we would be able to prove ``false''.
