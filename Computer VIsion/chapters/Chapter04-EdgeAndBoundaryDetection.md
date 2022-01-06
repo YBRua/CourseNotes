@@ -177,6 +177,16 @@ $$ x\sin\theta - y\cos\theta + \rho = 0 $$
   - Because this function is periodic
 - For images, we can restrict $-\pi/2 \le \theta \le \pi/2$ and $\rho_{max} = ImageDiagonal$
 
+#### Design Choices
+
+- Size of accumulator cells
+  - Too large: different lines may be merged
+  - Too small: noise may cause lines to be missed
+- Number of lines
+  - Number of lines can be determined by counting peaks in the accumulator array
+- Handling inaccurate edge locations
+  - Increment patch in accumulator rather than single point
+
 ### Circle Detection
 
 > "Click the circles:musical_note:"

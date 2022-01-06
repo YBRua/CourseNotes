@@ -1,5 +1,15 @@
 # 2D Recognition with SIFT
 
+- Corners are not scale invariant, so we need better features.
+
+## Recap: What is a Good Feature
+
+- Has rich image content within a local window
+- Has well-defined representation for matching/comparing with other points
+- Has a well-defined position
+- Should be invariant to rotation and scaling
+- SHould relatively invariant to lighting changes
+
 ## From Blob Detection to SIFT
 
 ### Overview
@@ -14,6 +24,7 @@
 #### Observation
 
 - If we compute the second-order derivative of an image with a Gaussian kernel of size $\sigma$ (i.e. a Laplacian kernel of size $\sigma$), and if the size of a blob is similar to the size of the kernel, there will be a local extremum in the result $\frac{\partial^2 n_\sigma}{\partial x^2} \ast f$
+  - The size of the kernel can then represent the size of the blob
 
 #### Characteristic Scale
 
@@ -35,7 +46,7 @@ Therefore we want to normalize the response.
 Given a 1D signal $f(x)$
 
 1. Compute $\frac{\partial^2 n_\sigma}{\partial x^2} \ast f$ at different scales of $\sigma$
-2. $(x^\ast,\sigma^\ast) = \arg\max$
+2. $(x^\ast,\sigma^\ast) = \arg\max\left| \frac{\partial^2n_\sigma}{\partial x^2}\ast f(x) \right|$
 
 ### 2D Blob Detection
 
@@ -45,7 +56,7 @@ Given a 1D signal $f(x)$
 
 As we increase $\sigma$, the resolution becomes lower. Define scale space by the space created by filtering results of differernt $\sigma$
 
-$$ S(x,y,\sigma) = \pi(x,y,\sigma) \ast f(x,y) $$
+$$ S(x,y,\sigma) = n(x,y,\sigma) \ast f(x,y) $$
 
 #### Creating Scale Space
 
@@ -77,7 +88,7 @@ $$ DoG = (n_{s\sigma} - n_{\sigma}) \approx (s-1)\sigma^2\nabla^2n_{\sigma} $$
 ### Basic Procedure
 
 1. Compute difference of Gaussians
-2. Find extrema in every 3x3 space
+2. Find extrema in every 3x3x3 space
 3. Select interest point candidates (may contain weak extrema and bad contrast)
 4. Remove weak extrema
 
@@ -89,7 +100,7 @@ $$ DoG = (n_{s\sigma} - n_{\sigma}) \approx (s-1)\sigma^2\nabla^2n_{\sigma} $$
   - For each detected blob
   - Divide the blob into grids
   - Group the grids into cells
-  - Compute histogram
+  - Compute histogram of gradients
 - Choose the most prominent gradient direction
 
 #### Matching Features

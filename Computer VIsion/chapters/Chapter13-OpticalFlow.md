@@ -118,7 +118,7 @@ The **optical flow** is the apparent motion of brightness patterns in the image
 
 $$ I(x,y,t-1) = I(x+u(x,y), y+v(x,y), t) $$
 
-By Tayor Expansion
+where $(u,v)$ is the displacement vector. By Tayor Expansion
 
 $$ I(x,y,t-1) = I(x,y,t) + I_xu(x,y) + I_yv(x,y) $$
 

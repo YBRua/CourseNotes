@@ -36,7 +36,7 @@
 
 ### Mathematic Model
 
-Consider shifting a window $W$ slightly by $(u,v)$, then we compare each pixel before and after the shift by summing up the squared differences (SSD)
+Consider shifting a window $W$ slightly by $(u,v)$, then we compare each pixel before and after the shift by summing up the squared differences (SSD/MSE)
 
 $$ E(u,v) = \sum_{(x,y)\in W}\left[ I(x+u, y+v) - I(x,y) \right]^2 $$
 
@@ -44,7 +44,7 @@ $$ E(u,v) = \sum_{(x,y)\in W}\left[ I(x+u, y+v) - I(x,y) \right]^2 $$
 
 Consider the first-order Taylor expansion of $I$
 
-$$ I(x+u,y+v) = I(x,y) + \frac{\partial I}{\partial x}u + \frac{\partial I}{\partial y}v + higher $$
+$$ I(x+u,y+v) = I(x,y) + \frac{\partial I}{\partial x}u + \frac{\partial I}{\partial y}v + higherOrder $$
 
 We can use the first-order approximation if the motion $(u,v)$ is sufficiently small.
 
@@ -83,7 +83,7 @@ $$ \begin{aligned}
 
 where
 
-$$ H = \sum_{(x,y)\in W} \begin{bmatrix}
+$$ H \triangleq \sum_{(x,y)\in W} \begin{bmatrix}
     I_x^2 & I_xI_y\\
     I_yI_x & I_y^2
   \end{bmatrix} $$

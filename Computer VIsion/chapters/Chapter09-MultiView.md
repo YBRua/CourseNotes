@@ -112,11 +112,27 @@ The essential matrix relates the position of scene point in left camera coordina
 
 $$ \mathbf{x}_l\cdot\mathbf{E}\mathbf{x}_r = 0 $$
 
+Notice that by the forward imaging equations, we have
+
+$$\mathbf{u}_l = \mathbf{K}_l\mathbf{x}_l \quad\mathbf{u}_r = \mathbf{K}_r\mathbf{x}_r$$
+
+So
+
+$$ \mathbf{x}_l = \mathbf{K}_l^{-1}\mathbf{u}_l \quad \mathbf{x}_r =\mathbf{K}_r^{-1}\mathbf{u}_r $$
+
+Plug this into the essential matrix equation
+
+$$ \mathbf{u}_l\mathbf{K}_l^{-\top}\mathbf{E}\mathbf{K}_r^{-1}\mathbf{u}_r = 0 $$
+
 ### Fundamental Matrix
 
 The fundamental matrix $\mathbf{F}$ relates the position of a scene point in left image to the position of the same scene point in right image
 
 $$ \tilde{\mathbf{u}}_l \cdot \mathbf{F}\tilde{\mathbf{u}}_r=0 $$
+
+where
+
+$$\mathbf{F} = \mathbf{K}_l^{-\top}\mathbf{E}\mathbf{K}_r^{-1}$$
 
 Notice that $\mathbf{F}$ is defined in the homogeneous coordinate. So it can be determined only up to a scale factor.
 
@@ -128,8 +144,31 @@ If $\mathbf{F}$ is known, then given a point $(u_l, v_l)$ in the left image, we 
 
 In an uncalibrated binocular stereo, $\mathbf{F}$ is unknown, but we can know the point correspondence by graph matching. So the goal is to estimate $\mathbf{F}$
 
+Given two images,
+
+1. Detect features using SIFT or other techniques
+2. Match the features, this gives us a set of matches $\mathbf{u}_l^{(i)}, \mathbf{u}_r^{(i)}$
+3. Expand $\tilde{\mathbf{u}}_l \cdot \mathbf{F}\tilde{\mathbf{u}}_r=0$ to get $\mathbf{A}\mathbf{f} = \mathbf{0}$, where $\mathbf{f} = \mathrm{vec}(\mathbf{F})$
+4. This can then be solved by EVD
+
 ### Extracting Essential Matrix
 
 $$ \mathbf{E} = \mathbf{K}_l^T\mathbf{F}\mathbf{K}_r $$
 
 Then $\mathbf{T}_\times$ and $\mathbf{R}$ can be decoupled by performing SVD on $\mathbf{E}$
+
+### Finding Corresponding Points Using Fundamental Matrix
+
+- Given the fundamental matrix and the point in one image, we can perform template matching along the epipolar line to find the correspondant on the other image
+
+### Computing Depth
+
+$$ \mathbf{u}_l = \mathbf{M}_{intl}\mathbf{x}_l \quad \mathbf{u}_r = \mathbf{M}_{intr}\mathbf{x}_r $$
+
+$$ \mathbf{x}_l = [\mathbf{R},\mathbf{t}]\mathbf{x}_r $$
+
+Expand and re-arrange
+
+$$ \mathbf{A}_{4\times3}\mathbf{x}_r = \mathbf{b}_{4\times1} $$
+
+This can then be solved by least squares

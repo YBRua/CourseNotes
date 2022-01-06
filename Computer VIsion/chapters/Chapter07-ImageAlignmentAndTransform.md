@@ -65,6 +65,8 @@ $$ T = \begin{bmatrix}
 
 ##### Flipping and Mirror
 
+`LazyError: trivial`
+
 > However, linear transformation cannot represent translation. Translation is not a linear transformation on 2D coordinates
 
 ##### All Linear Transformations
@@ -96,7 +98,7 @@ $$ \begin{bmatrix}
 
 #### Affine Transformations
 
-Any linear transformation in Euclidean **space** can be formulated as an affine transformation in the Homogeneous Coordinate, with the last row of $T$ fixed to $(0,0,1)$
+Any transformations with the last row fixed to $[0,0,1]$ are referred to as an **affine transformation**. Linear transformations can also be represented in the form of affine transformations.
 
 $$ T = \begin{bmatrix}
     a & b & t_x\\
@@ -139,14 +141,14 @@ $$ \begin{bmatrix}
 - Affine transformations are combinations of
   - Linear transformation
   - Translation
-- Origin does not necessarily map to origin
+- **Origin does not necessarily map to origin**
 - Lines map to lines
 - Parallel lines remain parallel
 - Closed under composition
 
-#### Projective Transformation
+#### Projective Transformation (Homographies)
 
-a.k.a. Homographies / Planar Perspective Maps
+> a.k.a. Homographies / Planar Perspective Maps
 
 $$ H =\begin{bmatrix}
     a & b & c\\
@@ -167,9 +169,9 @@ $$ \begin{bmatrix}
 - Projective transformations are
   - Affine transformations
   - Projective warping
-- Origin does not necessarily map to origin
+- **Origin does not necessarily map to origin**
 - Lines map to lines
-- Parallel lines do not necessarily remain parallel
+- **Parallel lines do not necessarily remain parallel**
 - Closed under combination
 
 ##### Converting Homographes to Euclidean Coordinates
@@ -187,6 +189,16 @@ $$ \begin{bmatrix}
 \end{bmatrix} $$
 
 - If Denominator is zero, then the point is mapped to infinity (vanishing point)
+
+#### Transfomations: Sum up
+
+|       Name        |                   Matrix                    |  DOF  |   Preserves    |   Changes   |
+| :---------------: | :-----------------------------------------: | :---: | :------------: | :---------: |
+|    Translation    | $[\mathbf{I} \quad \mathbf{t}]_{2\times 3}$ |   2   | orientation +  | translation |
+| Rigid (Euclidean) |  $[\mathbf{R}\quad\mathbf{t}]_{2\times 3}$  |   3   |   lengths +    |  rotation   |
+|    Similarity     | $[s\mathbf{R}\quad\mathbf{t}]_{2\times 3}$  |   4   |    angles +    |   scaling   |
+|      Affine       |          $\mathbf{A}_{2\times 3}$           |   6   |  parallelism +   |             |
+|    Projective     |          $\mathbf{H}_{3\times 3}$           |   8   | straight lines |             |
 
 ### Implementing Image Warping
 
@@ -224,17 +236,33 @@ Therefore it is a set of linear equations
 
 - Overdetermined system
 - We find the least-squares solution
-  - Minimize the sum of squared residuals $r_x^{(i)} = (x_i' - x_i) - x_t$
+  - Minimize the sum of squared residuals $r_x^{(i)} = (x_i' - x_i) - x_t$ and $r_y^{(i)} = (y_i' - y_i) - y_t$
 
 If we formulate the problem in matrix form
 
-$$ \mathbf{A}\mathbf{t} = \mathbf{r} $$
+$$ \mathbf{A}\mathbf{t} = \mathbf{b} $$
 
 Where $\mathbf{A}\in\mathbb{R}^{2n\times 2}$, $\mathbf{t}\in\mathbb{R}^{2\times 1}$, $\mathbf{r}\in\mathbb{R}^{2n\times{}1}$
 
+$$\mathbf{A} = \begin{bmatrix}
+    1 & 0\\
+    0 & 1\\
+    \vdots & \vdots\\
+    1 & 0\\
+    0 & 1
+\end{bmatrix} \quad \mathbf{t}=\begin{bmatrix}
+    x_t\\y_t
+\end{bmatrix}\quad\mathbf{b} = \begin{bmatrix}
+    x_1' - x_1\\
+    y_1'-y_1\\
+    \vdots\\
+    x_n' - x_n\\
+    y_n' - y_n
+\end{bmatrix}$$
+
 Then
 
-$$ \mathbf{t} = (\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T\mathbf{r} $$
+$$ \mathbf{t} = (\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T\mathbf{b} $$
 
 ### Least-Squares Formulation for Affine Transformations
 
@@ -269,14 +297,20 @@ $$ \begin{bmatrix}
 \end{bmatrix} \begin{bmatrix}
     a\\b\\c\\d\\e\\f
 \end{bmatrix} = \begin{bmatrix}
-    r_{x_1}\\r_{y_1}\\r_{x_2}\\r_{y_2}\\\vdots\\r_{x_n}\\r_{y_n}
+    x_1'\\y_1'\\x_2'\\y_2'\\\vdots\\x_n'\\y_n'
 \end{bmatrix}$$
+
+$$ \mathbf{A}_{2n\times 6} \mathbf{t}_{6\times 1} = \mathbf{b}_{2n\times1} $$
 
 Then it can be solved with least squares
 
 ### Solving Homographies
 
-$$ \mathbf{w}\mathbf{x}' = \mathbf{H}\mathbf{x} $$
+- Given matches $\mathbf{x}'$ and $\mathbf{x}$, we solve for $\mathbf{H}$
+- $\mathbf{H}$ is determined up to an arbitrary scale factor
+- $\mathbf{H}$ can be recovered by solving
+
+$$ w\mathbf{x}' = \mathbf{H}\mathbf{x} $$
 
 - 8 parameters for homographies
 - Requires at least 4 pairs of matches
@@ -291,7 +325,25 @@ $$ \begin{bmatrix}
     x\\y\\1
 \end{bmatrix} $$
 
-$$ x_i' =  $$
+$$ x_i' = \frac{h_{00}x_i + h_{01}y_i + h_{02}}{h_{20}x_i + h_{21}y_i + h_{22}} \quad y_i' = \frac{h_{10}x_i + h_{11}y_i + h_{12}}{h_{20}x_i + h_{21}y_i + h_{22}} $$
+
+This is non-linear, ~~so we got stuck~~, so we re-formulate the problem into
+
+$$ \begin{bmatrix}
+    x_i & y_i & 1 & 0 & 0 & 0 & -x_i'x_i & -x_i'y_i & -x_i'\\
+    0 & 0 & 0 & x_i & y_i & 1 & -y_i'x_i & -y_i'y_i & -y_i'
+\end{bmatrix}\begin{bmatrix}
+    h_{00}\\h_{01}\\h_{02}\\h_{10}\\h_{11}\\h_{12}\\h_{20}\\h_{21}\\h_{22}
+\end{bmatrix} = \begin{bmatrix}
+    0\\0
+\end{bmatrix} $$
+
+$$ \mathbf{A}_{2n\times9}\mathbf{h}_{9} = \mathbf{0}_{2n\times1} $$
+
+- This defines a least squares problem up to a scaling factor.
+- So we constraint to solve a unit vector $\hat{\mathbf{h}}$
+- This can be done by EVD on $\mathbf{A}^\top\mathbf{A}$. We find the eigenvector with the samllest eigenvalue.
+- Works with 4 or more pairs of points
 
 ## Image Alignment Algorithm
 

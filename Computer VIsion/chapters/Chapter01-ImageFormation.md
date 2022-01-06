@@ -126,11 +126,11 @@ $$ m = \frac{h_i}{h_o} = \frac{i}{o} $$
 
 $$ \frac{1}{i} + \frac{1}{o} = \frac{1}{f} \quad \frac{1}{i'}+\frac{1}{o'} = \frac{1}{f}$$
 
-By similar triangles
+Let $D$ be the diameter of the lens, let $i$ and $i'$ be the ideal depth of imaging (which should be the focal length) and the actual depth of imaging. By similar triangles
 
 $$\frac{b}{D} = \frac{|i-i'|}{i'}$$
 
-Therefore
+Therefore the diameter of a blur circle $b$ is given by
 
 $$ b = \frac{D}{i'}\cdot|i'-i| $$
 
@@ -157,7 +157,7 @@ $$ b = D\left|\frac{f(o-o')}{o'(o-f)}\right| $$
 
 #### $f$-number
 
-- DoF is a function of both focus distance and aperture diameter $d$
+- DoF is a function of both focus distance $f$ and aperture diameter $d$
 - $f$-number $f/\# = N = f/d$
   - $f$: focal length
   - $d$: aperture diameter
@@ -228,7 +228,7 @@ $$\begin{matrix}
   R & G & R & G & R\\
 \end{matrix}$$
 
-- Interpolation
+- Interpolation is required to smooth the results
 
 #### High Dynamic Range
 
