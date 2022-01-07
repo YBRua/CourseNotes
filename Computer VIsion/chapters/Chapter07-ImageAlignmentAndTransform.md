@@ -383,6 +383,22 @@ Problem: What about the mismatched outliers?
 4. Repeat $N$ times
 5. Choose the model that has the largest set of inliers
 
+##### How Many Samples Do RANSAC Need
+
+Assume we have to choose $s$ sample each time from a set with outlier ration $e$, if we want the right answer w.p. $p$
+
+The probablity that RANSAC works at some round is that all $s$ samples are inliers
+
+$$q = (1 - e)^s$$
+
+The probability that we get a working result after $r$ rounds is
+
+$$ 1 - (1 - q)^r \ge p $$
+
+Solve for $r$
+
+$$ r \ge \frac{\log(1-p)}{\log(1-q)} $$
+
 ##### Pros and Cons
 
 - Pros
