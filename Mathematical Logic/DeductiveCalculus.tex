@@ -300,8 +300,8 @@ The proof can be formatted into a tree. But I cannot draw it so please refer to 
     \item If $\varphi\in\Gamma$ then $\Gamma\vdash\varphi$
     \item If $\Gamma\vdash\varphi$ and $\Gamma\subseteq\Delta$ then $\Delta\vdash\varphi$
     \item If $\Gamma\vdash\alpha$ and $\Gamma\vdash\alpha\to\beta$, then $\Gamma\vdash\beta$
-    \item (Cut Rule) If $\Gamma\vdash\alpha$ and $\alpha\to\beta$, then $\Gamma\vdash\beta$. This property allows proving some theorem $\beta$ by one or more lemmas $\alpha$
-    \item If $\Gamma\to\alpha$ then for any $\beta$, $\Gamma\vdash\beta\to\alpha$. Notice that $\alpha\to\left( \beta\to\alpha \right)$ is an instance of tautology.
+    \item (Cut Rule) If $\Gamma\vdash\alpha$ and $\alpha\vdash\beta$, then $\Gamma\vdash\beta$. This property allows proving some theorem $\beta$ by one or more lemmas $\alpha$
+    \item If $\Gamma\vdash\alpha$ then for any $\beta$, $\Gamma\vdash\beta\to\alpha$. Notice that $\alpha\to\left( \beta\to\alpha \right)$ is an instance of tautology.
     \item If $\Gamma\vdash\alpha\wedge\beta$, then $\Gamma\vdash\alpha$ and $\Gamma\vdash\beta$. Notice that $\alpha\wedge\beta = \neg\left( \alpha\to\neg\beta \right)$, and that $\neg\left( \alpha\to\neg\beta \right) \to \alpha$ (or $\beta$) are two instances of tautologies.
     \item If $\Gamma\vdash\alpha$ and $\Gamma\vdash\beta$ then $\Gamma\vdash\alpha\wedge\beta$
     \item If $\Gamma\vdash\alpha$ or $\Gamma\vdash\beta$ then $\Gamma\vdash\alpha\vee\beta$
