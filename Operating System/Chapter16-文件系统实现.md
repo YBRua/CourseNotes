@@ -2,6 +2,8 @@
 
 ## 文件系统API
 
+文件系统提供多个API，应用程序通过系统调用使用这些API
+
 ### `open`
 
 > 打开一个文件
@@ -52,6 +54,72 @@
   - POSIX规范要求打开文件时返回的 `fd` 是表中可用的最小的 `fd`
     - 直接导致无优化时多核性能较差
     - 因为每个进程打开文件时必须锁住 `fd_table`、找到最小的 `fd` 并将其标为“在使用”
+
+#### `OPEN` 的实现
+
+```js
+function open(finename, flags, mode) {
+  inode_number = path_to_inode_number(filename, wd)
+  if (inode_number == null and flags == CREATE) {
+    inode_number = create(filename, mode)
+  }
+  if (inode_number == null) {
+    return FAILURE
+  }
+
+  inode = inode_number_to_inode(inode_number)
+  if (permitted(inode, flags)) { // check permissions
+    file_index = insert(file_table, inode_number)
+    fd = find_unused_descriptor(fd_table)
+    fd_table[fd] = file_index
+    return fd
+  } else {
+    return FAILURE
+  }
+}
+```
+
+#### `READ` 的实现
+
+```js
+function read(fd, buf, n) {
+  file_index = fd_table[fd]
+  cursor = file_table[file_index].cursor
+  
+  inode_number = file_table[file_index].inode_number
+  inode = inode_number_to_inode(inode_number)
+  
+  m = min(inode.size - cursor, n)
+  update_atime(inode, now())
+
+  if (m == 0) {
+    return EOF
+  }
+  for (i = 0; i < m; ++i) {
+    b = inode_number_to_block(i, inode_number)
+    copy(b, buf, min(m-i, BLOCK_SIZE))
+    i = i + min(m-i, BLOCK_SIZE)
+  }
+  file_table[file_index].cursor = cursor + m
+  return m
+}
+```
+
+#### 一个简单文件系统的磁盘布局
+
+```text
+| S | i | d | - | - | - | D | D | D | D | ...
+```
+
+- 磁盘开头存放文件元数据
+  - `S` 是超级块
+    - inode个数
+    - 数据块个数
+    - inode表起始位置（例如磁盘块`3`）
+    - ...
+    - Magic Number，指示文件系统类型
+  - `i` 空闲 inode 的 bitmap
+  - `d` 空闲数据块的 bitmap
 
 #### 删除一个打开的文件
 

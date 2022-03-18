@@ -90,6 +90,7 @@ $$ g[i,j] = \frac{1}{2\pi\sigma^2}\sum_m e^{-\frac{m^2}{2\sigma^2}}\cdot\sum_ne^
 
 - A 2D Gaussian filter can be equivalently replaced by two 1D Gaussian filters
   - Lower time complexity
+    - From $K^2$ multiplications and $K^2-1$ additions to $2K$ multiplications and $2(K-1)$ additions
 
 ### Denoise with Smoothing
 
