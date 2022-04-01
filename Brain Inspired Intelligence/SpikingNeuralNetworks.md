@@ -86,7 +86,7 @@ Time to charge until target value $\theta$
 
 #### Mathematic Formulation
 
-$$ I_{in} = I_R + I_C = \frac{U_{mean}(t)}{R} + C \frac{\mathrm{d}U_{mean}(t)}{\mathrm{d}t} $$
+$$ I_{in} = I_R + I_C = \frac{U_{mem}(t)}{R} + C \frac{\mathrm{d}U_{mem}(t)}{\mathrm{d}t} $$
 
 ##### Lapicque Model
 
@@ -121,3 +121,68 @@ Further consider resetting
 $$ U[t+1] = \beta U[t] + WX[t+1] - S[t]U_{threshold} $$
 
 Parameters are $\beta, W, S$
+
+## How to Train Your SNN
+
+### Methods
+
+#### White-box Optimization
+
+##### Back-Propagation
+
+- Classic gradient-based optimization methods
+
+#### Black-box Optimization
+
+##### Weight Perturbation
+
+- Add random perturbation to weights
+- If the performance is higher, then we accept the perturbation
+- Otherwise discard the perturbation
+
+However, as dimensions go up, sampling can be inefficient
+
+##### Bayes Optimization
+
+### Challenge
+
+#### Dead Neuron Problem
+
+- 模型的输入 $X[t+1]$ 是一串二进制序列
+- 信号突变导致对输入的导数要么是 0，要么是无穷大
+
+##### 导数替代 Surrogate Gradient
+
+- 用平滑信号代替突变的脉冲
+- 理论上需要证明替代梯度和理论梯度更新的权重之间的差距足够小
+
+##### Spkie-time Gradient
+
+- 对 Spike 产生的时间求导，而不是对 spike 本身求导 (SpikeProp)
+
+Spike response model
+
+$$ U_j(t) = \sum_{i,k} W_{i,j} I_i^{(k)} (t) $$
+
+$$ I_i^{(k)}(t) = \varepsilon(t - f_i^{(k)}) = \frac{t}{\tau}e^{1-t/\tau} \Theta(t) $$
+
+- $t$ is time step
+- $W_{ij}$ is the weight from neuron $i$ to $j$, which is to be updated
+- $f_i^{(k)}$ is the firing time of the $k$-th spike
+- $I_i^{(k)}$ is the input sequence of spikes
+- $\Theta(t)$ is the Heaviside step function
+
+$$ L = MSE(y_j, f_j) $$
+
+Gradient w.r.t. $W$ involves $I_i^{(k)}$. If there exists signal, then everything will be fine, but if there is no input signal, then the gradient will be $0$
+
+Instead, we compute gradient by
+
+$$ \frac{\partial L}{\partial W_{ij}} = \frac{\partial L}{\partial f_j} \frac{\partial f_j}{\partial U_j} \frac{\partial U_j}{\partial w_{ij}} $$
+
+- 第一项和第三项可以直接求导得到
+- 第二项在 $U(f_j)$ 满足反函数求导定理的前提下可以用 $\partial U / \partial t$ 的倒数求得
+
+##### Spike Timing Dependent Plasticity STDP
+
+从神经元接受和发射脉冲的时间差出发
