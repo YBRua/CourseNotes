@@ -1,4 +1,4 @@
-# My Notes Repo
+# Archive of Knowledge and Memories
 
 大概会用来放各种课程的电子笔记。
 
